@@ -1,14 +1,11 @@
 <?php
 
-namespace App\Core\Model;
+namespace Wame\Core\Models;
 
 use Nette\Utils\Finder;
 
 class ConfigLoader extends \Nette\Object 
 {
-	/** @var array */
-	private $configs = [];
-	
 	/** @var array */
 	private $directories = [];
 	
