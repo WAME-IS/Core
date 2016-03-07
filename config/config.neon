@@ -77,8 +77,4 @@ services:
     lessFilter: WebLoader\Filter\LessFilter
     jwlCssMinFilter: Joseki\Webloader\CssMinFilter
 
-    - App\Core\Model\ConfigLoader
-    - App\Core\Model\ServicesLoader
-
-#    - App\Model\UserManager
     - Wame\Core\Forms\FormFactory
