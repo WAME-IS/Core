@@ -68,7 +68,7 @@ webloader:
 
 
 services:
-    routerFactory: App\RouterFactory
+    routerFactory: Core\RouterFactory
     router: @routerFactory::createRouter
     database: @Nette\Database\Connection
 
