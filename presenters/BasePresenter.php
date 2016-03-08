@@ -137,5 +137,16 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
 
 		return $list;
 	}
+	
+	protected function shutdown($response) 
+	{
+		parent::shutdown($response);
+
+		try {
+			$this->entityManager->flush();
+		} catch (\Exception $e) {
+			$this->error($e->getMessage());
+		}
+	}
 
 }
