@@ -6,23 +6,23 @@ parameters:
 
 
 php:
-    date.timezone: Europe/Bratislava
+	date.timezone: Europe/Bratislava
 
 
 nette:
-    container:
-        debugger: TRUE
+	container:
+		debugger: TRUE
 
 
 application:
-    errorPresenter: Error
-    catchExceptions: FALSE
-    mapping:
-        *: App\*Module\Presenters\*Presenter
+	errorPresenter: Error
+	catchExceptions: FALSE
+	mapping:
+		*: App\*Module\Presenters\*Presenter
 
 
 session:
-    expiration: 14 days
+	expiration: 14 days
 
 
 extensions:
@@ -35,46 +35,48 @@ extensions:
 
 
 database:
-    dsn: '%database.driver%:host=%database.host%;port=%database.port%;dbname=%database.dbname%'
-    user: %database.user%
-    password: %database.password%
-    options:
-        lazy: yes
+	dsn: '%database.driver%:host=%database.host%;port=%database.port%;dbname=%database.dbname%'
+	user: %database.user%
+	password: %database.password%
+	options:
+		lazy: yes
 
 
 doctrine:
-    driver: %database.driver%
-    host: %database.host%
-    unix_socket: %database.unix_socket%
-    dbname: %database.dbname%
-    user: %database.user%
-    password: %database.password%
-    port: %database.port%
-    metadata:
-        App: %appDir%
+	driver: %database.driver%
+	host: %database.host%
+	unix_socket: %database.unix_socket%
+	dbname: %database.dbname%
+	user: %database.user%
+	password: %database.password%
+	port: %database.port%
+	metadata:
+		App: %appDir%
 
 
 webloader:
-    css:
-        frontend:
-            filters:
-                - @jwlCssMinFilter
-            fileFilters:
-                - @lessFilter
-                - @wlCssFilter
-            watchFiles:
-                - {files: ["*.css", "*.less"], from: css}
-                - {files: ["*.css", "*.less"], in: css}
+	css:
+		frontend:
+			filters:
+				- @jwlCssMinFilter
+			fileFilters:
+				- @lessFilter
+				- @wlCssFilter
+			watchFiles:
+				- {files: ["*.css", "*.less"], from: css}
+				- {files: ["*.css", "*.less"], in: css}
 
 
 services:
-    routerFactory: Core\RouterFactory
-    router: @routerFactory::createRouter
-    database: @Nette\Database\Connection
+	routerFactory: Core\RouterFactory
+	router: @routerFactory::createRouter
+	database: @Nette\Database\Connection
 
-    # WebLoader
-    wlCssFilter: WebLoader\Filter\CssUrlsFilter(%appDir%/../private/stylesheets/)
-    lessFilter: WebLoader\Filter\LessFilter
-    jwlCssMinFilter: Joseki\Webloader\CssMinFilter
+	# WebLoader
+	wlCssFilter: WebLoader\Filter\CssUrlsFilter(%appDir%/../private/stylesheets/)
+	lessFilter: WebLoader\Filter\LessFilter
+	jwlCssMinFilter: Joseki\Webloader\CssMinFilter
 
-    - Wame\Core\Forms\FormFactory
+	core: Wame\Core
+
+	- Wame\Core\Forms\FormFactory

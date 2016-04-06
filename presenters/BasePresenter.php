@@ -142,11 +142,7 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
 	{
 		parent::shutdown($response);
 
-		try {
-			$this->entityManager->flush();
-		} catch (\Exception $e) {
-			$this->error($e->getMessage());
-		}
+		$this->entityManager->flush();
 	}
 
 }
