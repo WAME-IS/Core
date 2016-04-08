@@ -52,7 +52,7 @@ doctrine:
 	port: %database.port%
 	metadata:
 		App: %appDir%
-
+		Wame\Core\Repositories: %appDir%/../vendor/wame/Core/repositories
 
 webloader:
 	css:
@@ -79,4 +79,5 @@ services:
 
 	core: Wame\Core
 
-	- Wame\Core\Forms\FormFactory
+	formFactory:
+		class: Wame\Core\Forms\FormFactory

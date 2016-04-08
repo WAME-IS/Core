@@ -2,20 +2,27 @@
 
 namespace Wame\Core\Repositories;
 
+use Nette\DI\Container;
+use Kdyby\Doctrine\EntityManager;
+
 class BaseRepository extends \Nette\Object implements \Kdyby\Persistence\Queryable 
 {
-	/** @var \Nette\DI\Container */
-	private $container;
+	/** @var Container */
+	public $container;
 	
+	/** @var EntityManager */
+	public $entityManager;
+
 	/** @var string */
-	private $name;
+	public $name;
 
 	/** @var \Kdyby\Doctrine\EntityRepository */
-	private $repo;
+	public $repo;
 
-	public function __construct(\Nette\DI\Container $container, $name) 
+	public function __construct(Container $container, EntityManager $entityManager, $name) 
 	{
 		$this->container = $container;
+		$this->entityManager = $entityManager;
 		$this->name = $this->prefix . $name;
 	}
 	

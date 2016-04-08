@@ -8,11 +8,15 @@ use Nette\Application\UI\Form;
 class FormFactory extends Nette\Object
 {
 	/**
+	 * Create Form
+	 * 
 	 * @return Form
 	 */
-	public function create()
+	public function createForm()
 	{
-		return new Form;
+		$form = new Form;
+		
+		return $form;
 	}
 
 }
