@@ -9,5 +9,15 @@ use Doctrine\ORM\Mapping as ORM;
  */
 abstract class BaseEntity extends \Kdyby\Doctrine\Entities\BaseEntity 
 {
-
+	
+	protected function sortLangs($langs)
+	{
+		$arr = [];
+		
+		foreach ($langs as $lang) {
+			$arr[$lang->lang] = $lang;
+		}
+		
+		return $arr;
+	}
 }

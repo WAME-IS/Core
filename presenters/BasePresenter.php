@@ -6,6 +6,9 @@ use Nette;
 
 abstract class BasePresenter extends Nette\Application\UI\Presenter
 {
+	/** h4kuna Gettext latte translator trait */
+    use \h4kuna\Gettext\InjectTranslator;
+	
 	/** @var \WebLoader\Nette\LoaderFactory @inject */
 	public $webLoader;
 	
