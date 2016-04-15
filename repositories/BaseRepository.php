@@ -4,8 +4,10 @@ namespace Wame\Core\Repositories;
 
 use Nette\DI\Container;
 use Kdyby\Doctrine\EntityManager;
+use h4kuna\Gettext\GettextSetup;
+use Nette\Security\User;
 
-class BaseRepository extends \Nette\Object implements \Kdyby\Persistence\Queryable 
+class BaseRepository extends \Nette\Object
 {
 	/** @var Container */
 	public $container;
@@ -14,71 +16,44 @@ class BaseRepository extends \Nette\Object implements \Kdyby\Persistence\Queryab
 	public $entityManager;
 
 	/** @var string */
-	public $name;
+	public $lang;
 
-	/** @var \Kdyby\Doctrine\EntityRepository */
-	public $repo;
+	/** @var User */
+	public $user;
 
-	public function __construct(Container $container, EntityManager $entityManager, $name) 
-	{
+	public function __construct(
+		Container $container, 
+		EntityManager $entityManager,
+		GettextSetup $translator,
+		User $user
+	) {
 		$this->container = $container;
 		$this->entityManager = $entityManager;
-		$this->name = $this->prefix . $name;
-	}
-	
-	protected function getRepo() 
-	{
-		if (!$this->repo) {
-			$class = $this->entityHandler->getBuilder($this->name)->getClass();
-			$this->repo = $this->em->getRepository($class);
-		}
-		
-		return $this->repo;
+		$this->lang = $translator->getLanguage();
+		$this->user = $user;
 	}
 
+	/**
+	 * Get table prefix
+	 * 
+	 * @return string
+	 */
 	public function getPrefix()
 	{
 		return $this->container->parameters['database']['prefix'];
 	}
-
-	public function getName() 
-	{
-		return $this->name;
-	}
-
-	public function getClass() 
-	{
-		return $this->entityHandler->getBuilder($this->name)->getClass();
-	}
-
-	public function save($entity) 
-	{
-		$this->em->persist($entity);
-		$this->em->flush($entity);
-	}
-
-	public function flush($entity = null) 
-	{
-		$this->em->persist($entity);
-		$this->em->flush($entity);
-	}
-	
-	public function createQuery($dql = NULL) 
-	{
-		$this->getRepo()->createQuery($dql);
-	}
-	
-	public function createNativeQuery($sql, \Doctrine\ORM\Query\ResultSetMapping $rsm) 
-	{
-		$this->getRepo()->createNativeQuery($sql, $rsm);
-	}
 	
 	/**
-	 * @return \Kdyby\Doctrine\QueryBuilder
+	 * Get class name from namespace
+	 * 
+	 * @param string $namespace
+	 * @return string
 	 */
-	public function createQueryBuilder($alias = NULL, $indexBy = NULL) 
+	public function getClassName($namespace)
 	{
-		return $this->getRepo()->createQueryBuilder($alias, $indexBy);
+		$reflect = new \ReflectionClass($namespace);
+		
+		return $reflect->getShortName();
 	}
 	
 }

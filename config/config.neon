@@ -77,7 +77,5 @@ services:
 	lessFilter: WebLoader\Filter\LessFilter
 	jwlCssMinFilter: Joseki\Webloader\CssMinFilter
 
-	core: Wame\Core
-
 	formFactory:
 		class: Wame\Core\Forms\FormFactory
