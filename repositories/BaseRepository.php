@@ -80,5 +80,9 @@ class BaseRepository extends \Nette\Object implements \Kdyby\Persistence\Queryab
 	{
 		return $this->getRepo()->createQueryBuilder($alias, $indexBy);
 	}
-	
+
+	public function select($alias = NULL) {
+		return $alias;
+	}
+
 }
