@@ -55,5 +55,9 @@ class BaseRepository extends \Nette\Object
 		
 		return $reflect->getShortName();
 	}
-	
+
+	public function select($alias = NULL) {
+		return $alias;
+	}
+
 }

@@ -24,4 +24,15 @@ class BaseEntity extends \Kdyby\Doctrine\Entities\BaseEntity
 		
 		return $return;
 	}
+	
+	protected function sortLangs($langs)
+	{
+		$arr = [];
+		
+		foreach ($langs as $lang) {
+			$arr[$lang->lang] = $lang;
+		}
+		
+		return $arr;
+	}
 }
