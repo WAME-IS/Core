@@ -3,6 +3,7 @@
 namespace Wame\Core\Repositories;
 
 use Nette\DI\Container;
+use Nette\Utils\DateTime;
 use Kdyby\Doctrine\EntityManager;
 use h4kuna\Gettext\GettextSetup;
 use Nette\Security\User;
@@ -58,6 +59,22 @@ class BaseRepository extends \Nette\Object
 
 	public function select($alias = NULL) {
 		return $alias;
+	}
+	
+	/**
+	 * Format string date to DateTime for Doctrine entity
+	 * 
+	 * @param DateTime $date
+	 * @param string $format
+	 * @return DateTime
+	 */
+	public function formatDate($date, $format = 'Y-m-d H:i:s')
+	{
+		if ($date == 'now') {
+			return new DateTime('now');
+		} else {
+			return new DateTime(date($format, strtotime($date)));
+		}
 	}
 
 }
