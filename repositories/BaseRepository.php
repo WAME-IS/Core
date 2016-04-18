@@ -78,9 +78,6 @@ class BaseRepository extends \Nette\Object implements \Kdyby\Persistence\Queryab
 	}
 
 	public function select($alias = NULL) {
-//		dump($this->getRepo());
-//		exit;
-		
 		$this->getRepo()->select($alias);
 	}
 	
@@ -101,6 +98,11 @@ class BaseRepository extends \Nette\Object implements \Kdyby\Persistence\Queryab
 		$criteria = ['id' => $id];
 		
 		return $this->getRepo()->findOneBy($criteria);
+	}
+	
+	public function findBy($criteria = [], $orderBy = null, $length = null, $offset = null)
+	{
+		return $this->getRepo()->findBy($criteria, $orderBy, $length, $offset);
 	}
 	
 	/**
