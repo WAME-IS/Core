@@ -1,7 +1,7 @@
 {
-	"name": "wame/core",
+	"name": "wame/Core",
 	"version": "0.0.1",
-	"description": "CMS WAME admin Core",
+	"description": "CMS WAME admin",
 	"homepage": "http://wame.sk/cms-wame-admin",
 	"minimum-stability": "dev",
 	"repository":{
