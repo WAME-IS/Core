@@ -16,6 +16,8 @@ class FormFactory extends Nette\Object
 	{
 		$form = new Form;
 		
+		$form->setRenderer(new \Tomaj\Form\Renderer\BootstrapVerticalRenderer);
+		
 		return $form;
 	}
 

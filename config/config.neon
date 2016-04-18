@@ -56,6 +56,7 @@ doctrine:
 		App: %appDir%
 		Wame\Core\Repositories: %appDir%/../vendor/wame/Core/repositories
 
+
 webloader:
 	css:
 		frontend:
