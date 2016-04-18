@@ -5,6 +5,7 @@ namespace Core;
 use Nette;
 use Nette\Application\Routers\RouteList;
 use Nette\Application\Routers\Route;
+use Nette\Application\Routers\CliRouter;
 
 class RouterFactory
 {
@@ -25,16 +26,16 @@ class RouterFactory
 		
 		$router[] = new Route('index.php', 'Homepage:Homepage:default', Route::ONE_WAY);
 		
-		if ($this->container->parameters['consoleMode']) {
-			$router[] = new CliRouter(array('lang' => 'en', 'action' => 'ImportExport:default'));
-			
-			$router[] = new Route('<lang>/<presenter>/<action>[/<id>][/<alias>]', [
-				'lang' => 'en',
-				'presenter' => 'Homepage',
-				'action' => 'default',
-				'id' => null
-			]);
-		} else {
+//		if ($this->container->parameters['consoleMode']) {
+//			$router[] = new CliRouter(array('lang' => 'en', 'action' => 'ImportExport:default'));
+//			
+//			$router[] = new Route('<lang>/<presenter>/<action>[/<id>][/<alias>]', [
+//				'lang' => 'en',
+//				'presenter' => 'Homepage',
+//				'action' => 'default',
+//				'id' => null
+//			]);
+//		} else {
 			$router[] = new Route('admin/<lang ' . $translator->routerAccept() . '>/<presenter>/<action>/<id>', [
 				'lang' => $translator->getDefault(),
 				'module' => 'Admin',
@@ -50,7 +51,7 @@ class RouterFactory
 				'action' => 'default',
 				'id' => null
 			]);
-		}
+//		}
 
 		return $router;
 	}
