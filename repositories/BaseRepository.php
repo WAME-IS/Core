@@ -10,6 +10,14 @@ use Nette\Security\User;
 
 class BaseRepository extends \Nette\Object implements \Kdyby\Persistence\Queryable
 {
+	/** @var array */
+	public $onCreate = [];
+	
+	public $onEdit = [];
+	
+//	public $onDelete = [];
+	
+	
 	/** @var Container */
 	public $container;
 	
