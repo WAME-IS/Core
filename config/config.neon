@@ -69,6 +69,13 @@ webloader:
 				- {files: ["*.css", "*.less"], from: css}
 				- {files: ["*.css", "*.less"], in: css}
 
+	js:
+		frontend:
+			remoteFiles:
+				- https://nette.github.io/resources/js/netteForms.min.js
+			files:
+				- %appDir%/../private/javascripts/nette-live-form-validation/live-form-validation.js
+
 
 services:
 	routerFactory: Core\RouterFactory
