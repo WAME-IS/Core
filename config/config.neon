@@ -54,7 +54,7 @@ doctrine:
 	port: %database.port%
 	metadata:
 		App: %appDir%
-		Wame\Core\Repositories: %appDir%/../vendor/wame/Core/repositories
+		Wame\Core\Entities: %appDir%/../vendor/wame/Core/entities
 
 
 webloader:
