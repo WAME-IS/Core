@@ -13,9 +13,11 @@ class BaseRepository extends \Nette\Object implements \Kdyby\Persistence\Queryab
 	/** @var array */
 	public $onCreate = [];
 	
+	/** @var array */
 	public $onEdit = [];
 	
-//	public $onDelete = [];
+	/** @var array */
+	public $onDelete = [];
 	
 	
 	/** @var Container */
