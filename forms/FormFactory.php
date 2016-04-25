@@ -64,8 +64,7 @@ class FormFactory extends Control
 		foreach ($this->formContainers as $containers)
 		{
 			foreach ($containers as $container) {
-				$service = new $container['service'];
-				$form->addComponent($service, $container['name']);
+				$form->addComponent($container['service'], $container['name']);
 			}
 		}
 		
