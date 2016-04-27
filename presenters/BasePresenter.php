@@ -14,6 +14,9 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
 	
 	/** @var \Kdyby\Doctrine\EntityManager @inject */
 	public $entityManager;
+	
+	/** @persistent */
+	public $id;
 
 	/** @return CssLoader */
 	protected function createComponentCss()
@@ -140,6 +143,21 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
 
 		return $list;
 	}
+	
+	/**
+     * Create template
+     * 
+     * @return Nette\Application\UI\ITemplate
+     */
+    public function createTemplate()
+    {
+        $template = parent::createTemplate();
+        
+        $template->lang = $this->lang;
+        $template->id = $this->id;
+        
+        return $template;
+    }
 	
 	protected function shutdown($response) 
 	{
