@@ -2,7 +2,7 @@
 
 namespace Wame\Core\Forms;
 
-use Nette;
+use Nette\Utils\DateTime;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 
@@ -69,6 +69,22 @@ class FormFactory extends Control
 		}
 		
 		return $form;
+	}
+	
+	/**
+	 * Format string date to DateTime for Doctrine entity
+	 * 
+	 * @param DateTime $date
+	 * @param string $format
+	 * @return DateTime
+	 */
+	public function formatDate($date, $format = 'Y-m-d H:i:s')
+	{
+		if ($date == 'now') {
+			return new DateTime('now');
+		} else {
+			return new DateTime(date($format, strtotime($date)));
+		}
 	}
 
 }
