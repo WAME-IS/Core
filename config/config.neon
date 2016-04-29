@@ -79,8 +79,8 @@ webloader:
 
 
 services:
-	routerFactory: Core\RouterFactory
-	router: @routerFactory::createRouter
+	router:
+		class: Wame\Core\Router
 	database: @Nette\Database\Connection
 
 	# WebLoader
@@ -88,5 +88,4 @@ services:
 	lessFilter: WebLoader\Filter\LessFilter
 	jwlCssMinFilter: Joseki\Webloader\CssMinFilter
 
-	formFactory:
-		class: Wame\Core\Forms\FormFactory
+	formFactory: Wame\Core\Forms\FormFactory
