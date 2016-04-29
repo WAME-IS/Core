@@ -24,7 +24,7 @@ class BaseRepository extends \Nette\Object /*implements \Kdyby\Persistence\Query
 	public $onRead = [];
 	
 	/** @var array */
-	public $onEdit = [];
+	public $onUpdate = [];
 	
 	/** @var array */
 	public $onDelete = [];
