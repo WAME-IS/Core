@@ -3,7 +3,8 @@
 # https://nette.org/security-warning
 #
 parameters:
-
+	database:
+		prefix: 'wame_'
 
 php:
 	date.timezone: Europe/Bratislava
