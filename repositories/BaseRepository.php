@@ -21,6 +21,9 @@ class BaseRepository extends \Nette\Object /*implements \Kdyby\Persistence\Query
 	public $onCreate = [];
 	
 	/** @var array */
+	public $onRead = [];
+	
+	/** @var array */
 	public $onEdit = [];
 	
 	/** @var array */

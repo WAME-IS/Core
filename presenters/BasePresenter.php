@@ -4,6 +4,9 @@ namespace App\Core\Presenters;
 
 use Nette;
 
+use Wame\HeadControl\HeadControl;
+use Wame\HeadControl\MetaTitle;
+
 abstract class BasePresenter extends Nette\Application\UI\Presenter
 {
 	/** h4kuna Gettext latte translator trait */
@@ -17,6 +20,9 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
 	
 	/** @persistent */
 	public $id;
+	
+	/** @var HeadControl @inject */
+	public $headControl;
 
 	/** @return CssLoader */
 	protected function createComponentCss()
@@ -30,6 +36,12 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
 		return $this->webLoader->createJavaScriptLoader('frontend');
 	}
 
+	// TODO: presunut do global component loadera
+	public function createComponentHeadControl()
+	{
+		return $this->headControl;
+	}
+	
 	/**
 	* Return module name
 	* 
