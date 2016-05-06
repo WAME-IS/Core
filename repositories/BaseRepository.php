@@ -68,8 +68,6 @@ class BaseRepository extends \Nette\Object /*implements \Kdyby\Persistence\Query
 		if($entityName) {
 			$this->entity = $this->entityManager->getRepository($entityName);
 		}
-		
-//		dump($this->entity->findAll()); exit;
 	}
 
 	/**
