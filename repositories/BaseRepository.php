@@ -146,16 +146,42 @@ class BaseRepository extends \Nette\Object /*implements \Kdyby\Persistence\Query
 	}
 	
 	/**
-	 * Get all articles by criteria
+	 * Get all entries by criteria
 	 * 
 	 * @param array $criteria
-	 * @return ArticleEntity
+	 * @return Entity
 	 */
 	public function find($criteria = [], $orderBy = null, $limit = null, $offset = null)
 	{
 		$articleEntity = $this->entity->findBy($criteria, $orderBy, $limit, $offset);
 
 		return $articleEntity;
+	}
+	
+	/**
+	 * Get all entries in pairs
+	 * 
+	 * @param Array $criteria	criteria
+	 * @param String $value		value
+	 * @param Array $orderBy	order by
+	 * @param String $key		key
+	 * @return Array			entries
+	 */
+	public function findPairs($criteria = [], $value = null, $orderBy = [], $key = 'id')
+	{
+		return $this->entity->findPairs($criteria, $value, $orderBy, $key);
+	}
+	
+	/**
+	 * Get all entries in pairs
+	 * 
+	 * @param Array $criteria	criteria
+	 * @param String $key		key
+	 * @return Array			entries
+	 */
+	public function findAssoc($criteria = [], $key = 'id')
+	{
+		return $this->entity->findAssoc($criteria, $key);
 	}
 	
 	/**
