@@ -26,9 +26,15 @@ class BaseRegister extends ArrayList {
 	 */
 	public function register($entry) {
 
+		if (!$entry) {
+			throw new InvalidArgumentException("Trying to register " . $entry . " into register of " . $this->type);
+		}
+
 		$entries = func_get_args();
 		foreach ($entries as $entry) {
-			if (in_array($this->type, class_implements($entry))) {
+			$implements = class_parents($entry);
+			$implements[] = get_class($entry);
+			if (in_array($this->type, $implements)) {
 				$this[] = $entry;
 			} else {
 				throw new InvalidArgumentException("Trying to register class " . get_class($entry) . " into register of " . $this->type);

@@ -34,12 +34,10 @@ class NeonType extends \Doctrine\DBAL\Types\StringType {
 	 * @return mixed The PHP representation of the value.
 	 */
 	public function convertToPHPValue($value, \Doctrine\DBAL\Platforms\AbstractPlatform $platform) {
-		$out = \Nette\Neon\Neon::decode($value);
-		if ($out) {
-			return $out;
-		} else {
-			return [];
+		if ($value) {
+			return \Nette\Neon\Neon::decode($value);
 		}
+		return [];
 	}
 
 	public function getName() {
