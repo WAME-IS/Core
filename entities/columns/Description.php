@@ -5,7 +5,7 @@ namespace Wame\Core\Entities\Columns;
 trait Description
 {
     /**
-     * @ORM\Column(name="description", type="string", length=255, nullable=false)
+     * @ORM\Column(name="description", type="string", length=255, nullable=true)
      */
     protected $description;
 
