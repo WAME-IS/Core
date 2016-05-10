@@ -22,6 +22,16 @@ trait Parameters
 	}
 	
 	
+	public function getParameter($key)
+	{
+		if (array_key_exists($key, $this->getParameters())) {
+			return $this->getParameters()[$key];
+		} else {
+			return null;
+		}
+	}
+	
+	
 	public function setParameters($parameters)
 	{
 		if (is_array($parameters) && count($parameters) > 0) {
