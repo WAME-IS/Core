@@ -194,6 +194,20 @@ class BaseRepository extends \Nette\Object /*implements \Kdyby\Persistence\Query
 	}
 	
 	/**
+	 * Return pairs
+	 * 
+	 * @param array $criteria
+	 * @param string $value
+	 * @param array $orderBy
+	 * @param string $key
+	 * @return array
+	 */
+	public function findPairs($criteria = [], $value = null, $orderBy = [], $key = null)
+	{
+		return $this->entity->findPairs($criteria, $value, $orderBy, $key);
+	}
+	
+	/**
 	 * Format string date to DateTime for Doctrine entity
 	 * 
 	 * @param DateTime $date

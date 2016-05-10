@@ -127,8 +127,7 @@ class FormFactory extends Control
 	 */
 	public function attachFormContainers($form)
 	{
-		foreach ($this->sortFormContainers() as $containers)
-		{
+		foreach ($this->sortFormContainers() as $containers) {
 			foreach ($containers as $container) {
 				$form->addComponent($container['service'], $container['name']);
 			}
