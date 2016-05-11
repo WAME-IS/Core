@@ -220,7 +220,7 @@ class BaseRepository extends \Nette\Object /*implements \Kdyby\Persistence\Query
 		$entities = $this->find($criteria);
 		
 		foreach($entities as $entity) {
-			$this->entity->remove($entity);
+			$this->entityManager->remove($entity);
 		}
 	}
 }
