@@ -76,12 +76,34 @@ class BaseControl extends UI\Control
 	 */
 	public function getTemplateFile()
 	{
-		$customTemplate = $this->getCustomTemplate();
 		$filePath = dirname($this->getReflection()->getFileName());
 		$dir = explode('/vendor/wame/', $filePath)[1];
-		$templateFile = $this->templateFile;
+		
+		$file = $this->findTemplate($dir);
+		
+		if (!$file) {
+			throw new \Exception(sprintf(_('%s and %s can not be found in %s.'), $this->templateFile, self::DEFAULT_TEMPLATE, $dir));
+		}
+		
+		$this->template->setFile($file);
 
+		return $this;
+	}
+	
+	
+	/**
+	 * Find the most appropriate template
+	 * 
+	 * @param string $dir
+	 * @return string
+	 */
+	private function findTemplate($dir)
+	{
+		$file = null;
 		$dirs = [];
+		
+		$templateFile = $this->templateFile;
+		$customTemplate = $this->getCustomTemplate();
 		
 		if ($templateFile) {
 			if ($customTemplate) { $dirs[] = TEMPLATES_PATH . '/' . $customTemplate . '/' . $dir . '/' . $templateFile; }
@@ -97,9 +119,7 @@ class BaseControl extends UI\Control
 			if (is_file($dir)) { $file = $dir; break; }
 		}
 		
-		$this->template->setFile($file);
-
-		return $this;
+		return $file;
 	}
 
 	
@@ -108,7 +128,7 @@ class BaseControl extends UI\Control
 	 * 
 	 * @return string
 	 */
-	public function getCustomTemplate()
+	private function getCustomTemplate()
 	{
 		if (isset($this->presenter->context->parameters['customTemplate'])) {
 			$template = $this->presenter->context->parameters['customTemplate'];
