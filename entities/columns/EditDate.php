@@ -15,4 +15,32 @@ trait EditDate
 	 */
 	protected $editUser;
 
+	
+	public function getEditDate()
+	{
+		return $this->editDate;
+	}
+
+
+	public function setEditDate($editDate)
+	{
+		$this->editDate = $editDate;
+		
+		return $this;
+	}
+	
+	
+	public function getEditUser()
+	{
+		return $this->editUser;
+	}
+
+
+	public function setEditUser($editUser)
+	{
+		$this->editUser = $editUser;
+		
+		return $this;
+	}
+	
 }

@@ -4,6 +4,9 @@ namespace App\Core\Presenters;
 
 use Nette;
 
+use Wame\HeadControl\HeadControl;
+use Wame\PositionModule\Components\IPositionControlFactory;
+
 abstract class BasePresenter extends Nette\Application\UI\Presenter
 {
 	/** h4kuna Gettext latte translator trait */
@@ -14,7 +17,17 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
 	
 	/** @var \Kdyby\Doctrine\EntityManager @inject */
 	public $entityManager;
+	
+	/** @persistent */
+	public $id;
+	
+	/** @var HeadControl @inject */
+	public $headControl;
 
+	/** @var IPositionControlFactory @inject */
+	public $IPositionControlFactory;
+
+	
 	/** @return CssLoader */
 	protected function createComponentCss()
 	{
@@ -27,6 +40,26 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
 		return $this->webLoader->createJavaScriptLoader('frontend');
 	}
 
+	// TODO: presunut do global component loadera
+	public function createComponentHeadControl()
+	{
+		return $this->headControl;
+	}
+
+	
+	/**
+	 * Position control
+	 * 
+	 * @return IPositionControlFactory
+	 */
+	protected function createComponentPositionControl()
+	{
+		$control = $this->IPositionControlFactory->create();
+	
+		return $control;
+	}
+	
+	
 	/**
 	* Return module name
 	* 
@@ -140,6 +173,21 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
 
 		return $list;
 	}
+	
+	/**
+     * Create template
+     * 
+     * @return Nette\Application\UI\ITemplate
+     */
+    public function createTemplate()
+    {
+        $template = parent::createTemplate();
+        
+        $template->lang = $this->lang;
+        $template->id = $this->id;
+        
+        return $template;
+    }
 	
 	protected function shutdown($response) 
 	{

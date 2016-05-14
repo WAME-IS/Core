@@ -3,7 +3,8 @@
 # https://nette.org/security-warning
 #
 parameters:
-
+	database:
+		prefix: 'wame_'
 
 php:
 	date.timezone: Europe/Bratislava
@@ -54,7 +55,7 @@ doctrine:
 	port: %database.port%
 	metadata:
 		App: %appDir%
-		Wame\Core\Repositories: %appDir%/../vendor/wame/Core/repositories
+		Wame\Core\Entities: %appDir%/../vendor/wame/Core/entities
 
 
 webloader:
@@ -68,6 +69,13 @@ webloader:
 			watchFiles:
 				- {files: ["*.css", "*.less"], from: css}
 				- {files: ["*.css", "*.less"], in: css}
+
+	js:
+		frontend:
+			remoteFiles:
+				- https://nette.github.io/resources/js/netteForms.min.js
+			files:
+				- %appDir%/../private/javascripts/nette-live-form-validation/live-form-validation.js
 
 
 services:

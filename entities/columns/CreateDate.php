@@ -15,4 +15,32 @@ trait CreateDate
 	 */
 	protected $createUser;
 
+	
+	public function getCreateDate()
+	{
+		return $this->createDate;
+	}
+
+
+	public function setCreateDate($createDate)
+	{
+		$this->createDate = $createDate;
+		
+		return $this;
+	}
+	
+	
+	public function getCreateUser()
+	{
+		return $this->createUser;
+	}
+
+
+	public function setCreateUser($createUser)
+	{
+		$this->createUser = $createUser;
+		
+		return $this;
+	}
+	
 }

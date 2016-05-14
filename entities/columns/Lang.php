@@ -9,4 +9,18 @@ trait Lang
      */
     protected $lang;
 
+	
+	public function getLang()
+	{
+		return $this->lang;
+	}
+
+
+	public function setLang($lang)
+	{
+		$this->lang = $lang;
+		
+		return $this;
+	}
+	
 }

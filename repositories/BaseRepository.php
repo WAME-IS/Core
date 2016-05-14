@@ -8,8 +8,28 @@ use Kdyby\Doctrine\EntityManager;
 use h4kuna\Gettext\GettextSetup;
 use Nette\Security\User;
 
-class BaseRepository extends \Nette\Object
+interface ICrud
 {
+	public function create($values);
+	public function update($id, $values); // TODO: prerobit na entitu, values bude uz vlozene do entity vo formulari
+	public function delete($criteria, $status);
+}
+
+class BaseRepository extends \Nette\Object /*implements \Kdyby\Persistence\Queryable*/
+{
+	/** @var array */
+	public $onCreate = [];
+	
+	/** @var array */
+	public $onRead = [];
+	
+	/** @var array */
+	public $onUpdate = [];
+	
+	/** @var array */
+	public $onDelete = [];
+	
+	
 	/** @var Container */
 	public $container;
 	
@@ -21,17 +41,33 @@ class BaseRepository extends \Nette\Object
 
 	/** @var User */
 	public $user;
+	
+	/** @var string */
+	private $name;
+	
+	/** Entity */
+	public $entity;
+	
+//	/** @var \Kdyby\Doctrine\EntityRepository */
+//	private $repo;
 
 	public function __construct(
 		Container $container, 
 		EntityManager $entityManager,
 		GettextSetup $translator,
-		User $user
+		User $user,
+		$entityName = null
 	) {
 		$this->container = $container;
 		$this->entityManager = $entityManager;
 		$this->lang = $translator->getLanguage();
 		$this->user = $user;
+		
+		$this->name = $entityName;
+		
+		if($entityName) {
+			$this->entity = $this->entityManager->getRepository($entityName);
+		}
 	}
 
 	/**
@@ -56,10 +92,107 @@ class BaseRepository extends \Nette\Object
 		
 		return $reflect->getShortName();
 	}
-
-	public function select($alias = NULL) {
-		return $alias;
+	
+//	protected function getRepo() {
+//		if (!$this->repo) {
+////			$entityBuilder = new EntityBuilder($this->name);
+////			$class = $entityBuilder->getClass();
+//			
+////			$class = $this->entityHandler->getBuilder($this->name)->getClass();
+//			$this->repo = $this->entityManager->getRepository('Wame\CategoryModule\Entities\CategoryEntity');
+//		}
+//		return $this->repo;
+//	}
+//
+//	public function select($alias = NULL) {
+//		$this->getRepo()->select($alias);
+//	}
+//	
+//	public function createNativeQuery($sql, \Doctrine\ORM\Query\ResultSetMapping $rsm) {
+//		$this->getRepo()->createNativeQuery($sql, $rsm);
+//	}
+//
+//	public function createQuery($dql = NULL) {
+//		$this->getRepo()->createQuery($dql);
+//	}
+//
+//	public function createQueryBuilder($alias = NULL, $indexBy = NULL) {
+//		$this->getRepo()->createQueryBuilder($alias, $indexBy);
+//	}
+	
+	
+//	public function find($id) {
+//		$criteria = ['id' => $id];
+//		
+//		return $this->getRepo()->findOneBy($criteria);
+//	}
+//	
+//	public function findBy($criteria = [], $orderBy = null, $length = null, $offset = null)
+//	{
+//		return $this->getRepo()->findBy($criteria, $orderBy, $length, $offset);
+//	}
+	
+	/**
+	 * Get one article by criteria
+	 * 
+	 * @param array $criteria
+	 * @return ArticleEntity
+	 */
+	public function get($criteria = [])
+	{
+		return $this->entity->findOneBy($criteria);
 	}
+	
+	/**
+	 * Get all entries by criteria
+	 * 
+	 * @param array $criteria
+	 * @return Entity
+	 */
+	public function find($criteria = [], $orderBy = null, $limit = null, $offset = null)
+	{
+		$articleEntity = $this->entity->findBy($criteria, $orderBy, $limit, $offset);
+
+		return $articleEntity;
+	}
+	
+	/**
+	 * Get all entries in pairs
+	 * 
+	 * @param Array $criteria	criteria
+	 * @param String $value		value
+	 * @param Array $orderBy	order by
+	 * @param String $key		key
+	 * @return Array			entries
+	 */
+	public function findPairs($criteria = [], $value = null, $orderBy = [], $key = 'id')
+	{
+		return $this->entity->findPairs($criteria, $value, $orderBy, $key);
+	}
+	
+	/**
+	 * Get all entries in pairs
+	 * 
+	 * @param Array $criteria	criteria
+	 * @param String $key		key
+	 * @return Array			entries
+	 */
+	public function findAssoc($criteria = [], $key = 'id')
+	{
+		return $this->entity->findAssoc($criteria, $key);
+	}
+	
+	/**
+	 * Return count of articles
+	 * 
+	 * @param array $criteria	criteria
+	 * @return integer			count
+	 */
+	public function countBy($criteria = [])
+	{
+		return $this->entity->countBy($criteria);
+	}
+
 	
 	/**
 	 * Format string date to DateTime for Doctrine entity
@@ -77,4 +210,17 @@ class BaseRepository extends \Nette\Object
 		}
 	}
 
+	/**
+	 * Remove entities
+	 * 
+	 * @param type $criteria	criteria
+	 */
+	public function remove($criteria = [])
+	{
+		$entities = $this->find($criteria);
+		
+		foreach($entities as $entity) {
+			$this->entityManager->remove($entity);
+		}
+	}
 }
