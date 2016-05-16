@@ -10,7 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
 class BaseEntity extends \Kdyby\Doctrine\Entities\BaseEntity 
 {
 	/**
-	 * Sort by languages
+	 * Get languages
 	 * 
 	 * @return array
 	 */
@@ -25,6 +25,13 @@ class BaseEntity extends \Kdyby\Doctrine\Entities\BaseEntity
 		return $return;
 	}
 	
+	
+	/**
+	 * Sort by languages
+	 * 
+	 * @param type $langs
+	 * @return type
+	 */
 	protected function sortLangs($langs)
 	{
 		$arr = [];
@@ -35,4 +42,20 @@ class BaseEntity extends \Kdyby\Doctrine\Entities\BaseEntity
 		
 		return $arr;
 	}
+	
+	
+	/**
+	 * Add lang
+	 * 
+	 * @param string $lang
+	 * @param object $entity
+	 * @return \Wame\Core\Entities\BaseEntity
+	 */
+	public function addLang($lang, $entity)
+	{
+		$this->langs[$lang] = $entity;
+		
+		return $this;
+	}
+	
 }

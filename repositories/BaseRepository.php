@@ -192,6 +192,7 @@ class BaseRepository extends \Nette\Object /*implements \Kdyby\Persistence\Query
 	{
 		return $this->entity->countBy($criteria);
 	}
+
 	
 	/**
 	 * Format string date to DateTime for Doctrine entity
@@ -209,4 +210,17 @@ class BaseRepository extends \Nette\Object /*implements \Kdyby\Persistence\Query
 		}
 	}
 
+	/**
+	 * Remove entities
+	 * 
+	 * @param type $criteria	criteria
+	 */
+	public function remove($criteria = [])
+	{
+		$entities = $this->find($criteria);
+		
+		foreach($entities as $entity) {
+			$this->entityManager->remove($entity);
+		}
+	}
 }

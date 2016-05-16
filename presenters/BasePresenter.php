@@ -5,7 +5,7 @@ namespace App\Core\Presenters;
 use Nette;
 
 use Wame\HeadControl\HeadControl;
-use Wame\HeadControl\MetaTitle;
+use Wame\PositionModule\Components\IPositionControlFactory;
 
 abstract class BasePresenter extends Nette\Application\UI\Presenter
 {
@@ -24,6 +24,10 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
 	/** @var HeadControl @inject */
 	public $headControl;
 
+	/** @var IPositionControlFactory @inject */
+	public $IPositionControlFactory;
+
+	
 	/** @return CssLoader */
 	protected function createComponentCss()
 	{
@@ -41,6 +45,20 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
 	{
 		return $this->headControl;
 	}
+
+	
+	/**
+	 * Position control
+	 * 
+	 * @return IPositionControlFactory
+	 */
+	protected function createComponentPositionControl()
+	{
+		$control = $this->IPositionControlFactory->create();
+	
+		return $control;
+	}
+	
 	
 	/**
 	* Return module name
