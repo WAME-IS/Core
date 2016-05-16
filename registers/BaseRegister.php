@@ -3,6 +3,7 @@
 namespace Wame\Core\Registers;
 
 use Nette\InvalidArgumentException,
+	Nette\Reflection\ClassType,
 	Nette\Utils\ArrayList;
 
 /**
@@ -32,9 +33,12 @@ class BaseRegister extends ArrayList {
 
 		$entries = func_get_args();
 		foreach ($entries as $entry) {
-			$implements = class_parents($entry);
-			$implements[] = get_class($entry);
-			if (in_array($this->type, $implements)) {
+
+			if (!$entry) {
+				throw new InvalidArgumentException("Trying to insert invalid entry.");
+			}
+
+			if ((new ClassType(get_class($entry)))->is($this->type)) {
 				$this[] = $entry;
 			} else {
 				throw new InvalidArgumentException("Trying to register class " . get_class($entry) . " into register of " . $this->type);
