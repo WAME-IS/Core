@@ -3,71 +3,68 @@
 namespace App\Core\Presenters;
 
 use Nette;
-
 use Wame\HeadControl\HeadControl;
 use Wame\PositionModule\Components\IPositionControlFactory;
 
-abstract class BasePresenter extends Nette\Application\UI\Presenter
-{
+abstract class BasePresenter extends Nette\Application\UI\Presenter {
+
 	/** h4kuna Gettext latte translator trait */
-    use \h4kuna\Gettext\InjectTranslator;
-	
+	use \h4kuna\Gettext\InjectTranslator;
+
 	/** @var \WebLoader\Nette\LoaderFactory @inject */
 	public $webLoader;
-	
+
 	/** @var \Kdyby\Doctrine\EntityManager @inject */
 	public $entityManager;
-	
+
 	/** @persistent */
 	public $id;
-	
+
 	/** @var HeadControl @inject */
 	public $headControl;
 
 	/** @var IPositionControlFactory @inject */
 	public $IPositionControlFactory;
 
-	
+	/**
+	 * Event of type LinkEvent
+	 * @var callable[]
+	 */
+	public $onLink;
+
 	/** @return CssLoader */
-	protected function createComponentCss()
-	{
+	protected function createComponentCss() {
 		return $this->webLoader->createCssLoader('frontend');
 	}
 
 	/** @return JavaScriptLoader */
-	protected function createComponentJs()
-	{
+	protected function createComponentJs() {
 		return $this->webLoader->createJavaScriptLoader('frontend');
 	}
 
 	// TODO: presunut do global component loadera
-	public function createComponentHeadControl()
-	{
+	public function createComponentHeadControl() {
 		return $this->headControl;
 	}
 
-	
 	/**
 	 * Position control
 	 * 
 	 * @return IPositionControlFactory
 	 */
-	protected function createComponentPositionControl()
-	{
+	protected function createComponentPositionControl() {
 		$control = $this->IPositionControlFactory->create();
-	
+
 		return $control;
 	}
-	
-	
+
 	/**
-	* Return module name
-	* 
-	* @param string $name
-	* @return string
-	*/
-	public function getModule($name = null)
-	{
+	 * Return module name
+	 * 
+	 * @param string $name
+	 * @return string
+	 */
+	public function getModule($name = null) {
 		if (is_null($name)) {
 			$name = $this->name;
 		}
@@ -78,12 +75,11 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
 	}
 
 	/**
-	* Return custom template
-	* 
-	* @return string
-	*/
-	public function getCustomTemplate()
-	{
+	 * Return custom template
+	 * 
+	 * @return string
+	 */
+	public function getCustomTemplate() {
 		if (isset($this->context->parameters['customTemplate'])) {
 			$template = $this->context->parameters['customTemplate'];
 		} else {
@@ -94,14 +90,13 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
 	}
 
 	/**
-	* Return template file
-	* use current Module, Presenter
-	* resolve customTemplates
-	* 
-	* @return array
-	*/
-	public function formatTemplateFiles()
-	{
+	 * Return template file
+	 * use current Module, Presenter
+	 * resolve customTemplates
+	 * 
+	 * @return array
+	 */
+	public function formatTemplateFiles() {
 		$name = $this->getName();
 		$presenter = substr($name, strrpos(':' . $name, ':'));
 		$module = $this->getModule();
@@ -128,14 +123,13 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
 	}
 
 	/**
-	* Return layout file
-	* use current Module, Presenter
-	* resolve customTemplates
-	* 
-	* @return array
-	*/
-	public function formatLayoutTemplateFiles()
-	{
+	 * Return layout file
+	 * use current Module, Presenter
+	 * resolve customTemplates
+	 * 
+	 * @return array
+	 */
+	public function formatLayoutTemplateFiles() {
 		$name = $this->getName();
 		$presenter = substr($name, strrpos(':' . $name, ':'));
 		$module = $this->getModule();
@@ -173,24 +167,28 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
 
 		return $list;
 	}
-	
+
 	/**
-     * Create template
-     * 
-     * @return Nette\Application\UI\ITemplate
-     */
-    public function createTemplate()
-    {
-        $template = parent::createTemplate();
-        
-        $template->lang = $this->lang;
-        $template->id = $this->id;
-        
-        return $template;
-    }
-	
-	protected function shutdown($response) 
-	{
+	 * Create template
+	 * 
+	 * @return Nette\Application\UI\ITemplate
+	 */
+	public function createTemplate() {
+		$template = parent::createTemplate();
+
+		$template->lang = $this->lang;
+		$template->id = $this->id;
+
+		return $template;
+	}
+
+	public function link($destination, $args = array()) {
+		$event = new \Wame\Core\LinkEvent($destination, $args);
+		$this->onLink($event);
+		return parent::link($event->getDestination(), $event->getArgs());
+	}
+
+	protected function shutdown($response) {
 		parent::shutdown($response);
 
 		$this->entityManager->flush();
