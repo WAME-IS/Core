@@ -106,13 +106,13 @@ class BaseControl extends UI\Control
 		$customTemplate = $this->getCustomTemplate();
 		
 		if ($templateFile) {
-			if ($customTemplate) { $dirs[] = TEMPLATES_PATH . '/' . $customTemplate . '/' . $dir . '/' . $templateFile; }
 			$dirs[] = APP_PATH . '/' . $dir . '/' . $templateFile;
+			if ($customTemplate) { $dirs[] = TEMPLATES_PATH . '/' . $customTemplate . '/' . $dir . '/' . $templateFile; }
 			$dirs[] = VENDOR_PATH . '/' . PACKAGIST_NAME . '/' . $dir . '/' . $templateFile;
 		}
 		
-		if ($customTemplate) { $dirs[] = TEMPLATES_PATH . '/' . $customTemplate . '/' . $dir . '/' . self::DEFAULT_TEMPLATE; }
 		$dirs[] = APP_PATH . '/' . $dir . '/' . self::DEFAULT_TEMPLATE;
+		if ($customTemplate) { $dirs[] = TEMPLATES_PATH . '/' . $customTemplate . '/' . $dir . '/' . self::DEFAULT_TEMPLATE; }
 		$dirs[] = VENDOR_PATH . '/' . PACKAGIST_NAME . '/' . $dir . '/' . self::DEFAULT_TEMPLATE;
 		
 		foreach ($dirs as $dir) {
