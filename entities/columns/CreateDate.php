@@ -10,26 +10,19 @@ trait CreateDate
 	 */
 	protected $createDate;
 
-	/**ˇ
+	/**
 	 * @ORM\ManyToOne(targetEntity="\Wame\UserModule\Entities\UserEntity")
 	 * @ORM\JoinColumn(name="create_user_id", referencedColumnName="id", nullable=false)
 	 */
 	protected $createUser;
 
 	
+	/** get ************************************************************/
+
 	public function getCreateDate()
 	{
 		return $this->createDate;
 	}
-
-
-	public function setCreateDate($createDate)
-	{
-		$this->createDate = $createDate;
-		
-		return $this;
-	}
-	
 	
 	public function getCreateUser()
 	{
@@ -37,6 +30,15 @@ trait CreateDate
 	}
 
 
+	/** set ************************************************************/
+	
+	public function setCreateDate($createDate)
+	{
+		$this->createDate = $createDate;
+		
+		return $this;
+	}
+	
 	public function setCreateUser($createUser)
 	{
 		$this->createUser = $createUser;
