@@ -10,11 +10,15 @@ trait Description
     protected $description;
 
 	
+	/** get ************************************************************/
+
 	public function getDescription()
 	{
 		return $this->description;
 	}
 
+
+	/** set ************************************************************/
 
 	public function setDescription($description)
 	{

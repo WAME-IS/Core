@@ -111,11 +111,12 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
 
 		$dirs = [];
 
+		$dirs[] = APP_PATH . '/' . $module . '/presenters/templates';
+
 		if ($this->customTemplate) {
 			$dirs[] = TEMPLATES_PATH . '/' . $this->customTemplate . '/' . $module . '/presenters/templates';
 		}
 
-		$dirs[] = APP_PATH . '/' . $module . '/presenters/templates';
 		$dirs[] = $dir . '/templates';
 
 		$paths = [];
@@ -146,11 +147,12 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
 
 		$dirs = [];
 
+		$dirs[] = APP_PATH . '/' . $module . '/presenters/templates';
+
 		if ($this->customTemplate) {
 			$dirs[] = TEMPLATES_PATH . '/' . $this->customTemplate . '/' . $module . '/presenters/templates';
 		}
 
-		$dirs[] = APP_PATH . '/' . $module . '/presenters/templates';
 		$dirs[] = $dir . '/templates';
 
 		$list = [];
@@ -164,11 +166,12 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
 			} while ($dir && ($name = substr($name, 0, strrpos($name, ':'))));
 		}
 
+		array_push($list, APP_PATH . '/Core/presenters/templates/@layout.latte');
+
 		if ($this->customTemplate) {
 			array_push($list, TEMPLATES_PATH . '/' . $this->customTemplate . '/Core/presenters/templates/@layout.latte');
 		}
 
-		array_push($list, APP_PATH . '/Core/presenters/templates/@layout.latte');
 		array_push($list, VENDOR_PATH . '/' . PACKAGIST_NAME . '/Core/presenters/templates/@layout.latte');
 
 		return $list;

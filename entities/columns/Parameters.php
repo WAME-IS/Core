@@ -12,6 +12,8 @@ trait Parameters
     protected $parameters = null;
 	
 	
+	/** get ************************************************************/
+
 	public function getParameters()
 	{
 		if ($this->parameters) {
@@ -32,6 +34,8 @@ trait Parameters
 	}
 	
 	
+	/** set ************************************************************/
+
 	public function setParameters($parameters)
 	{
 		if (is_array($parameters) && count($parameters) > 0) {

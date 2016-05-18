@@ -12,11 +12,15 @@ trait Identifier
     protected $id;
 
 	
+	/** get ************************************************************/
+
 	public function getId()
 	{
 		return $this->id;
 	}
 
+
+	/** set ************************************************************/
 
 	public function setId($id)
 	{

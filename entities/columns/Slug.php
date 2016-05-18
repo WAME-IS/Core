@@ -10,11 +10,15 @@ trait Slug
 	protected $slug;
 
 	
+	/** get ************************************************************/
+
 	public function getSlug()
 	{
 		return $this->slug;
 	}
 
+
+	/** set ************************************************************/
 
 	public function setSlug($slug)
 	{

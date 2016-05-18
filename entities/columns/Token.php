@@ -10,11 +10,15 @@ trait Token
     protected $token = null;
 
 	
+	/** get ************************************************************/
+
 	public function getToken()
 	{
 		return $this->token;
 	}
 
+
+	/** set ************************************************************/
 
 	public function setToken($token)
 	{
