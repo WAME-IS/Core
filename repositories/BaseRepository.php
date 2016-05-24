@@ -7,6 +7,8 @@ use Nette\Utils\DateTime;
 use Kdyby\Doctrine\EntityManager;
 use h4kuna\Gettext\GettextSetup;
 use Nette\Security\User;
+use Wame\UserModule\Entities\UserEntity;
+
 
 interface ICrud
 {
@@ -14,6 +16,7 @@ interface ICrud
 	public function update($id, $values); // TODO: prerobit na entitu, values bude uz vlozene do entity vo formulari
 	public function delete($criteria, $status);
 }
+
 
 class BaseRepository extends \Nette\Object /*implements \Kdyby\Persistence\Queryable*/
 {
@@ -48,9 +51,10 @@ class BaseRepository extends \Nette\Object /*implements \Kdyby\Persistence\Query
 	/** Entity */
 	public $entity;
 	
-//	/** @var \Kdyby\Doctrine\EntityRepository */
-//	private $repo;
+	/** UserEntity */
+	public $yourUserEntity = null;
 
+	
 	public function __construct(
 		Container $container, 
 		EntityManager $entityManager,
@@ -65,10 +69,15 @@ class BaseRepository extends \Nette\Object /*implements \Kdyby\Persistence\Query
 		
 		$this->name = $entityName;
 		
-		if($entityName) {
+		if ($entityName) {
 			$this->entity = $this->entityManager->getRepository($entityName);
 		}
+		
+		if ($this->user->isLoggedIn()) {
+			$this->yourUserEntity = $this->entityManager->getRepository(UserEntity::class)->findOneBy(['id' => $this->user->id]);
+		}
 	}
+
 
 	/**
 	 * Get table prefix
@@ -92,69 +101,35 @@ class BaseRepository extends \Nette\Object /*implements \Kdyby\Persistence\Query
 		
 		return $reflect->getShortName();
 	}
-	
-//	protected function getRepo() {
-//		if (!$this->repo) {
-////			$entityBuilder = new EntityBuilder($this->name);
-////			$class = $entityBuilder->getClass();
-//			
-////			$class = $this->entityHandler->getBuilder($this->name)->getClass();
-//			$this->repo = $this->entityManager->getRepository('Wame\CategoryModule\Entities\CategoryEntity');
-//		}
-//		return $this->repo;
-//	}
-//
-//	public function select($alias = NULL) {
-//		$this->getRepo()->select($alias);
-//	}
-//	
-//	public function createNativeQuery($sql, \Doctrine\ORM\Query\ResultSetMapping $rsm) {
-//		$this->getRepo()->createNativeQuery($sql, $rsm);
-//	}
-//
-//	public function createQuery($dql = NULL) {
-//		$this->getRepo()->createQuery($dql);
-//	}
-//
-//	public function createQueryBuilder($alias = NULL, $indexBy = NULL) {
-//		$this->getRepo()->createQueryBuilder($alias, $indexBy);
-//	}
-	
-	
-//	public function find($id) {
-//		$criteria = ['id' => $id];
-//		
-//		return $this->getRepo()->findOneBy($criteria);
-//	}
-//	
-//	public function findBy($criteria = [], $orderBy = null, $length = null, $offset = null)
-//	{
-//		return $this->getRepo()->findBy($criteria, $orderBy, $length, $offset);
-//	}
+
 	
 	/**
 	 * Get one article by criteria
 	 * 
 	 * @param array $criteria
-	 * @return ArticleEntity
+	 * @param array $orderBy
 	 */
-	public function get($criteria = [])
+	public function get($criteria = [], $orderBy = [])
 	{
-		return $this->entity->findOneBy($criteria);
+		return $this->entity->findOneBy($criteria, $orderBy);
 	}
+	
 	
 	/**
 	 * Get all entries by criteria
 	 * 
 	 * @param array $criteria
-	 * @return Entity
+	 * @param array $orderBy
+	 * @param string $limit
+	 * @param string $offset
 	 */
-	public function find($criteria = [], $orderBy = null, $limit = null, $offset = null)
+	public function find($criteria = [], $orderBy = [], $limit = null, $offset = null)
 	{
 		$articleEntity = $this->entity->findBy($criteria, $orderBy, $limit, $offset);
 
 		return $articleEntity;
 	}
+	
 	
 	/**
 	 * Get all entries in pairs
@@ -170,6 +145,7 @@ class BaseRepository extends \Nette\Object /*implements \Kdyby\Persistence\Query
 		return $this->entity->findPairs($criteria, $value, $orderBy, $key);
 	}
 	
+	
 	/**
 	 * Get all entries in pairs
 	 * 
@@ -182,6 +158,7 @@ class BaseRepository extends \Nette\Object /*implements \Kdyby\Persistence\Query
 		return $this->entity->findAssoc($criteria, $key);
 	}
 	
+	
 	/**
 	 * Return count of articles
 	 * 
@@ -193,6 +170,21 @@ class BaseRepository extends \Nette\Object /*implements \Kdyby\Persistence\Query
 		return $this->entity->countBy($criteria);
 	}
 
+	
+	/**
+	 * Remove entities
+	 * 
+	 * @param type $criteria	
+	 */
+	public function remove($criteria = [])
+	{
+		$entities = $this->find($criteria);
+		
+		foreach($entities as $entity) {
+			$this->entityManager->remove($entity);
+		}
+	}
+	
 	
 	/**
 	 * Format string date to DateTime for Doctrine entity
@@ -209,18 +201,47 @@ class BaseRepository extends \Nette\Object /*implements \Kdyby\Persistence\Query
 			return new DateTime(date($format, strtotime($date)));
 		}
 	}
-
+	
+	
 	/**
-	 * Remove entities
+	 * Resort items
 	 * 
-	 * @param type $criteria	criteria
+	 * @param array $criteria
+	 * @param numeric $factor
 	 */
-	public function remove($criteria = [])
+	public function resort($criteria = [], $factor = 1)
 	{
-		$entities = $this->find($criteria);
-		
-		foreach($entities as $entity) {
-			$this->entityManager->remove($entity);
+		$items = $this->find($criteria, ['sort']);
+
+		if (count($items) > 0) {
+			$i = 1;
+			
+			foreach ($items as $item) {
+				if ($factor > 0) {
+					$item->setSort($item->getSort() + $factor);
+				} elseif ($factor < 0) {
+					$item->setSort($item->getSort() - $factor);
+				} elseif ($factor == 0) {
+					$item->setSort($i++);
+				}
+			}
 		}
+		
+		$this->entityManager->flush();
 	}
+	
+	
+	/**
+	 * Get next sort
+	 * 
+	 * @param array $criteria
+	 * @return int
+	 */
+	public function getNextSort($criteria = [])
+	{
+		$count = $this->countBy($criteria);
+		
+		return $count + 1;
+	}
+
 }
