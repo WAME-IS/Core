@@ -27,7 +27,7 @@ class FormFactory extends Control
 	{
 		$form = new Form;
 		
-		$form->setRenderer(new \Tomaj\Form\Renderer\BootstrapVerticalRenderer);
+		$form->setRenderer(new \App\Core\Forms\CustomRenderer);
 		
 		$this->attachFormContainers($form);
 		

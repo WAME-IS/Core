@@ -61,22 +61,33 @@ doctrine:
 webloader:
 	css:
 		frontend:
-			filters:
-				- @jwlCssMinFilter
-			fileFilters:
-				- @lessFilter
-				- @wlCssFilter
-			watchFiles:
-				- {files: ["*.css", "*.less"], from: css}
-				- {files: ["*.css", "*.less"], in: css}
-
-	js:
-		frontend:
-			remoteFiles:
-				- https://nette.github.io/resources/js/netteForms.min.js
+			sourceDir: '%appDir%/../private/stylesheets'
 			files:
-				- %appDir%/../private/javascripts/nette-live-form-validation/live-form-validation.js
+				- wame/custom-bootstrap.less
+				- layout.less
+			fileFilters:
+				- @jwlCssMinFilter
+				- @lessFilter
+#				- @wlCssFilter
+			watchFiles:
+				- {files: ['*.less'], from: wame/}
 
+	js:	
+		frontend:
+			sourceDir: '%appDir%/../private/javascripts'
+			files:
+				- nette.ajax.js
+				- live-form-validation.js
+				- ../components/jquery/js/jquery.min.js
+				- ../components/bootstrap/js/alert.js
+				- ../components/bootstrap/js/button.js
+				- ../components/bootstrap/js/collapse.js
+				- ../components/bootstrap/js/dropdown.js
+				- ../components/bootstrap/js/modal.js
+				- ../components/bootstrap/js/transition.js
+				- main.js
+			fileFilters:
+				- @jwlJsMinFilter
 
 services:
 	router:
@@ -84,8 +95,9 @@ services:
 	database: @Nette\Database\Connection
 
 	# WebLoader
-	wlCssFilter: WebLoader\Filter\CssUrlsFilter(%appDir%/../private/stylesheets/)
+	wlCssFilter: WebLoader\Filter\CssUrlsFilter(%wwwDir%)
 	lessFilter: WebLoader\Filter\LessFilter
 	jwlCssMinFilter: Joseki\Webloader\CssMinFilter
+	jwlJsMinFilter: Joseki\Webloader\JsMinFilter
 
 	formFactory: Wame\Core\Forms\FormFactory
