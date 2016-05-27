@@ -2,7 +2,7 @@
 
 namespace Wame\Core\Repositories;
 
-class TranslatableRepository extends BaseRepository {
+abstract class TranslatableRepository extends BaseRepository {
 
 	/**
 	 * Get one article by criteria
@@ -11,12 +11,14 @@ class TranslatableRepository extends BaseRepository {
 	 * @param array $orderBy
 	 */
 	public function get($criteria = [], $orderBy = []) {
-		parent::get();
 		$qb = $this->entity->createQueryBuilder('a');
 
-		$qb->leftJoin('a.langs', 'l')
-				->whereCriteria($criteria)
-				->autoJoinOrderBy($orderBy);
+		if (!isset($criteria['lang'])) {
+			$criteria['lang'] = $this->lang;
+		}
+
+		$qb->whereCriteria($this->autoPrefixParams($criteria))
+				->autoJoinOrderBy($this->autoPrefixParams($orderBy));
 
 		$entity = $qb->setMaxResults(1)
 				->getQuery()
@@ -89,4 +91,36 @@ class TranslatableRepository extends BaseRepository {
 		}
 	}
 
+	/**
+	 * Can be used to automaticly add correct prefix to language fields.
+	 * 
+	 * @param array $params
+	 * @return array
+	 */
+	private function autoPrefixParams($params) {
+		if ($params && is_array($params)) {
+			$meta = $this->entity->getClassMetadata();
+			foreach (array_keys($params) as $key) {
+				if (!array_key_exists($key, $meta->columnNames)) {
+					//rename key if found in association
+					$this->autoPrefixParamsAssoc($params, $key, $meta->associationMappings['langs']);
+				}
+			}
+		}
+
+		return $params;
+	}
+
+	private function autoPrefixParamsAssoc(&$params, $key, $assoc) {
+		$meta = $this->entityManager->getClassMetadata($assoc['targetEntity']);
+		if (array_key_exists($key, $meta->columnNames)) {
+			$this->autoPrefixParamsRename($params, $key, $assoc['fieldName'] . '.' . $key);
+		}
+	}
+
+	private function autoPrefixParamsRename(&$params, $oldKey, $newKey) {
+		$tmp = $params[$oldKey];
+		unset($params[$oldKey]);
+		$params[$newKey] = $tmp;
+	}
 }
