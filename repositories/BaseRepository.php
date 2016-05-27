@@ -2,40 +2,42 @@
 
 namespace Wame\Core\Repositories;
 
-use Nette\DI\Container;
-use Nette\Utils\DateTime;
-use Kdyby\Doctrine\EntityManager;
-use h4kuna\Gettext\GettextSetup;
-use Nette\Security\User;
-use Wame\UserModule\Entities\UserEntity;
+use h4kuna\Gettext\GettextSetup,
+	Kdyby\Doctrine\EntityManager,
+	Kdyby\Doctrine\EntityRepository,
+	Nette\DI\Container,
+	Nette\Object,
+	Nette\Security\User,
+	Nette\Utils\DateTime,
+	ReflectionClass,
+	Wame\UserModule\Entities\UserEntity;
 
+interface ICrud {
 
-interface ICrud
-{
 	public function create($values);
+
 	public function update($id, $values); // TODO: prerobit na entitu, values bude uz vlozene do entity vo formulari
+
 	public function delete($criteria, $status);
 }
 
+class BaseRepository extends Object /* implements \Kdyby\Persistence\Queryable */ {
 
-class BaseRepository extends \Nette\Object /*implements \Kdyby\Persistence\Queryable*/
-{
 	/** @var array */
 	public $onCreate = [];
-	
+
 	/** @var array */
 	public $onRead = [];
-	
+
 	/** @var array */
 	public $onUpdate = [];
-	
+
 	/** @var array */
 	public $onDelete = [];
-	
-	
+
 	/** @var Container */
 	public $container;
-	
+
 	/** @var EntityManager */
 	public $entityManager;
 
@@ -44,77 +46,66 @@ class BaseRepository extends \Nette\Object /*implements \Kdyby\Persistence\Query
 
 	/** @var User */
 	public $user;
-	
+
 	/** @var string */
 	private $name;
-	
-	/** Entity */
+
+	/** @var EntityRepository */
 	public $entity;
-	
-	/** UserEntity */
+
+	/** @var UserEntity */
 	public $yourUserEntity = null;
 
-	
 	public function __construct(
-		Container $container, 
-		EntityManager $entityManager,
-		GettextSetup $translator,
-		User $user,
-		$entityName = null
+	Container $container, EntityManager $entityManager, GettextSetup $translator, User $user, $entityName = null
 	) {
 		$this->container = $container;
 		$this->entityManager = $entityManager;
 		$this->lang = $translator->getLanguage();
 		$this->user = $user;
-		
+
 		$this->name = $entityName;
-		
+
 		if ($entityName) {
 			$this->entity = $this->entityManager->getRepository($entityName);
 		}
-		
+
 		if ($this->user->isLoggedIn()) {
 			$this->yourUserEntity = $this->entityManager->getRepository(UserEntity::class)->findOneBy(['id' => $this->user->id]);
 		}
 	}
-
 
 	/**
 	 * Get table prefix
 	 * 
 	 * @return string
 	 */
-	public function getPrefix()
-	{
+	public function getPrefix() {
 		return $this->container->parameters['database']['prefix'];
 	}
-	
+
 	/**
 	 * Get class name from namespace
 	 * 
 	 * @param string $namespace
 	 * @return string
 	 */
-	public function getClassName($namespace)
-	{
-		$reflect = new \ReflectionClass($namespace);
-		
+	public function getClassName($namespace) {
+		$reflect = new ReflectionClass($namespace);
+
 		return $reflect->getShortName();
 	}
 
-	
 	/**
 	 * Get one article by criteria
 	 * 
 	 * @param array $criteria
 	 * @param array $orderBy
 	 */
-	public function get($criteria = [], $orderBy = [])
-	{
+	public function get($criteria = [], $orderBy = []) {
 		return $this->entity->findOneBy($criteria, $orderBy);
 	}
-	
-	
+
 	/**
 	 * Get all entries by criteria
 	 * 
@@ -123,14 +114,12 @@ class BaseRepository extends \Nette\Object /*implements \Kdyby\Persistence\Query
 	 * @param string $limit
 	 * @param string $offset
 	 */
-	public function find($criteria = [], $orderBy = [], $limit = null, $offset = null)
-	{
+	public function find($criteria = [], $orderBy = [], $limit = null, $offset = null) {
 		$articleEntity = $this->entity->findBy($criteria, $orderBy, $limit, $offset);
 
 		return $articleEntity;
 	}
-	
-	
+
 	/**
 	 * Get all entries in pairs
 	 * 
@@ -140,12 +129,10 @@ class BaseRepository extends \Nette\Object /*implements \Kdyby\Persistence\Query
 	 * @param String $key		key
 	 * @return Array			entries
 	 */
-	public function findPairs($criteria = [], $value = null, $orderBy = [], $key = 'id')
-	{
+	public function findPairs($criteria = [], $value = null, $orderBy = [], $key = 'id') {
 		return $this->entity->findPairs($criteria, $value, $orderBy, $key);
 	}
-	
-	
+
 	/**
 	 * Get all entries in pairs
 	 * 
@@ -153,39 +140,33 @@ class BaseRepository extends \Nette\Object /*implements \Kdyby\Persistence\Query
 	 * @param String $key		key
 	 * @return Array			entries
 	 */
-	public function findAssoc($criteria = [], $key = 'id')
-	{
+	public function findAssoc($criteria = [], $key = 'id') {
 		return $this->entity->findAssoc($criteria, $key);
 	}
-	
-	
+
 	/**
 	 * Return count of articles
 	 * 
 	 * @param array $criteria	criteria
 	 * @return integer			count
 	 */
-	public function countBy($criteria = [])
-	{
+	public function countBy($criteria = []) {
 		return $this->entity->countBy($criteria);
 	}
 
-	
 	/**
 	 * Remove entities
 	 * 
 	 * @param type $criteria	
 	 */
-	public function remove($criteria = [])
-	{
+	public function remove($criteria = []) {
 		$entities = $this->find($criteria);
-		
-		foreach($entities as $entity) {
+
+		foreach ($entities as $entity) {
 			$this->entityManager->remove($entity);
 		}
 	}
-	
-	
+
 	/**
 	 * Format string date to DateTime for Doctrine entity
 	 * 
@@ -193,29 +174,26 @@ class BaseRepository extends \Nette\Object /*implements \Kdyby\Persistence\Query
 	 * @param string $format
 	 * @return DateTime
 	 */
-	public function formatDate($date, $format = 'Y-m-d H:i:s')
-	{
+	public function formatDate($date, $format = 'Y-m-d H:i:s') {
 		if ($date == 'now') {
 			return new DateTime('now');
 		} else {
 			return new DateTime(date($format, strtotime($date)));
 		}
 	}
-	
-	
+
 	/**
 	 * Resort items
 	 * 
 	 * @param array $criteria
 	 * @param numeric $factor
 	 */
-	public function resort($criteria = [], $factor = 1)
-	{
+	public function resort($criteria = [], $factor = 1) {
 		$items = $this->find($criteria, ['sort']);
 
 		if (count($items) > 0) {
 			$i = 1;
-			
+
 			foreach ($items as $item) {
 				if ($factor > 0) {
 					$item->setSort($item->getSort() + $factor);
@@ -226,21 +204,19 @@ class BaseRepository extends \Nette\Object /*implements \Kdyby\Persistence\Query
 				}
 			}
 		}
-		
+
 		$this->entityManager->flush();
 	}
-	
-	
+
 	/**
 	 * Get next sort
 	 * 
 	 * @param array $criteria
 	 * @return int
 	 */
-	public function getNextSort($criteria = [])
-	{
+	public function getNextSort($criteria = []) {
 		$count = $this->countBy($criteria);
-		
+
 		return $count + 1;
 	}
 
