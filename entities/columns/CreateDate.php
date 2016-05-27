@@ -10,7 +10,7 @@ trait CreateDate
 	 */
 	protected $createDate;
 
-	/**ˇ
+	/**
 	 * @ORM\ManyToOne(targetEntity="\Wame\UserModule\Entities\UserEntity")
 	 * @ORM\JoinColumn(name="create_user_id", referencedColumnName="id", nullable=false)
 	 */
