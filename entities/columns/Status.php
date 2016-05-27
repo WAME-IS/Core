@@ -10,11 +10,15 @@ trait Status
 	protected $status;
 
 	
+	/** get ************************************************************/
+
 	public function getStatus()
 	{
 		return $this->status;
 	}
 
+
+	/** set ************************************************************/
 
 	public function setStatus($status)
 	{

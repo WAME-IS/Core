@@ -10,11 +10,15 @@ trait Lang
     protected $lang;
 
 	
+	/** get ************************************************************/
+
 	public function getLang()
 	{
 		return $this->lang;
 	}
 
+
+	/** set ************************************************************/
 
 	public function setLang($lang)
 	{

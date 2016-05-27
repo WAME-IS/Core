@@ -10,11 +10,15 @@ trait Name
     protected $name;
 
 	
+	/** get ************************************************************/
+
 	public function getName()
 	{
 		return $this->name;
 	}
 
+
+	/** set ************************************************************/
 
 	public function setName($name)
 	{

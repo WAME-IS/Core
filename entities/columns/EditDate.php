@@ -5,6 +5,7 @@ namespace Wame\Core\Entities\Columns;
 trait EditDate
 {
 	/**
+	 * @var DateTime
 	 * @ORM\Column(name="edit_date", type="datetime", nullable=true)
 	 */
 	protected $editDate;
@@ -16,11 +17,20 @@ trait EditDate
 	protected $editUser;
 
 	
+	/** get ************************************************************/
+	
 	public function getEditDate()
 	{
 		return $this->editDate;
 	}
 
+	public function getEditUser()
+	{
+		return $this->editUser;
+	}
+
+
+	/** set ************************************************************/
 
 	public function setEditDate($editDate)
 	{
@@ -29,13 +39,6 @@ trait EditDate
 		return $this;
 	}
 	
-	
-	public function getEditUser()
-	{
-		return $this->editUser;
-	}
-
-
 	public function setEditUser($editUser)
 	{
 		$this->editUser = $editUser;

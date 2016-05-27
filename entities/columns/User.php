@@ -11,11 +11,15 @@ trait User
 	protected $user;
 
 	
+	/** get ************************************************************/
+
 	public function getUser()
 	{
 		return $this->user;
 	}
 
+
+	/** set ************************************************************/
 
 	public function setUser($user)
 	{

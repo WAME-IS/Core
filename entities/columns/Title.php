@@ -10,11 +10,15 @@ trait Title
     protected $title;
 
 	
+	/** get ************************************************************/
+
 	public function getTitle()
 	{
 		return $this->title;
 	}
 
+
+	/** set ************************************************************/
 
 	public function setTitle($title)
 	{
