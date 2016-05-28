@@ -2,6 +2,9 @@
 
 namespace Wame\Core\Repositories;
 
+use Doctrine\ORM\NoResultException,
+	Elastica\Query\AbstractQuery;
+
 abstract class TranslatableRepository extends BaseRepository {
 
 	/**
@@ -20,14 +23,16 @@ abstract class TranslatableRepository extends BaseRepository {
 		$qb->whereCriteria($this->autoPrefixParams($criteria))
 				->autoJoinOrderBy($this->autoPrefixParams($orderBy));
 
-		$entity = $qb->setMaxResults(1)
-				->getQuery()
-				->getSingleResult();
+		try {
+			$entity = $qb->setMaxResults(1)
+					->getQuery()
+					->getSingleResult();
 
-		if ($entity) {
 			$entity->setCurrentLang($this->lang);
+			return $entity;
+		} catch (NoResultException $e) {
+			return null;
 		}
-		return $entity;
 	}
 
 	/**
@@ -39,9 +44,29 @@ abstract class TranslatableRepository extends BaseRepository {
 	 * @param string $offset
 	 */
 	public function find($criteria = [], $orderBy = [], $limit = null, $offset = null) {
-		$articleEntity = $this->entity->findBy($criteria, $orderBy, $limit, $offset);
+		$qb = $this->entity->createQueryBuilder('a');
 
-		return $articleEntity;
+		if (!isset($criteria['lang'])) {
+			$criteria['lang'] = $this->lang;
+		}
+
+		$qb->whereCriteria($this->autoPrefixParams($criteria))
+				->autoJoinOrderBy($this->autoPrefixParams($orderBy));
+
+		if ($limit) {
+			$qb->setMaxResults($limit);
+		}
+		if ($offset) {
+			$qb->setFirstResult($offset);
+		}
+
+		$result = $qb->getQuery()
+				->getResult();
+
+		foreach ($result as $entity) {
+			$entity->setCurrentLang($this->lang);
+		}
+		return $result;
 	}
 
 	/**
@@ -53,8 +78,24 @@ abstract class TranslatableRepository extends BaseRepository {
 	 * @param String $key		key
 	 * @return Array			entries
 	 */
-	public function findPairs($criteria = [], $value = null, $orderBy = [], $key = 'id') {
-		return $this->entity->findPairs($criteria, $value, $orderBy, $key);
+	public function findPairs($criteria = [], $value = null, $orderBy = [], $key = NULL) {
+
+		if (!$key) {
+			$key = $this->entity->getClassMetadata()->getSingleIdentifierFieldName();
+		}
+
+		$query = $this->entity->createQueryBuilder('e')
+				->whereCriteria($this->autoPrefixParams($criteria))
+				->select("e.$value", "e.$key")
+				->resetDQLPart('from')->from($this->getEntityName(), 'e', 'e.' . $key)
+				->autoJoinOrderBy($this->autoPrefixParams((array) $orderBy))
+				->getQuery();
+
+		return array_map(function ($row) {
+			$entity = reset($row);
+			// ? $entity->setCurrentLang($this->lang);
+			return $entity;
+		}, $query->getResult(AbstractQuery::HYDRATE_ARRAY));
 	}
 
 	/**
@@ -65,7 +106,15 @@ abstract class TranslatableRepository extends BaseRepository {
 	 * @return Array			entries
 	 */
 	public function findAssoc($criteria = [], $key = 'id') {
-		return $this->entity->findAssoc($criteria, $key);
+		$qb = $this->entity->createQueryBuilder('e')
+						->whereCriteria($this->autoPrefixParams($criteria))
+						->resetDQLPart('from')->from($this->getEntityName(), 'e', 'e.' . $key);
+
+		$result = $qb->getQuery()->getResult();
+		foreach ($result as $entity) {
+			$entity->setCurrentLang($this->lang);
+		}
+		return $result;
 	}
 
 	/**
@@ -75,20 +124,10 @@ abstract class TranslatableRepository extends BaseRepository {
 	 * @return integer			count
 	 */
 	public function countBy($criteria = []) {
-		return $this->entity->countBy($criteria);
-	}
-
-	/**
-	 * Remove entities
-	 * 
-	 * @param type $criteria	
-	 */
-	public function remove($criteria = []) {
-		$entities = $this->find($criteria);
-
-		foreach ($entities as $entity) {
-			$this->entityManager->remove($entity);
-		}
+		return (int) $this->createQueryBuilder('e')
+						->whereCriteria($this->autoPrefixParams($criteria))
+						->select('COUNT(e)')
+						->getQuery()->getSingleScalarResult();
 	}
 
 	/**
@@ -123,4 +162,5 @@ abstract class TranslatableRepository extends BaseRepository {
 		unset($params[$oldKey]);
 		$params[$newKey] = $tmp;
 	}
+
 }
