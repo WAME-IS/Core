@@ -1,6 +1,6 @@
 <?php 
 
-namespace App\Core\Components;
+namespace Wame\Core\Components;
 
 use Nette\Application\UI;
 use Wame\ComponentModule\Entities\ComponentInPositionEntity;
@@ -23,7 +23,7 @@ class BaseControl extends UI\Control
 	 * Set component name
 	 * 
 	 * @param string $componentName
-	 * @return \App\AdminModule\Components\BaseControl
+	 * @return \Wame\AdminModule\Components\BaseControl
 	 */
 	public function setComponentName($componentName)
 	{
@@ -37,18 +37,20 @@ class BaseControl extends UI\Control
 	 * Set component in position
 	 * 
 	 * @param ComponentInPositionEntity $componentInPosition
-	 * @return \App\AdminModule\Components\BaseControl
+	 * @return \Wame\AdminModule\Components\BaseControl
 	 */
 	public function setComponentInPosition($componentInPosition)
 	{
-		$this->componentInPosition = $componentInPosition;
-		
-		if ($componentInPosition->component->getParameter('template')) {
-			$this->setTemplateFile($componentInPosition->component->getParameter('template'));
-		}
-		
-		if ($componentInPosition->getParameter('template')) {
-			$this->setTemplateFile($componentInPosition->getParameter('template'));
+		if (isset($componentInPosition->component)) {
+			$this->componentInPosition = $componentInPosition;
+
+			if ($componentInPosition->component->getParameter('template')) {
+				$this->setTemplateFile($componentInPosition->component->getParameter('template'));
+			}
+
+			if ($componentInPosition->getParameter('template')) {
+				$this->setTemplateFile($componentInPosition->getParameter('template'));
+			}
 		}
 		
 		return $this;
@@ -59,7 +61,7 @@ class BaseControl extends UI\Control
 	 * Set template file
 	 * 
 	 * @param string $template
-	 * @return \App\AdminModule\Components\BaseControl
+	 * @return \Wame\AdminModule\Components\BaseControl
 	 */
 	public function setTemplateFile($template)
 	{
@@ -72,12 +74,12 @@ class BaseControl extends UI\Control
 	/**
 	 * Get template file path
 	 * 
-	 * @return \App\Core\Components\BaseControl
+	 * @return \Wame\Core\Components\BaseControl
 	 */
 	public function getTemplateFile()
 	{
 		$filePath = dirname($this->getReflection()->getFileName());
-		$dir = explode('/vendor/wame/', $filePath)[1];
+		$dir = explode(DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR . 'wame' . DIRECTORY_SEPARATOR, $filePath)[1];
 		
 		$file = $this->findTemplate($dir);
 		
@@ -97,7 +99,7 @@ class BaseControl extends UI\Control
 	 * @param string $dir
 	 * @return string
 	 */
-	private function findTemplate($dir)
+	public function findTemplate($dir)
 	{
 		$file = null;
 		$dirs = [];
