@@ -141,4 +141,96 @@ class BaseControl extends UI\Control
 		return $template;
 	}
 	
+	
+	/**
+	 * Retrun component title
+	 * 
+	 * @return string
+	 */
+	public function getTitle()
+	{
+		return $this->componentInPosition->component->langs[$this->parent->lang]->getTitle();
+	}
+	
+	
+	/**
+	 * Retrun component description
+	 * 
+	 * @return string
+	 */
+	public function getDescription()
+	{
+		return $this->componentInPosition->component->langs[$this->parent->lang]->getDescription();
+	}
+	
+	
+	/**
+	 * Retrun component name
+	 * 
+	 * @return string
+	 */
+	public function getComponentName()
+	{
+		return $this->componentInPosition->component->getComponentName();
+	}
+	
+	
+	/**
+	 * Retrun component type
+	 * 
+	 * @return string
+	 */
+	public function getType()
+	{
+		return $this->componentInPosition->component->getType();
+	}
+	
+	
+	/**
+	 * Retrun component parameters
+	 * 
+	 * @return array
+	 */
+	public function getComponentParameters()
+	{
+		$position = $this->componentInPosition->position->getParameters();
+		$component = $this->componentInPosition->component->getParameters();
+		
+		$parameters = [];
+		
+		foreach ($position as $key => $value) {
+			if ($value != '') {
+				$parameters[$key] = $value;
+			}
+		}
+		
+		return array_replace($component, $parameters);
+	}
+	
+	
+	/**
+	 * Retrun component parameter
+	 * 
+	 * @return string
+	 */
+	public function getComponentParameter($parameter)
+	{
+		if (isset($this->getComponentParameters()[$parameter])) {
+			return $this->getComponentParameters()[$parameter];
+		} else {
+			return null;
+		}
+	}
+	
+	
+	/**
+	 * Retrun actual lang
+	 * 
+	 * @return string
+	 */
+	public function getLang()
+	{
+		return $this->parent->lang;
+	}
+	
 }
