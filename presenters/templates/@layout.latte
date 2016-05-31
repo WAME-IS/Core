@@ -6,14 +6,9 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 
 		<title>{ifset #title}{include title|striptags} | {/ifset}CMS WAME Admin</title>
-		
-		{* jQuery & jQueryUI *}
-        <link rel="stylesheet" href="https://code.jquery.com/ui/1.11.3/themes/smoothness/jquery-ui.css">
-		<script src="https://code.jquery.com/jquery-1.12.3.min.js" integrity="sha256-aaODHAgvwQW1bFOGXMeX+pC4PZIPsvn2h1sArYOhgXQ=" crossorigin="anonymous"></script>
-		<script src="https://code.jquery.com/ui/1.11.4/jquery-ui.min.js" integrity="sha256-xNjb53/rY+WmG+4L6tTl9m6PpqknWZvRt0rO1SRnJzw=" crossorigin="anonymous"></script>
 
 		{block head}
-			{*control css*}
+			{control css}
 		{/block}
 
 		<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
@@ -38,7 +33,7 @@
 		</div>
 
 		{block scripts}
-			{*control js*}
+			{control js}
 		{/block}
 	</body>
 </html>
