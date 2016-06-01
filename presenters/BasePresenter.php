@@ -6,6 +6,7 @@ use Nette;
 
 use Wame\HeadControl\HeadControl;
 use Wame\PositionModule\Components\IPositionControlFactory;
+use Wame\UserModule\Repositories\UserRepository;
 
 abstract class BasePresenter extends Nette\Application\UI\Presenter
 {
@@ -26,7 +27,21 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
 
 	/** @var IPositionControlFactory @inject */
 	public $IPositionControlFactory;
-
+	
+	/** @var UserRepository @inject */
+	public $userRepository;
+	
+	/** @var UserEntity */
+	public $yourUserEntity;
+	
+	
+	protected function startup() 
+	{
+		parent::startup();
+		
+		$this->yourUserEntity = $this->userRepository->get(['id' => $this->user->id]);
+	}
+	
 	
 	/** @return CssLoader */
 	protected function createComponentCss()
