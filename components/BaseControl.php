@@ -41,6 +41,8 @@ class BaseControl extends UI\Control
 	 */
 	public function setComponentInPosition($componentInPosition)
 	{
+		$this->setTemplateFile(null);
+		
 		if (isset($componentInPosition->component)) {
 			$this->componentInPosition = $componentInPosition;
 
