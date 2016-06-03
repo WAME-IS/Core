@@ -4,10 +4,12 @@ namespace Wame\Core\Repositories;
 
 use Nette\DI\Container;
 use Nette\Utils\DateTime;
+use Nette\Security\User;
 use Kdyby\Doctrine\EntityManager;
 use h4kuna\Gettext\GettextSetup;
-use Nette\Security\User;
+
 use Wame\UserModule\Entities\UserEntity;
+use Wame\Utils\Discriminator\Annotation;
 
 
 interface ICrud
@@ -31,7 +33,6 @@ class BaseRepository extends \Nette\Object /*implements \Kdyby\Persistence\Query
 	
 	/** @var array */
 	public $onDelete = [];
-	
 	
 	/** @var Container */
 	public $container;
@@ -104,7 +105,7 @@ class BaseRepository extends \Nette\Object /*implements \Kdyby\Persistence\Query
 
 	
 	/**
-	 * Get one article by criteria
+	 * Get one entity by criteria
 	 * 
 	 * @param array $criteria
 	 * @param array $orderBy
@@ -125,9 +126,7 @@ class BaseRepository extends \Nette\Object /*implements \Kdyby\Persistence\Query
 	 */
 	public function find($criteria = [], $orderBy = [], $limit = null, $offset = null)
 	{
-		$articleEntity = $this->entity->findBy($criteria, $orderBy, $limit, $offset);
-
-		return $articleEntity;
+		return $this->entity->findBy($criteria, $orderBy, $limit, $offset);
 	}
 	
 	
@@ -160,7 +159,7 @@ class BaseRepository extends \Nette\Object /*implements \Kdyby\Persistence\Query
 	
 	
 	/**
-	 * Return count of articles
+	 * Return count of entities
 	 * 
 	 * @param array $criteria	criteria
 	 * @return integer			count
