@@ -17,6 +17,9 @@ class FormFactory extends Control
 	/** @var array */
 	public $removeFormContainers = [];
 	
+	/** @var string */
+	public $actionForm;
+	
 
 	/**
 	 * Create Form
@@ -28,6 +31,8 @@ class FormFactory extends Control
 		$form = new Form;
 		
 		$form->setRenderer(new \Tomaj\Form\Renderer\BootstrapVerticalRenderer);
+
+		$this->getActionForm($form);
 		
 		$this->attachFormContainers($form);
 		
@@ -131,6 +136,36 @@ class FormFactory extends Control
 			foreach ($containers as $container) {
 				$form->addComponent($container['service'], $container['name']);
 			}
+		}
+		
+		return $form;
+	}
+	
+	
+	/**
+	 * Set action form
+	 * 
+	 * @param string $action
+	 */
+	public function setActionForm($action)
+	{
+		$this->actionForm = $action;
+		
+		return $this;
+	}
+	
+	
+	/**
+	 * Get action form
+	 * 
+	 * @param Form $form
+	 * @return Form
+	 * @throws \Exception
+	 */
+	private function getActionForm(Form $form)
+	{
+		if ($this->actionForm) {
+			$form->setAction($this->actionForm);
 		}
 		
 		return $form;
