@@ -81,7 +81,7 @@ class BaseControl extends UI\Control
 	public function getTemplateFile()
 	{
 		$filePath = dirname($this->getReflection()->getFileName());
-		$dir = explode(DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR . 'wame' . DIRECTORY_SEPARATOR, $filePath)[1];
+		$dir = explode(DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR . 'wame' . DIRECTORY_SEPARATOR, $filePath, 2)[1];
 		
 		$file = $this->findTemplate($dir);
 		
