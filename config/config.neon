@@ -73,6 +73,8 @@ webloader:
 	js:
 		frontend:
 			remoteFiles:
+				- http://code.jquery.com/jquery-1.9.1.js
+				- http://code.jquery.com/ui/1.10.1/jquery-ui.js
 				- https://nette.github.io/resources/js/netteForms.min.js
 			files:
 				- %appDir%/../private/javascripts/nette-live-form-validation/live-form-validation.js
