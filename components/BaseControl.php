@@ -145,6 +145,17 @@ class BaseControl extends UI\Control
 	
 	
 	/**
+	 * Render methods
+	 */
+	public function componentRender()
+	{
+		$this->getTemplateFile();
+		
+		$this->template->render();
+	}
+	
+	
+	/**
 	 * Retrun component title
 	 * 
 	 * @return string
@@ -234,6 +245,7 @@ class BaseControl extends UI\Control
 	{
 		return $this->parent->lang;
 	}
+	
 	
 	/**
 	 * Get class name from namespace
