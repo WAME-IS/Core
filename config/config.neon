@@ -78,6 +78,7 @@ webloader:
 				- https://nette.github.io/resources/js/netteForms.min.js
 			files:
 				- %appDir%/../private/javascripts/nette-live-form-validation/live-form-validation.js
+				- %appDir%/../private/javascripts/wame-add-param-to-url/add-param-to-url.js
 
 
 services:
