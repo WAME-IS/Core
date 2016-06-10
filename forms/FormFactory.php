@@ -5,6 +5,8 @@ namespace Wame\Core\Forms;
 use Nette\Utils\DateTime;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
+use Nette\Forms\Container;
+
 
 class FormFactory extends Control
 {
@@ -95,6 +97,43 @@ class FormFactory extends Control
 				unset($this->formContainers[$name]);
 			}
 		}
+	}
+	
+	
+	/**
+	 * Add form containers
+	 * 
+	 * @param array $containers
+	 * @return array
+	 */
+	public function addFormContainers($containers)
+	{
+		$this->formContainers = array_merge($containers, $this->formContainers);
+		
+		return $this;
+	}
+	
+	
+	/**
+	 * Return form containers
+	 * 
+	 * @return array
+	 */
+	public function getFormContainers()
+	{
+		return $this->formContainers;
+	}
+	
+	
+	/**
+	 * Get form container
+	 * 
+	 * @param string $name
+	 * @return Container
+	 */
+	public function getFormContainer($name)
+	{
+		return $this->getFormContainers()[$name];
 	}
 	
 	

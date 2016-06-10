@@ -83,6 +83,7 @@ webloader:
 				- %appDir%/../private/javascripts/nette-ajax/nette.ajax.js
 				- %appDir%/../private/javascripts/nette-live-form-validation/live-form-validation.js
 				- %appDir%/../private/javascripts/main.js
+				- %appDir%/../private/javascripts/wame-add-param-to-url/add-param-to-url.js
 
 
 services:
