@@ -150,7 +150,8 @@ class BaseControl extends UI\Control
 	public function componentRender()
 	{
 		$this->getTemplateFile();
-		
+
+		$this->template->lang = $this->parent->getParameter('lang');
 		$this->template->render();
 	}
 	
