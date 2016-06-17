@@ -78,6 +78,7 @@ webloader:
 			remoteFiles:
 				- http://code.jquery.com/jquery-1.9.1.js
 				- http://code.jquery.com/ui/1.10.1/jquery-ui.js
+				- https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js
 				- https://nette.github.io/resources/js/netteForms.min.js
 			files:
 				- %appDir%/../private/javascripts/nette-ajax/nette.ajax.js
