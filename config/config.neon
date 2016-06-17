@@ -86,7 +86,6 @@ webloader:
 				- %appDir%/../private/javascripts/main.js
 				- %appDir%/../private/javascripts/wame-add-param-to-url/add-param-to-url.js
 
-
 services:
 	router:
 		class: Wame\Core\Router
