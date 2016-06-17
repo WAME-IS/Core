@@ -9,18 +9,8 @@ use Kdyby\Doctrine\EntityManager;
 use h4kuna\Gettext\GettextSetup;
 
 use Wame\UserModule\Entities\UserEntity;
-use Wame\Utils\Discriminator\Annotation;
 
-
-interface ICrud
-{
-	public function create($values);
-	public function update($id, $values); // TODO: prerobit na entitu, values bude uz vlozene do entity vo formulari
-	public function delete($criteria, $status);
-}
-
-
-class BaseRepository extends \Nette\Object /*implements \Kdyby\Persistence\Queryable*/
+class BaseRepository extends \Nette\Object
 {
 	/** @var array */
 	public $onCreate = [];
@@ -46,14 +36,14 @@ class BaseRepository extends \Nette\Object /*implements \Kdyby\Persistence\Query
 	/** @var User */
 	public $user;
 	
-	/** @var string */
-	private $name;
-	
 	/** Entity */
 	public $entity;
 	
 	/** UserEntity */
 	public $yourUserEntity = null;
+	
+	/** @var string */
+	private $name;
 
 	
 	public function __construct(
@@ -83,7 +73,7 @@ class BaseRepository extends \Nette\Object /*implements \Kdyby\Persistence\Query
 	/**
 	 * Get table prefix
 	 * 
-	 * @return string
+	 * @return string	Returns prefix
 	 */
 	public function getPrefix()
 	{
@@ -93,8 +83,8 @@ class BaseRepository extends \Nette\Object /*implements \Kdyby\Persistence\Query
 	/**
 	 * Get class name from namespace
 	 * 
-	 * @param string $namespace
-	 * @return string
+	 * @param string $namespace	namespace
+	 * @return string	Returns class name
 	 */
 	public function getClassName($namespace)
 	{
@@ -107,8 +97,9 @@ class BaseRepository extends \Nette\Object /*implements \Kdyby\Persistence\Query
 	/**
 	 * Get one entity by criteria
 	 * 
-	 * @param array $criteria
-	 * @param array $orderBy
+	 * @param array $criteria	criteria
+	 * @param array $orderBy	order by
+	 * @return BaseEntity		entity
 	 */
 	public function get($criteria = [], $orderBy = [])
 	{
@@ -119,10 +110,10 @@ class BaseRepository extends \Nette\Object /*implements \Kdyby\Persistence\Query
 	/**
 	 * Get all entries by criteria
 	 * 
-	 * @param array $criteria
-	 * @param array $orderBy
-	 * @param string $limit
-	 * @param string $offset
+	 * @param array $criteria	criteria
+	 * @param array $orderBy	order by
+	 * @param string $limit		limit
+	 * @param string $offset	offset
 	 */
 	public function find($criteria = [], $orderBy = [], $limit = null, $offset = null)
 	{
@@ -173,7 +164,7 @@ class BaseRepository extends \Nette\Object /*implements \Kdyby\Persistence\Query
 	/**
 	 * Remove entities
 	 * 
-	 * @param type $criteria	
+	 * @param type $criteria	criteria
 	 */
 	public function remove($criteria = [])
 	{
@@ -188,11 +179,11 @@ class BaseRepository extends \Nette\Object /*implements \Kdyby\Persistence\Query
 	/**
 	 * Format string date to DateTime for Doctrine entity
 	 * 
-	 * @param DateTime $date
-	 * @param string $format
-	 * @return DateTime
+	 * @param DateTime $date	date
+	 * @param string $format	format
+	 * @return DateTime			date
 	 */
-	public function formatDate($date, $format = 'Y-m-d H:i:s')
+	public function formatDate($date, $format = 'Y-m-d H:i:s') // TODO: presunut do utils a vyhodit z repository?!
 	{
 		if ($date == 'now') {
 			return new DateTime('now');
@@ -205,8 +196,8 @@ class BaseRepository extends \Nette\Object /*implements \Kdyby\Persistence\Query
 	/**
 	 * Resort items
 	 * 
-	 * @param array $criteria
-	 * @param numeric $factor
+	 * @param array $criteria	criteria
+	 * @param numeric $factor	factor
 	 */
 	public function resort($criteria = [], $factor = 1)
 	{
@@ -233,8 +224,8 @@ class BaseRepository extends \Nette\Object /*implements \Kdyby\Persistence\Query
 	/**
 	 * Get next sort
 	 * 
-	 * @param array $criteria
-	 * @return int
+	 * @param array $criteria	criteria
+	 * @return int	Returns index of next
 	 */
 	public function getNextSort($criteria = [])
 	{
