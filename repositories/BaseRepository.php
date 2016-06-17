@@ -168,6 +168,25 @@ class BaseRepository extends \Nette\Object /*implements \Kdyby\Persistence\Query
 	{
 		return $this->entity->countBy($criteria);
 	}
+	
+	
+	/**
+	 * Get rows by key
+	 * 
+	 * @param array $criteria
+	 * @param string $key
+	 * @return array
+	 */
+	public function getList($criteria = [], $key = 'id')
+	{
+		$return = [];
+
+		foreach ($rows = $this->find($criteria) as $row) {
+			$return[$row->$key] = $row;
+		}
+		
+		return $return;
+	}
 
 	
 	/**
