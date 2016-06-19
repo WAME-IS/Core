@@ -26,12 +26,6 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter {
 	/** @var IPositionControlFactory @inject */
 	public $IPositionControlFactory;
 
-	/**
-	 * Event of type LinkEvent
-	 * @var callable[]
-	 */
-	public $onLink;
-
 	/** @return CssLoader */
 	protected function createComponentCss() {
 		return $this->webLoader->createCssLoader('frontend');
@@ -183,12 +177,6 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter {
 		$template->id = $this->id;
 
 		return $template;
-	}
-
-	public function link($destination, $args = array()) {
-		$event = new \Wame\Core\LinkEvent($destination, $args);
-		$this->onLink($event);
-		return parent::link($event->getDestination(), $event->getArgs());
 	}
 
 	protected function shutdown($response) {
