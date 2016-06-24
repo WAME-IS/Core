@@ -3,8 +3,8 @@
 namespace App\Core\Presenters;
 
 use Nette;
-
 use Wame\HeadControl\HeadControl;
+use Wame\DynamicObject\Components\IFormControlFactory;
 use Wame\PositionModule\Components\IPositionControlFactory;
 use Wame\UserModule\Repositories\UserRepository;
 
@@ -24,6 +24,9 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
 	
 	/** @var HeadControl @inject */
 	public $headControl;
+
+	/** @var IFormControlFactory @inject */
+	public $IFormControlFactory;
 
 	/** @var IPositionControlFactory @inject */
 	public $IPositionControlFactory;
@@ -55,6 +58,7 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
 		return $this->webLoader->createJavaScriptLoader('frontend');
 	}
 
+
 	// TODO: presunut do global component loadera
 	public function createComponentHeadControl()
 	{
@@ -72,6 +76,19 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
 		$control = $this->IPositionControlFactory->create();
 	
 		return $control;
+	}
+
+	
+	/**
+	 * Form control
+	 * 
+	 * @return IFormControlFactory
+	 */
+	protected function createComponentForm()
+	{
+		return new \Nette\Application\UI\Multiplier(function ($formName) {
+			return $this->IFormControlFactory->create($formName);
+		});
 	}
 	
 	
@@ -91,6 +108,7 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
 
 		return $module . 'Module';
 	}
+	
 
 	/**
 	* Return custom template
@@ -107,6 +125,7 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
 
 		return $template;
 	}
+	
 
 	/**
 	* Return template file
@@ -115,7 +134,7 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
 	* 
 	* @return array
 	*/
-	public function formatTemplateFiles()
+	public function formatTemplateFiles($way = '')
 	{
 		$name = $this->getName();
 		$presenter = substr($name, strrpos(':' . $name, ':'));
@@ -126,10 +145,10 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
 
 		$dirs = [];
 
-		$dirs[] = APP_PATH . '/' . $module . '/presenters/templates';
+		$dirs[] = APP_PATH . '/' . $module . $way . '/presenters/templates';
 
 		if ($this->customTemplate) {
-			$dirs[] = TEMPLATES_PATH . '/' . $this->customTemplate . '/' . $module . '/presenters/templates';
+			$dirs[] = TEMPLATES_PATH . '/' . $this->customTemplate . '/' . $module . $way . '/presenters/templates';
 		}
 
 		$dirs[] = $dir . '/templates';
@@ -142,6 +161,7 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
 
 		return $paths;
 	}
+	
 
 	/**
 	* Return layout file
@@ -150,7 +170,7 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
 	* 
 	* @return array
 	*/
-	public function formatLayoutTemplateFiles()
+	public function formatLayoutTemplateFiles($modulePath = 'Core', $way = '')
 	{
 		$name = $this->getName();
 		$presenter = substr($name, strrpos(':' . $name, ':'));
@@ -162,10 +182,10 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
 
 		$dirs = [];
 
-		$dirs[] = APP_PATH . '/' . $module . '/presenters/templates';
+		$dirs[] = APP_PATH . '/' . $module . $way . '/presenters/templates';
 
 		if ($this->customTemplate) {
-			$dirs[] = TEMPLATES_PATH . '/' . $this->customTemplate . '/' . $module . '/presenters/templates';
+			$dirs[] = TEMPLATES_PATH . '/' . $this->customTemplate . '/' . $module . $way . '/presenters/templates';
 		}
 
 		$dirs[] = $dir . '/templates';
@@ -181,16 +201,17 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
 			} while ($dir && ($name = substr($name, 0, strrpos($name, ':'))));
 		}
 
-		array_push($list, APP_PATH . '/Core/presenters/templates/@layout.latte');
+		array_push($list, APP_PATH . '/' . $modulePath . '/presenters/templates/@layout.latte');
 
 		if ($this->customTemplate) {
-			array_push($list, TEMPLATES_PATH . '/' . $this->customTemplate . '/Core/presenters/templates/@layout.latte');
+			array_push($list, TEMPLATES_PATH . '/' . $this->customTemplate . '/' . $modulePath . '/presenters/templates/@layout.latte');
 		}
 
-		array_push($list, VENDOR_PATH . '/' . PACKAGIST_NAME . '/Core/presenters/templates/@layout.latte');
+		array_push($list, VENDOR_PATH . '/' . PACKAGIST_NAME . '/' . $modulePath . '/presenters/templates/@layout.latte');
 
 		return $list;
 	}
+	
 	
 	/**
      * Create template
@@ -206,6 +227,20 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
         
         return $template;
     }
+	
+
+	/**
+	 * Format DateTime to string
+	 * 
+	 * @param \DateTime $date
+	 * @param string $format
+	 * @return string
+	 */
+	public function formatDate($date, $format = 'Y-m-d H:i:s')
+	{
+		return $date->format($format);
+	}
+	
 	
 	protected function shutdown($response) 
 	{
