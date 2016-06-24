@@ -191,6 +191,10 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
 		$dirs[] = $dir . '/templates';
 
 		$list = [];
+		
+		if ($this->isAjax()) {
+			$list[] = __DIR__ . '/templates/@modalLayout.latte';
+		}
 
 		foreach ($dirs as $dir) {
 			array_push($list, "$dir/$presenter/@$layout.latte", "$dir/$presenter.@$layout.latte");
