@@ -49,13 +49,13 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
 	/** @return CssLoader */
 	protected function createComponentCss()
 	{
-		return $this->webLoader->createCssLoader('frontend');
+		return $this->webLoader->createCssLoader('default');
 	}
 
 	/** @return JavaScriptLoader */
 	protected function createComponentJs()
 	{
-		return $this->webLoader->createJavaScriptLoader('frontend');
+		return $this->webLoader->createJavaScriptLoader('default');
 	}
 
 
