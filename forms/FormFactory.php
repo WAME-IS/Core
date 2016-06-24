@@ -142,7 +142,7 @@ class FormFactory extends Control
 	 * 
 	 * @return array
 	 */
-	private function sortFormContainers()
+	public function sortFormContainers()
 	{
 		$this->removeFormContainers();
 
