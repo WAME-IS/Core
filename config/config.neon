@@ -33,6 +33,7 @@ extensions:
     doctrine: Kdyby\Doctrine\DI\OrmExtension
     doctrineExtension: Kappa\Doctrine\DI\DoctrineExtension
     doctrineMPTT: Kappa\DoctrineMPTT\DI\DoctrineMPTTExtension
+    dynamicDiscriminatorMap: IPub\DoctrineDynamicDiscriminatorMap\DI\DoctrineDynamicDiscriminatorMapExtension
 
 
 database:
