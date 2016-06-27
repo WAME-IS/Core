@@ -171,8 +171,10 @@ class BaseRepository extends \Nette\Object
 	public function getList($criteria = [], $key = 'id')
 	{
 		$return = [];
+		
+		$rows = $this->find($criteria);
 
-		foreach ($rows = $this->find($criteria) as $row) {
+		foreach ($rows as $row) {
 			$return[$row->$key] = $row;
 		}
 		

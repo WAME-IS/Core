@@ -3,98 +3,108 @@
 # https://nette.org/security-warning
 #
 parameters:
-	database:
-		prefix: 'wame_'
+    database:
+        prefix: 'wame_'
 
 php:
-	date.timezone: Europe/Bratislava
-
+    date.timezone: Europe/Bratislava
 
 nette:
-	container:
-		debugger: TRUE
-
+    container:
+        debugger: TRUE
 
 application:
-	errorPresenter: Error
-	catchExceptions: FALSE
-	mapping:
-		*: App\*Module\Presenters\*Presenter
+    errorPresenter: Error
+    catchExceptions: FALSE
+    mapping:
+        *: App\*Module\Presenters\*Presenter
 
 
 session:
-	expiration: 14 days
+    expiration: 14 days
 
 
 extensions:
-	webloader: WebLoader\Nette\Extension
-	gettextLatteExtension: h4kuna\Gettext\DI\GettextLatteExtension
-	console: Kdyby\Console\DI\ConsoleExtension
-	events: Kdyby\Events\DI\EventsExtension
-	annotations: Kdyby\Annotations\DI\AnnotationsExtension
-	doctrine: Kdyby\Doctrine\DI\OrmExtension
-	doctrineExtension: Kappa\Doctrine\DI\DoctrineExtension
-	doctrineMPTT: Kappa\DoctrineMPTT\DI\DoctrineMPTTExtension
+    webloader: WebLoader\Nette\Extension
+    gettextLatteExtension: h4kuna\Gettext\DI\GettextLatteExtension
+    console: Kdyby\Console\DI\ConsoleExtension
+    events: Kdyby\Events\DI\EventsExtension
+    annotations: Kdyby\Annotations\DI\AnnotationsExtension
+    doctrine: Kdyby\Doctrine\DI\OrmExtension
+    doctrineExtension: Kappa\Doctrine\DI\DoctrineExtension
+    doctrineMPTT: Kappa\DoctrineMPTT\DI\DoctrineMPTTExtension
 
 
 database:
-	dsn: '%database.driver%:host=%database.host%;port=%database.port%;dbname=%database.dbname%'
-	user: %database.user%
-	password: %database.password%
-	options:
-		lazy: yes
+    dsn: '%database.driver%:host=%database.host%;port=%database.port%;dbname=%database.dbname%'
+    user: %database.user%
+    password: %database.password%
+    options:
+        lazy: yes
 
 
 doctrine:
-	driver: %database.driver%
-	host: %database.host%
-	unix_socket: %database.unix_socket%
-	dbname: %database.dbname%
-	user: %database.user%
-	password: %database.password%
-	port: %database.port%
-	metadata:
-		App: %appDir%
-		Wame\Core\Entities: %appDir%/../vendor/wame/Core/entities
+    driver: %database.driver%
+    host: %database.host%
+    unix_socket: %database.unix_socket%
+    dbname: %database.dbname%
+    user: %database.user%
+    password: %database.password%
+    port: %database.port%
+    metadata:
+        App: %appDir%
+        Wame\Core\Entities: %appDir%/../vendor/wame/Core/entities
 
 
 webloader:
-	css:
-		frontend:
-			remoteFiles:
-				- https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css
-				- https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css
-			filters:
-				- @jwlCssMinFilter
-			fileFilters:
-				- @lessFilter
-				- @wlCssFilter
-			watchFiles:
-				- {files: ["*.css", "*.less"], from: css}
-				- {files: ["*.css", "*.less"], in: css}
+    css:
+        default:
+            sourceDir: '%appDir%/../private/stylesheets'
+            remoteFiles:
+                - https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css
+                - https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css
+            files:
+                - wame/custom-bootstrap.less
+            fileFilters:
+                - @lessFilter
+                - @jwlCssMinFilter
+            watchFiles:
+                - {files: ['*.less'], from: wame/}
 
-	js:
-		frontend:
-			remoteFiles:
-				- http://code.jquery.com/jquery-1.9.1.js
-				- http://code.jquery.com/ui/1.10.1/jquery-ui.js
-				- https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js
-				- https://nette.github.io/resources/js/netteForms.min.js
-			files:
-				- %appDir%/../private/javascripts/nette-ajax/nette.ajax.js
-				- %appDir%/../vendor/nette/forms/src/assets/netteForms.js
-				- %appDir%/../private/javascripts/nette-live-form-validation/live-form-validation.js
-				- %appDir%/../private/javascripts/main.js
-				- %appDir%/../private/javascripts/wame-add-param-to-url/add-param-to-url.js
+    js:
+        default:
+            sourceDir: '%appDir%/../private/javascripts'
+
+            remoteFiles:
+                - https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js
+                - https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js
+
+            files:
+#				- ../components/jquery/js/jquery.min.js
+#				- ../components/jquery-ui/jquery-ui.min.js
+                - ../components/bootstrap/js/alert.js
+                - ../components/bootstrap/js/carousel.js
+                - ../components/bootstrap/js/button.js
+                - ../components/bootstrap/js/collapse.js
+                - ../components/bootstrap/js/dropdown.js
+                - ../components/bootstrap/js/modal.js
+                - ../components/bootstrap/js/transition.js
+                - nette.ajax.js
+                - live-form-validation.js
+                - main.js
+                - /wame-add-param-to-url/add-param-to-url.js
+            fileFilters:
+                - @jwlJsMinFilter
 
 services:
-	router:
-		class: Wame\Core\Router
-	database: @Nette\Database\Connection
+    router:
+        class: Wame\Core\Router
+    database: @Nette\Database\Connection
 
-	# WebLoader
-	wlCssFilter: WebLoader\Filter\CssUrlsFilter(%appDir%/../private/stylesheets/)
-	lessFilter: WebLoader\Filter\LessFilter
-	jwlCssMinFilter: Joseki\Webloader\CssMinFilter
+    # WebLoader
+    wlCssFilter: WebLoader\Filter\CssUrlsFilter(%appDir%/../private/stylesheets/)
+    lessFilter: WebLoader\Filter\LessFilter
+    jwlCssMinFilter: Joseki\Webloader\CssMinFilter
+    jwlJsMinFilter: Joseki\Webloader\JsMinFilter
 
-	formFactory: Wame\Core\Forms\FormFactory
+    formFactory: Wame\Core\Forms\FormFactory
