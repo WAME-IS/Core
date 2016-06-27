@@ -45,7 +45,7 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
 		$this->yourUserEntity = $this->userRepository->get(['id' => $this->user->id]);
 	}
 	
-	
+
 	/** @return CssLoader */
 	protected function createComponentCss()
 	{
@@ -191,6 +191,10 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
 		$dirs[] = $dir . '/templates';
 
 		$list = [];
+		
+		if ($this->isAjax()) {
+			$list[] = __DIR__ . '/templates/@modalLayout.latte';
+		}
 
 		foreach ($dirs as $dir) {
 			array_push($list, "$dir/$presenter/@$layout.latte", "$dir/$presenter.@$layout.latte");
@@ -215,6 +219,7 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
 	
 	/**
      * Create template
+	 * Append vars to template
      * 
      * @return Nette\Application\UI\ITemplate
      */
@@ -227,6 +232,7 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
         
         return $template;
     }
+
 	
 
 	/**
@@ -242,6 +248,11 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
 	}
 	
 	
+	/**
+	 * End of cycle presenter
+	 * 
+	 * @param \Nette\Application\IResponse $response
+	 */
 	protected function shutdown($response) 
 	{
 		parent::shutdown($response);
