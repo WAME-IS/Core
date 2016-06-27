@@ -61,9 +61,9 @@ webloader:
         default:
             sourceDir: '%appDir%/../private/stylesheets'
             remoteFiles:
+                - https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css
                 - https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css
             files:
-                - ../components/jquery-ui/jquery-ui.min.css
                 - wame/custom-bootstrap.less
             fileFilters:
                 - @lessFilter
