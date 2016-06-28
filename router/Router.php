@@ -11,7 +11,9 @@ class Router extends RouteList {
 	public function __construct(GettextSetup $translator) {
 
 		$this[] = new Route('index.php', 'Homepage:Homepage:default', Route::ONE_WAY);
-
+		
+		$this[] = new Route('admin', 'Admin:Dashboard:', Route::ONE_WAY);
+		
 		$this[] = new Route('[<lang ' . $translator->routerAccept() . '>/][<module>/]<presenter>/<action>/[<id>/]', [
 			'lang' => $translator->getDefault(),
 			'module' => 'Homepage',

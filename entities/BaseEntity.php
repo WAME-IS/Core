@@ -18,9 +18,11 @@ class BaseEntity extends \Kdyby\Doctrine\Entities\BaseEntity
 	{
 		$return = [];
 		
-		foreach ($this->langs as $lang) {
-			$return[$lang->lang] = $lang;
-		}
+        if(isset($this->langs)) {
+            foreach ($this->langs as $lang) {
+                $return[$lang->lang] = $lang;
+            }
+        }
 		
 		return $return;
 	}

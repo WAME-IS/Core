@@ -41,6 +41,8 @@ class BaseControl extends UI\Control
 	 */
 	public function setComponentInPosition($componentInPosition)
 	{
+		$this->setTemplateFile(null);
+		
 		if (isset($componentInPosition->component)) {
 			$this->componentInPosition = $componentInPosition;
 
@@ -79,7 +81,7 @@ class BaseControl extends UI\Control
 	public function getTemplateFile()
 	{
 		$filePath = dirname($this->getReflection()->getFileName());
-		$dir = explode(DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR . 'wame' . DIRECTORY_SEPARATOR, $filePath)[1];
+		$dir = explode(DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR . 'wame' . DIRECTORY_SEPARATOR, $filePath, 2)[1];
 		
 		$file = $this->findTemplate($dir);
 		
@@ -139,6 +141,124 @@ class BaseControl extends UI\Control
 		}
 
 		return $template;
+	}
+	
+	
+	/**
+	 * Render methods
+	 */
+	public function componentRender()
+	{
+		$this->getTemplateFile();
+
+		$this->template->lang = $this->parent->getParameter('lang');
+		$this->template->render();
+	}
+	
+	
+	/**
+	 * Retrun component title
+	 * 
+	 * @return string
+	 */
+	public function getTitle()
+	{
+		return $this->componentInPosition->component->langs[$this->parent->lang]->getTitle();
+	}
+	
+	
+	/**
+	 * Retrun component description
+	 * 
+	 * @return string
+	 */
+	public function getDescription()
+	{
+		return $this->componentInPosition->component->langs[$this->parent->lang]->getDescription();
+	}
+	
+	
+	/**
+	 * Retrun component name
+	 * 
+	 * @return string
+	 */
+	public function getComponentName()
+	{
+		return $this->componentInPosition->component->getComponentName();
+	}
+	
+	
+	/**
+	 * Retrun component type
+	 * 
+	 * @return string
+	 */
+	public function getType()
+	{
+		return $this->componentInPosition->component->getType();
+	}
+	
+	
+	/**
+	 * Retrun component parameters
+	 * 
+	 * @return array
+	 */
+	public function getComponentParameters()
+	{
+		$position = $this->componentInPosition->position->getParameters();
+		$component = $this->componentInPosition->component->getParameters();
+		
+		$parameters = [];
+		
+		foreach ($position as $key => $value) {
+			if ($value != '') {
+				$parameters[$key] = $value;
+			}
+		}
+		
+		return array_replace($component, $parameters);
+	}
+	
+	
+	/**
+	 * Retrun component parameter
+	 * 
+	 * @return string
+	 */
+	public function getComponentParameter($parameter)
+	{
+		if (isset($this->getComponentParameters()[$parameter])) {
+			return $this->getComponentParameters()[$parameter];
+		} else {
+			return null;
+		}
+	}
+	
+	
+	/**
+	 * Retrun actual lang
+	 * 
+	 * @return string
+	 */
+	public function getLang()
+	{
+		return $this->parent->lang;
+	}
+	
+	
+	/**
+	 * Get class name from namespace
+	 * 
+	 * @param string $namespace
+	 * @return string
+	 */
+	public function getClassName($namespace)
+	{
+		$reflect = new \ReflectionClass($namespace);
+		
+		return $reflect->getShortName();
 	}
 	
 }

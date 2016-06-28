@@ -10,12 +10,6 @@ trait EditDate
 	 */
 	protected $editDate;
 
-	/**
-	 * @ORM\ManyToOne(targetEntity="\Wame\UserModule\Entities\UserEntity")
-	 * @ORM\JoinColumn(name="edit_user_id", referencedColumnName="id", nullable=false)
-	 */
-	protected $editUser;
-
 	
 	/** get ************************************************************/
 	
@@ -24,24 +18,12 @@ trait EditDate
 		return $this->editDate;
 	}
 
-	public function getEditUser()
-	{
-		return $this->editUser;
-	}
-
 
 	/** set ************************************************************/
 
 	public function setEditDate($editDate)
 	{
 		$this->editDate = $editDate;
-		
-		return $this;
-	}
-	
-	public function setEditUser($editUser)
-	{
-		$this->editUser = $editUser;
 		
 		return $this;
 	}

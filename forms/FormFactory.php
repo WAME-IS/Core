@@ -5,6 +5,8 @@ namespace Wame\Core\Forms;
 use Nette\Utils\DateTime;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
+use Nette\Forms\Container;
+
 
 class FormFactory extends Control
 {
@@ -17,6 +19,9 @@ class FormFactory extends Control
 	/** @var array */
 	public $removeFormContainers = [];
 	
+	/** @var string */
+	public $actionForm;
+	
 
 	/**
 	 * Create Form
@@ -28,6 +33,8 @@ class FormFactory extends Control
 		$form = new Form;
 		
 		$form->setRenderer(new \Tomaj\Form\Renderer\BootstrapVerticalRenderer);
+
+		$this->getActionForm($form);
 		
 		$this->attachFormContainers($form);
 		
@@ -94,11 +101,48 @@ class FormFactory extends Control
 	
 	
 	/**
+	 * Add form containers
+	 * 
+	 * @param array $containers
+	 * @return array
+	 */
+	public function addFormContainers($containers)
+	{
+		$this->formContainers = array_merge($containers, $this->formContainers);
+		
+		return $this;
+	}
+	
+	
+	/**
+	 * Return form containers
+	 * 
+	 * @return array
+	 */
+	public function getFormContainers()
+	{
+		return $this->formContainers;
+	}
+	
+	
+	/**
+	 * Get form container
+	 * 
+	 * @param string $name
+	 * @return Container
+	 */
+	public function getFormContainer($name)
+	{
+		return $this->getFormContainers()[$name];
+	}
+	
+	
+	/**
 	 * Sort form containers by priority
 	 * 
 	 * @return array
 	 */
-	private function sortFormContainers()
+	public function sortFormContainers()
 	{
 		$this->removeFormContainers();
 
@@ -131,6 +175,36 @@ class FormFactory extends Control
 			foreach ($containers as $container) {
 				$form->addComponent($container['service'], $container['name']);
 			}
+		}
+		
+		return $form;
+	}
+	
+	
+	/**
+	 * Set action form
+	 * 
+	 * @param string $action
+	 */
+	public function setActionForm($action)
+	{
+		$this->actionForm = $action;
+		
+		return $this;
+	}
+	
+	
+	/**
+	 * Get action form
+	 * 
+	 * @param Form $form
+	 * @return Form
+	 * @throws \Exception
+	 */
+	private function getActionForm(Form $form)
+	{
+		if ($this->actionForm) {
+			$form->setAction($this->actionForm);
 		}
 		
 		return $form;
