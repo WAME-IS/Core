@@ -2,14 +2,10 @@
 
 namespace Wame\Core\Doctrine\Types;
 
-use Doctrine\DBAL\Platforms\AbstractPlatform,
-	Doctrine\DBAL\Types\StringType,
-	Nette\Neon\Neon;
-
 /**
  * @author Dominik Gmiterko <ienze@ienze.me>
  */
-class NeonType extends StringType {
+class NeonType extends \Doctrine\DBAL\Types\StringType {
 
 	const TYPE_NAME = "neon";
 
@@ -18,13 +14,13 @@ class NeonType extends StringType {
 	 * of this type.
 	 *
 	 * @param mixed                                     $value    The value to convert.
-	 * @param AbstractPlatform $platform The currently used database platform.
+	 * @param \Doctrine\DBAL\Platforms\AbstractPlatform $platform The currently used database platform.
 	 *
 	 * @return mixed The database representation of the value.
 	 */
-	public function convertToDatabaseValue($value, AbstractPlatform $platform) {
+	public function convertToDatabaseValue($value, \Doctrine\DBAL\Platforms\AbstractPlatform $platform) {
 		if ($value) {
-			return Neon::encode($value);
+			return \Nette\Neon\Neon::encode($value);
 		}
 	}
 
@@ -33,13 +29,13 @@ class NeonType extends StringType {
 	 * of this type.
 	 *
 	 * @param mixed                                     $value    The value to convert.
-	 * @param AbstractPlatform $platform The currently used database platform.
+	 * @param \Doctrine\DBAL\Platforms\AbstractPlatform $platform The currently used database platform.
 	 *
 	 * @return mixed The PHP representation of the value.
 	 */
-	public function convertToPHPValue($value, AbstractPlatform $platform) {
+	public function convertToPHPValue($value, \Doctrine\DBAL\Platforms\AbstractPlatform $platform) {
 		if ($value) {
-			return Neon::decode($value);
+			return \Nette\Neon\Neon::decode($value);
 		}
 		return [];
 	}

@@ -55,6 +55,8 @@ doctrine:
     metadata:
         App: %appDir%
         Wame\Core\Entities: %appDir%/../vendor/wame/Core/entities
+    types:
+        neon: Wame\Core\Doctrine\Types\NeonType
 
 
 webloader:

@@ -236,22 +236,5 @@ class FormFactory extends Control
 			}
 		}
 	}
-	
-	
-	/**
-	 * Format string date to DateTime for Doctrine entity
-	 * 
-	 * @param DateTime $date
-	 * @param string $format
-	 * @return DateTime
-	 */
-	public function formatDate($date, $format = 'Y-m-d H:i:s')
-	{
-		if ($date == 'now') {
-			return new DateTime('now');
-		} else {
-			return new DateTime(date($format, strtotime($date)));
-		}
-	}
 
 }

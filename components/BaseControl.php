@@ -9,28 +9,11 @@ class BaseControl extends UI\Control
 {
 	const DEFAULT_TEMPLATE = 'default.latte';
 	
-  	/** @var string */
-	public $componentName;
-	
 	/** @var ComponentInPositionEntity */
 	public $componentInPosition;
 	
 	/** @var string */
 	public $templateFile;
-	
-	
-	/**
-	 * Set component name
-	 * 
-	 * @param string $componentName
-	 * @return \Wame\AdminModule\Components\BaseControl
-	 */
-	public function setComponentName($componentName)
-	{
-		$this->componentName = $componentName;
-		
-		return $this;
-	}
 	
 	
 	/**
