@@ -94,6 +94,7 @@ webloader:
                 - live-form-validation.js
                 - main.js
                 - /wame-add-param-to-url/add-param-to-url.js
+                - /wame-bootstrap-modal/bootstrap-modal.js
             fileFilters:
                 - @jwlJsMinFilter
 
