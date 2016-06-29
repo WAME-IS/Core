@@ -229,6 +229,7 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
         
         $template->lang = $this->lang;
         $template->id = $this->id;
+		$template->siteTitle = null;
         
         return $template;
     }
