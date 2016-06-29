@@ -6,12 +6,15 @@ parameters:
     database:
         prefix: 'wame_'
 
+
 php:
     date.timezone: Europe/Bratislava
+
 
 nette:
     container:
         debugger: TRUE
+
 
 application:
     errorPresenter: Error
@@ -75,11 +78,9 @@ webloader:
     js:
         default:
             sourceDir: '%appDir%/../private/javascripts'
-
             remoteFiles:
                 - https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js
                 - https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js
-
             files:
 #				- ../components/jquery/js/jquery.min.js
 #				- ../components/jquery-ui/jquery-ui.min.js
@@ -92,10 +93,10 @@ webloader:
                 - ../components/bootstrap/js/transition.js
                 - nette.ajax.js
                 - live-form-validation.js
-                - main.js
                 - /wame-add-param-to-url/add-param-to-url.js
             fileFilters:
                 - @jwlJsMinFilter
+
 
 services:
     router:
