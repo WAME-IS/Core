@@ -5,10 +5,13 @@ namespace Wame\Core\Repositories;
 use h4kuna\Gettext\GettextSetup;
 use Kdyby\Doctrine\EntityManager;
 use Kdyby\Doctrine\EntityRepository;
+use Kdyby\Events\EventArgsList;
+use Kdyby\Events\EventManager;
 use Nette\DI\Container;
 use Nette\Object;
 use Nette\Security\User;
 use ReflectionClass;
+use Wame\Core\Event\RepositoryEntitySetEvent;
 
 interface IRepository
 {
@@ -18,16 +21,46 @@ interface IRepository
 class BaseRepository extends Object implements IRepository
 {
 
-    /** @var array */
+    /**
+     * Event called when entity is created
+     * 
+     * Parameters of event:
+     * \Nette\Forms\Form $form
+     * array $values
+     * \Wame\Core\Entities\BaseEntity $articleEntity
+     * 
+     * @var callable[]
+     */
     public $onCreate = [];
 
-    /** @var array */
+    /**
+     * Event called when entity is being read
+     * 
+     * Parameters of event:
+     * int $id
+     * 
+     * @var callable[]
+     */
     public $onRead = [];
 
-    /** @var array */
+    /**
+     * Event called when entity is updated
+     * 
+     * Parameters of event:
+     * int $id
+     * 
+     * @var callable[]
+     */
     public $onUpdate = [];
 
-    /** @var array */
+    /**
+     * Event called when entity is deleted
+     * 
+     * Parameters of event:
+     * int $id
+     * 
+     * @var callable[]
+     */
     public $onDelete = [];
 
     /** @var Container */
@@ -55,6 +88,19 @@ class BaseRepository extends Object implements IRepository
         $this->user = $user;
 
         if ($entityClass) {
+            $this->setEntityClass($entityClass);
+        }
+    }
+
+    public function setEntityClass($entityClass)
+    {
+        $en = 'Wame\\Core\\Repositories\\BaseRepository::onEntitynNameSet';
+        $eventtManager = $this->container->getByType(EventManager::class);
+        if ($eventtManager->hasListeners($en)) {
+            $event = new RepositoryEntitySetEvent($entityClass);
+            $eventtManager->dispatchEvent($en, new EventArgsList([$event]));
+            $this->entity = $this->entityManager->getRepository($event->getEntityName());
+        } else {
             $this->entity = $this->entityManager->getRepository($entityClass);
         }
     }

@@ -35,15 +35,6 @@ extensions:
     doctrineMPTT: Kappa\DoctrineMPTT\DI\DoctrineMPTTExtension
     dynamicDiscriminatorMap: IPub\DoctrineDynamicDiscriminatorMap\DI\DoctrineDynamicDiscriminatorMapExtension
 
-
-database:
-    dsn: '%database.driver%:host=%database.host%;port=%database.port%;dbname=%database.dbname%'
-    user: %database.user%
-    password: %database.password%
-    options:
-        lazy: yes
-
-
 doctrine:
     driver: %database.driver%
     host: %database.host%
@@ -100,14 +91,8 @@ webloader:
                 - @jwlJsMinFilter
 
 services:
-    router:
-        class: Wame\Core\Router
-    database: @Nette\Database\Connection
-
     # WebLoader
     wlCssFilter: WebLoader\Filter\CssUrlsFilter(%appDir%/../private/stylesheets/)
     lessFilter: WebLoader\Filter\LessFilter
     jwlCssMinFilter: Joseki\Webloader\CssMinFilter
     jwlJsMinFilter: Joseki\Webloader\JsMinFilter
-
-    formFactory: Wame\Core\Forms\FormFactory
