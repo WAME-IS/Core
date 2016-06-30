@@ -194,6 +194,8 @@ class BaseRepository extends \Nette\Object
 		foreach($entities as $entity) {
 			$this->entityManager->remove($entity);
 		}
+		
+		return true;
 	}
 	
 	
