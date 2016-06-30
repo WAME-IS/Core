@@ -229,19 +229,4 @@ class BaseControl extends UI\Control
 	{
 		return $this->parent->lang;
 	}
-	
-	
-	/**
-	 * Get class name from namespace
-	 * 
-	 * @param string $namespace
-	 * @return string
-	 */
-	public function getClassName($namespace)
-	{
-		$reflect = new \ReflectionClass($namespace);
-		
-		return $reflect->getShortName();
-	}
-	
 }

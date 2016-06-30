@@ -116,19 +116,6 @@ class BaseRepository extends Object implements IRepository
     }
 
     /**
-     * Get class name from namespace
-     * 
-     * @param string $namespace	namespace
-     * @return string	Returns class name
-     */
-    public function getClassName($namespace)
-    {
-        $reflect = new ReflectionClass($namespace);
-
-        return $reflect->getShortName();
-    }
-
-    /**
      * Get one entity by criteria
      * 
      * @param array $criteria	criteria
