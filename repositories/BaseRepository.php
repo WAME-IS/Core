@@ -27,7 +27,7 @@ class BaseRepository extends Object implements IRepository
      * Parameters of event:
      * \Nette\Forms\Form $form
      * array $values
-     * \Wame\Core\Entities\BaseEntity $articleEntity
+     * \Wame\Core\Entities\BaseEntity $entity
      * 
      * @var callable[]
      */
@@ -79,9 +79,8 @@ class BaseRepository extends Object implements IRepository
     public $entity;
 
     public function __construct(
-    Container $container, EntityManager $entityManager, GettextSetup $translator, User $user, $entityClass = null
-    )
-    {
+        Container $container, EntityManager $entityManager, GettextSetup $translator, User $user, $entityClass = null
+    ) {
         $this->container = $container;
         $this->entityManager = $entityManager;
         $this->lang = $translator->getLanguage();
@@ -193,21 +192,22 @@ class BaseRepository extends Object implements IRepository
         foreach ($rows as $row) {
             $return[$row->$key] = $row;
         }
-
-        return $return;
     }
-
-    /**
-     * Remove entities
-     * 
-     * @param type $criteria	criteria
-     */
-    public function remove($criteria = [])
-    {
-        $entities = $this->find($criteria);
-
-        foreach ($entities as $entity) {
-            $this->entityManager->remove($entity);
-        }
-    }
+    
+	/**
+	 * Remove entities
+	 * 
+	 * @param type $criteria	criteria
+	 */
+	public function remove($criteria = [])
+	{
+		$entities = $this->find($criteria);
+		
+		foreach($entities as $entity) {
+			$this->entityManager->remove($entity);
+		}
+		
+		return true;
+	}
+	
 }
