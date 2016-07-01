@@ -192,6 +192,8 @@ class BaseRepository extends Object implements IRepository
         foreach ($rows as $row) {
             $return[$row->$key] = $row;
         }
+        
+        return $return;
     }
     
 	/**
