@@ -3,7 +3,7 @@
 namespace Wame\Core\Repositories;
 
 use Doctrine\ORM\NoResultException;
-use Elastica\Query\AbstractQuery;
+use Doctrine\ORM\AbstractQuery;
 
 abstract class TranslatableRepository extends BaseRepository
 {
@@ -93,7 +93,7 @@ abstract class TranslatableRepository extends BaseRepository
         $query = $this->entity->createQueryBuilder('e')
             ->whereCriteria($this->autoPrefixParams($criteria))
             ->select("e.$value", "e.$key")
-            ->resetDQLPart('from')->from($this->getEntityName(), 'e', 'e.' . $key)
+            ->resetDQLPart('from')->from($this->entity->getClassName(), 'e', 'e.' . $key)
             ->autoJoinOrderBy($this->autoPrefixParams((array) $orderBy))
             ->getQuery();
 
@@ -115,7 +115,7 @@ abstract class TranslatableRepository extends BaseRepository
     {
         $qb = $this->entity->createQueryBuilder('e')
                 ->whereCriteria($this->autoPrefixParams($criteria))
-                ->resetDQLPart('from')->from($this->getEntityName(), 'e', 'e.' . $key);
+                ->resetDQLPart('from')->from($this->entity->getClassName(), 'e', 'e.' . $key);
 
         $result = $qb->getQuery()->getResult();
         foreach ($result as $entity) {
@@ -132,7 +132,7 @@ abstract class TranslatableRepository extends BaseRepository
      */
     public function countBy($criteria = [])
     {
-        return (int) $this->createQueryBuilder('e')
+        return (int) $this->entity->createQueryBuilder('e')
                 ->whereCriteria($this->autoPrefixParams($criteria))
                 ->select('COUNT(e)')
                 ->getQuery()->getSingleScalarResult();
