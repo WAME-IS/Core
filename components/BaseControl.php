@@ -134,7 +134,10 @@ class BaseControl extends UI\Control
 	{
 		$this->getTemplateFile();
 
-		$this->template->lang = $this->parent->getParameter('lang');
+        if (!isset($this->template->lang)) {
+            $this->template->lang = $this->parent->getParameter('lang');
+        }
+        
 		$this->template->render();
 	}
 	
