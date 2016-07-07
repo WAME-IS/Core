@@ -1,29 +1,27 @@
-# README #
+## BaseEntity, BaseRepository, BasePresenter,..
+Core modul obsahuje zakladne triedy od ktorych by mali dedit vsetky objekty tychto typov v systeme
 
-This README would normally document whatever steps are necessary to get your application up and running.
+## Register
+Zjednoteny sposob na registrovanie typov do pluginov. Register ma jeden parameter ktory je nazov triedy ktore musia pridavane typy implementovat. Novy register sa vytvori takto.
+```
+class FilterHandlersRegister extends \Wame\Core\Registers\BaseRegister {
+    public function __construct() {
+        parent::__construct(\Nazov\Triedy\Ktore\Register\Berie::class);
+    }
+}
+```
 
-### What is this repository for? ###
+## Control "Status"
+Tento stav maju presentre a vsetky komponenty. Zabezpecuju predavanie stavu medzi komponentami/presentrom. Premenne v stave sa propaguju smerom dole do deti komponenty.
 
-* Quick summary
-* Version
-* [Learn Markdown](https://bitbucket.org/tutorials/markdowndemo)
+Na citanie hodnoty sa da prihlasit tymto sposobom:
+```
+$this->status->get("def", function($value) {
+    //callback volany pri zmene hodnoty
+});
+```
 
-### How do I get set up? ###
-
-* Summary of set up
-* Configuration
-* Dependencies
-* Database configuration
-* How to run tests
-* Deployment instructions
-
-### Contribution guidelines ###
-
-* Writing tests
-* Code review
-* Other guidelines
-
-### Who do I talk to? ###
-
-* Repo owner or admin
-* Other community or team contact
+Alebo bez eventu, ale nieje zarucene ze hodnota je uz vyplnena. Vrati len aktualnu hodnotu.
+```
+$this->status->get("def"), "return");
+```

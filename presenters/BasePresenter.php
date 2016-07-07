@@ -7,6 +7,7 @@ use Nette\Application\IResponse;
 use Nette\Application\UI\ITemplate;
 use Nette\Application\UI\Multiplier;
 use Nette\Application\UI\Presenter;
+use Wame\Core\Model\ControlStatus;
 use Wame\DynamicObject\Components\IFormControlFactory;
 use Wame\HeadControl\HeadControl;
 use Wame\PositionModule\Components\IPositionControlFactory;
@@ -20,9 +21,9 @@ abstract class BasePresenter extends Presenter
     /** h4kuna Gettext latte translator trait */
     use \h4kuna\Gettext\InjectTranslator;
 
-	/** FormGroup getter trait */
+/** FormGroup getter trait */
     use \Wame\DynamicObject\Forms\FormGroup;
-    
+
     /** @var LoaderFactory @inject */
     public $webLoader;
 
@@ -40,6 +41,15 @@ abstract class BasePresenter extends Presenter
 
     /** @var IPositionControlFactory @inject */
     public $IPositionControlFactory;
+
+    /** @var ControlStatus */
+    public $status;
+
+    public function __construct()
+    {
+        parent::__construct();
+        $this->status = new ControlStatus($this);
+    }
 
     /** @return CssLoader */
     protected function createComponentCss()
@@ -216,8 +226,8 @@ abstract class BasePresenter extends Presenter
 
         $template->lang = $this->lang;
         $template->id = $this->id;
-		$template->siteTitle = null;
-        
+        $template->siteTitle = null;
+
         return $template;
     }
 
@@ -231,5 +241,10 @@ abstract class BasePresenter extends Presenter
         parent::shutdown($response);
 
         $this->entityManager->flush();
+    }
+
+    function getStatus()
+    {
+        return $this->status;
     }
 }
