@@ -2,7 +2,6 @@
 
 namespace Wame\Core\Components;
 
-use Exception;
 use Nette\Application\UI;
 use Nette\ComponentModel\IContainer;
 use Nette\InvalidStateException;
@@ -42,7 +41,7 @@ class BaseControl extends UI\Control
      * Set component in position
      * 
      * @param ComponentInPositionEntity $componentInPosition
-     * @return BaseControl
+     * @return \Wame\AdminModule\Components\BaseControl
      */
     public function setComponentInPosition($componentInPosition)
     {
@@ -67,7 +66,7 @@ class BaseControl extends UI\Control
      * Set template file
      * 
      * @param string $template
-     * @return BaseControl
+     * @return \Wame\AdminModule\Components\BaseControl
      */
     public function setTemplateFile($template)
     {
@@ -79,7 +78,7 @@ class BaseControl extends UI\Control
     /**
      * Get template file path
      * 
-     * @return BaseControl
+     * @return \Wame\Core\Components\BaseControl
      */
     public function getTemplateFile()
     {
@@ -89,7 +88,7 @@ class BaseControl extends UI\Control
         $file = $this->findTemplate($dir);
 
         if (!$file) {
-            throw new Exception(sprintf(_('%s and %s can not be found in %s.'), $this->templateFile, self::DEFAULT_TEMPLATE, $dir));
+            throw new \Exception(sprintf(_('%s and %s can not be found in %s.'), $this->templateFile, self::DEFAULT_TEMPLATE, $dir));
         }
 
         $this->template->setFile($file);
@@ -158,7 +157,10 @@ class BaseControl extends UI\Control
     {
         $this->getTemplateFile();
 
-        $this->template->lang = $this->parent->getParameter('lang');
+        if (!isset($this->template->lang)) {
+            $this->template->lang = $this->parent->getParameter('lang');
+        }
+
         $this->template->render();
     }
 
