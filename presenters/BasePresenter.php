@@ -21,7 +21,7 @@ abstract class BasePresenter extends Presenter
     /** h4kuna Gettext latte translator trait */
     use \h4kuna\Gettext\InjectTranslator;
 
-/** FormGroup getter trait */
+    /** FormGroup getter trait */
     use \Wame\DynamicObject\Forms\FormGroup;
 
     /** @var LoaderFactory @inject */
