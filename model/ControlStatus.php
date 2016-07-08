@@ -38,7 +38,9 @@ class ControlStatus extends Object
                 $this->listeners[$name] = [];
             }
             $this->listeners[$name][] = $callback;
-            call_user_func_array($callback, [$value]);
+            if($value) {
+                call_user_func_array($callback, [$value]);
+            }
         } else {
             return $value;
         }
