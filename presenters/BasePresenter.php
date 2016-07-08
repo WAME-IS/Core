@@ -44,6 +44,9 @@ abstract class BasePresenter extends Presenter
 
     /** @var ControlStatus */
     public $status;
+    
+    public $meta;
+    
 
     public function __construct()
     {
