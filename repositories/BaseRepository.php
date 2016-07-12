@@ -95,6 +95,7 @@ class BaseRepository extends Object implements IRepository
     {
         $en = 'Wame\\Core\\Repositories\\BaseRepository::onEntitynNameSet';
         $eventtManager = $this->container->getByType(EventManager::class);
+        
         if ($eventtManager->hasListeners($en)) {
             $event = new RepositoryEntitySetEvent($entityClass);
             $eventtManager->dispatchEvent($en, new EventArgsList([$event]));
@@ -102,6 +103,8 @@ class BaseRepository extends Object implements IRepository
         } else {
             $this->entity = $this->entityManager->getRepository($entityClass);
         }
+        
+        $this->container->getByType(RepositoryRegister::class)->add($this, $entityClass);
     }
 
     /**

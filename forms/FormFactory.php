@@ -2,13 +2,11 @@
 
 namespace Wame\Core\Forms;
 
-use Nette\Utils\DateTime;
-use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Nette\Forms\Container;
 
 
-class FormFactory extends Control
+class FormFactory
 {
 	/** @var int */
 	public $id;
@@ -22,6 +20,10 @@ class FormFactory extends Control
 	/** @var string */
 	public $actionForm;
 	
+    public function __construct()
+    {
+        
+    }
 
 	/**
 	 * Create Form
