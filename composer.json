@@ -1,20 +1,23 @@
 {
-	"name": "wame/Core",
-	"version": "0.0.1",
-	"description": "CMS WAME admin",
-	"homepage": "http://wame.sk/cms-wame-admin",
-	"minimum-stability": "dev",
-	"repository":{
-		"type": "vcs",
-		"url": "git@bitbucket.org:wamesro/core.git"
-	},
-	"authors": [
-		{
-			"name": "Wame",
-			"homepage": "http://wame.sk"
-		}
-	],
-	"autoload": {
-		"classmap": ["."]
-	}
+    "name": "wame\/Core",
+    "version": "0.0.1",
+    "description": "CMS WAME admin",
+    "homepage": "http:\/\/wame.sk\/cms-wame-admin",
+    "minimum-stability": "dev",
+    "repository": {
+        "type": "vcs",
+        "url": "git@bitbucket.org:wamesro\/core.git"
+    },
+    "authors": [
+        {
+            "name": "Wame",
+            "homepage": "http:\/\/wame.sk"
+        }
+    ],
+    "autoload": {
+        "classmap": [
+            "."
+        ]
+    },
+    "type": "wame-module"
 }
