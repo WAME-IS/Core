@@ -2,15 +2,17 @@
 
 namespace Wame\Core\Repositories\Traits;
 
-trait SortableRepositoryTrait {
-    
+
+trait SortableRepositoryTrait 
+{
 	/**
 	 * Resort items
 	 * 
 	 * @param array $criteria	criteria
 	 * @param numeric $factor	factor
 	 */
-	public function resort($criteria = [], $factor = 1) {
+	public function resort($criteria = [], $factor = 1) 
+    {
 		$items = $this->find($criteria, ['sort']);
 
 		if (count($items) > 0) {
@@ -29,17 +31,20 @@ trait SortableRepositoryTrait {
 
 		$this->entityManager->flush();
 	}
+    
 
 	/**
 	 * Get next sort
 	 * 
 	 * @param array $criteria	criteria
+	 * @param array $order	order
 	 * @return int	Returns index of next
 	 */
-	public function getNextSort($criteria = []) {
-		$count = $this->countBy($criteria);
+	public function getNextSort($criteria = [], $order = ['sort' => 'DESC']) 
+    {
+		$get = $this->get($criteria, $order);
 
-		return $count + 1;
+		return $get->sort + 1;
 	}
 
 }
