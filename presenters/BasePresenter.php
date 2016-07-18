@@ -156,9 +156,15 @@ abstract class BasePresenter extends Presenter
         $dirs[] = $dir . '/templates';
 
         $paths = [];
+        
+        if ($this->isAjax()) {
+            foreach ($dirs as $dir) {
+                array_push($paths, "$dir/$presenter/ajax-$this->view.latte");
+            }
+        }
 
         foreach ($dirs as $dir) {
-            array_push($paths, "$dir/$presenter/$this->view.latte", "$dir/$presenter.$this->view.latte");
+            array_push($paths, "$dir/$presenter/$this->view.latte");
         }
 
         return $paths;
