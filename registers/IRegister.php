@@ -2,7 +2,7 @@
 
 namespace Wame\Core\Registers;
 
-interface IRegister extends \IteratorAggregate
+interface IRegister extends \IteratorAggregate, \ArrayAccess
 {
 
     /**

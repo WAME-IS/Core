@@ -10,7 +10,7 @@ use Nette\Application\UI\Presenter;
 use Wame\Core\Model\ControlStatus;
 use Wame\DynamicObject\Components\IFormControlFactory;
 use Wame\HeadControl\HeadControl;
-use Wame\PositionModule\Components\IPositionControlFactory;
+use Wame\ComponentModule\Components\PositionControlLoader;
 use WebLoader\Nette\CssLoader;
 use WebLoader\Nette\JavaScriptLoader;
 use WebLoader\Nette\LoaderFactory;
@@ -39,8 +39,8 @@ abstract class BasePresenter extends Presenter
     /** @var IFormControlFactory @inject */
     public $IFormControlFactory;
 
-    /** @var IPositionControlFactory @inject */
-    public $IPositionControlFactory;
+    /** @var PositionControlLoader @inject */
+    public $positionControlLoader;
 
     /** @var ControlStatus */
     public $status;
@@ -52,6 +52,12 @@ abstract class BasePresenter extends Presenter
     {
         parent::__construct();
         $this->status = new ControlStatus($this);
+    }
+    
+    protected function startup()
+    {
+        parent::startup();
+        $this->positionControlLoader->load($this);
     }
 
     /** @return CssLoader */
@@ -70,18 +76,6 @@ abstract class BasePresenter extends Presenter
     public function createComponentHeadControl()
     {
         return $this->headControl;
-    }
-
-    /**
-     * Position control
-     * 
-     * @return IPositionControlFactory
-     */
-    protected function createComponentPositionControl()
-    {
-        $control = $this->IPositionControlFactory->create();
-
-        return $control;
     }
 
     /**

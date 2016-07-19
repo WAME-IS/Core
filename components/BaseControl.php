@@ -4,28 +4,54 @@ namespace Wame\Core\Components;
 
 use Nette\Application\UI;
 use Nette\ComponentModel\IContainer;
+use Nette\DI\Container;
 use Nette\InvalidStateException;
+use Nette\Caching\IStorage;
+use Wame\ComponentModule\Entities\ComponentEntity;
 use Wame\ComponentModule\Entities\ComponentInPositionEntity;
+use Wame\ComponentModule\Paremeters\ArrayParameterSource;
+use Wame\ComponentModule\Paremeters\IParameterReader;
+use Wame\ComponentModule\Paremeters\ParametersCombiner;
 use Wame\Core\Model\ControlStatus;
+use Wame\Core\Cache\TemplatingCache;
 
 class BaseControl extends UI\Control
 {
 
-    const DEFAULT_TEMPLATE = 'default.latte';
+    const DEFAULT_TEMPLATE = 'default.latte',
+        COMPONENT_TYPE_CLASS = 'component-%s';
+
+    /** @var Container */
+    protected $container;
 
     /** @var ComponentInPositionEntity */
-    public $componentInPosition;
+    protected $componentInPosition;
+
+    /** @var ComponentEntity */
+    protected $component;
 
     /** @var string */
-    public $templateFile;
+    protected $templateFile;
 
     /** @var ControlStatus */
-    public $status;
+    protected $status;
 
-    public function __construct(IContainer $parent = NULL, $name = NULL)
+    /** @var ParametersCombiner */
+    protected $componentParameters;
+
+    /** @var TemplatingCache */
+    protected $componentCache;
+
+    public function __construct(Container $container, IContainer $parent = NULL, $name = NULL)
     {
-        $this->status = new ControlStatus($this);
         parent::__construct($parent, $name);
+
+        $this->container = $container;
+        $container->callInjects($this);
+
+        $this->status = new ControlStatus($this);
+        $this->componentParameters = new ParametersCombiner();
+        $this->componentCache = new TemplatingCache($container->getByType(IStorage::class));
     }
 
     protected function attached($control)
@@ -35,28 +61,33 @@ class BaseControl extends UI\Control
             throw new InvalidStateException("Control " . get_class($this) . " doesn't call default __construct method.");
         }
         $this->status->callListeners(null, false);
+        $this->componentCache->setName($this->getUniqueId());
     }
 
     /**
      * Set component in position
      * 
+     * @param string $type
      * @param ComponentInPositionEntity $componentInPosition
-     * @return \Wame\AdminModule\Components\BaseControl
+     * @return BaseControl
      */
-    public function setComponentInPosition($componentInPosition)
+    public function setComponentInPosition($type, $componentInPosition)
     {
-        $this->setTemplateFile(null);
+        $this->componentInPosition = $componentInPosition;
+        $this->component = $componentInPosition->component;
 
-        if (isset($componentInPosition->component)) {
-            $this->componentInPosition = $componentInPosition;
+        //add paramter sources
+        $this->componentParameters->add(
+            new ArrayParameterSource($componentInPosition->getParameters()), 'componentInPosition', 30);
+        $this->componentParameters->add(
+            new ArrayParameterSource($this->component->getParameters()), 'component', 20);
+        $this->componentParameters->add(
+            new ArrayParameterSource(['container' => ['class' => sprintf(self::COMPONENT_TYPE_CLASS, $type)]]), 'componentDefaultClass', 1);
 
-            if ($componentInPosition->component->getParameter('template')) {
-                $this->setTemplateFile($componentInPosition->component->getParameter('template'));
-            }
-
-            if ($componentInPosition->getParameter('template')) {
-                $this->setTemplateFile($componentInPosition->getParameter('template'));
-            }
+        //update template if specified in parameters
+        $template = $this->getComponentParameter("template");
+        if ($template) {
+            $this->setTemplateFile($template);
         }
 
         return $this;
@@ -66,7 +97,7 @@ class BaseControl extends UI\Control
      * Set template file
      * 
      * @param string $template
-     * @return \Wame\AdminModule\Components\BaseControl
+     * @return BaseControl
      */
     public function setTemplateFile($template)
     {
@@ -78,7 +109,7 @@ class BaseControl extends UI\Control
     /**
      * Get template file path
      * 
-     * @return \Wame\Core\Components\BaseControl
+     * @return BaseControl
      */
     public function getTemplateFile()
     {
@@ -135,7 +166,8 @@ class BaseControl extends UI\Control
     }
 
     /**
-     * Return custom template
+     * Return custom temp
+     * late
      * 
      * @return string
      */
@@ -171,7 +203,7 @@ class BaseControl extends UI\Control
      */
     public function getTitle()
     {
-        return $this->componentInPosition->component->langs[$this->parent->lang]->getTitle();
+        return $this->component->getTitle();
     }
 
     /**
@@ -181,17 +213,7 @@ class BaseControl extends UI\Control
      */
     public function getDescription()
     {
-        return $this->componentInPosition->component->langs[$this->parent->lang]->getDescription();
-    }
-
-    /**
-     * Retrun component name
-     * 
-     * @return string
-     */
-    public function getComponentName()
-    {
-        return $this->componentInPosition->component->getComponentName();
+        return $this->component->getDescription();
     }
 
     /**
@@ -201,52 +223,39 @@ class BaseControl extends UI\Control
      */
     public function getType()
     {
-        return $this->componentInPosition->component->getType();
+        return $this->component->getType();
     }
 
     /**
-     * Retrun component parameters
+     * Retrun component parameters object
      * 
-     * @return array
+     * @return ParametersCombiner
      */
     public function getComponentParameters()
     {
-        $position = $this->componentInPosition->position->getParameters();
-        $component = $this->componentInPosition->component->getParameters();
-
-        $parameters = [];
-
-        foreach ($position as $key => $value) {
-            if ($value != '') {
-                $parameters[$key] = $value;
-            }
-        }
-
-        return array_replace($component, $parameters);
+        return $this->componentParameters;
     }
 
     /**
-     * Retrun component parameter
+     * Get component parameter
      * 
+     * @param string $parameter Name of parameter
+     * @param IParameterReader|array $parameterReader
      * @return string
      */
-    public function getComponentParameter($parameter)
+    public function getComponentParameter($parameter, $parameterReader = null)
     {
-        if (isset($this->getComponentParameters()[$parameter])) {
-            return $this->getComponentParameters()[$parameter];
-        } else {
-            return null;
-        }
+        return $this->componentParameters->getParameter($parameter, $parameterReader);
     }
 
     /**
-     * Retrun actual lang
+     * Get component cache settings
      * 
-     * @return string
+     * @return ComponentCache
      */
-    public function getLang()
+    function getComponentCache()
     {
-        return $this->parent->lang;
+        return $this->componentCache;
     }
 
     /**

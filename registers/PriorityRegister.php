@@ -3,7 +3,6 @@
 namespace Wame\Core\Registers;
 
 use Nette\Reflection\ClassType;
-use Nette\Utils\ArrayHash;
 use RecursiveArrayIterator;
 use WebLoader\InvalidArgumentException as InvalidArgumentException2;
 
@@ -13,7 +12,7 @@ class PriorityRegister implements IRegister
     /** @var string Type */
     private $type;
 
-    /** @var ArrayHash */
+    /** @var array */
     private $array;
 
     /**
@@ -38,25 +37,30 @@ class PriorityRegister implements IRegister
         }
 
         if ((new ClassType(get_class($service)))->is($this->type)) {
-            
+
             if (!$name) {
-                $name = get_class($service);
+                $name = $this->getDefaultName($service);
             }
-            
+
             $index = $this->getIndexByName($name);
-            if($index >= 0) {
+            if ($index >= 0) {
                 $this->array[$index]['service'] = $service;
                 $this->array[$index]['priority'] = $priority;
             } else {
                 $this->array[] = ['name' => $name, 'service' => $service, 'priority' => $priority];
             }
-            
+
             usort($this->array, function($s1, $s2) {
                 return $s2['priority'] - $s1['priority'];
             });
         } else {
             throw new InvalidArgumentException2("Trying to register class " . get_class($service) . " into register of " . $this->type);
         }
+    }
+    
+    protected function getDefaultName($service)
+    {
+        return get_class($service);
     }
 
     /**
@@ -92,14 +96,15 @@ class PriorityRegister implements IRegister
         }
         return -1;
     }
-    
+
     /**
      * Get service by name
      * 
      * @param string $name
      * @return object|null Service
      */
-    public function getByName($name) {
+    public function getByName($name)
+    {
         foreach ($this->array as $service) {
             if ($service['name'] == $name) {
                 return $service['service'];
@@ -139,5 +144,35 @@ class PriorityRegister implements IRegister
     public function getIterator()
     {
         return new RecursiveArrayIterator($this->getAll());
+    }
+
+    public function offsetExists($key)
+    {
+        return $this->getByName($key) != null;
+    }
+
+    public function offsetGet($key)
+    {
+        return $this->getByName($key);
+    }
+
+    public function offsetSet($key, $value)
+    {
+        foreach ($this->array as $service) {
+            if ($service['name'] == $key) {
+                $service['service'] = $value;
+                break;
+            }
+        }
+    }
+
+    public function offsetUnset($key)
+    {
+        foreach ($this->array as $service) {
+            if ($service['name'] == $key) {
+                unset($service);
+                break;
+            }
+        }
     }
 }

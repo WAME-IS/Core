@@ -46,13 +46,18 @@ class BaseRegister extends Object implements IRegister
         if ((new ClassType(get_class($service)))->is($this->type)) {
 
             if (!$name) {
-                $name = get_class($service);
+                $name = $this->getDefaultName($service);
             }
 
             $this->array[$name] = $service;
         } else {
             throw new InvalidArgumentException("Trying to register class " . get_class($service) . " into register of " . $this->type);
         }
+    }
+    
+    protected function getDefaultName($service)
+    {
+        return get_class($service);
     }
 
     /**
@@ -101,5 +106,25 @@ class BaseRegister extends Object implements IRegister
     public function getIterator()
     {
         return new \ArrayIterator((array) $this->array);
+    }
+
+    public function offsetExists($key)
+    {
+        return isset($this->array[$key]);
+    }
+
+    public function offsetGet($key)
+    {
+        return $this->array[$key];
+    }
+
+    public function offsetSet($key, $value)
+    {
+        $this->array[$key] = $value;
+    }
+
+    public function offsetUnset($key)
+    {
+        unset($this->array[$key]);
     }
 }

@@ -46,6 +46,7 @@ doctrine:
     user: %database.user%
     password: %database.password%
     port: %database.port%
+    autoGenerateProxyClasses: true
     metadata:
         App: %appDir%
         Wame\Core\Entities: %appDir%/../vendor/wame/Core/entities

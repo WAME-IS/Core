@@ -2,12 +2,10 @@
 
 namespace Wame\Core\Entities\Columns;
 
-use Nette\Neon\Neon;
-
 trait Parameters
 {
     /**
-     * @ORM\Column(name="parameters", type="string", nullable=true)
+     * @ORM\Column(name="parameters", type="neon", nullable=true)
      */
     protected $parameters = null;
 	
@@ -16,18 +14,14 @@ trait Parameters
 
 	public function getParameters()
 	{
-		if ($this->parameters) {
-			return Neon::decode($this->parameters);
-		} else {
-			return [];
-		}
+		return $this->parameters;
 	}
 	
 	
-	public function getParameter($key)
+	public function getParameter($parameter)
 	{
-		if (array_key_exists($key, $this->getParameters())) {
-			return $this->getParameters()[$key];
+		if (array_key_exists($parameter, $this->parameters)) {
+			return $this->parameters[$parameter];
 		} else {
 			return null;
 		}
@@ -38,12 +32,13 @@ trait Parameters
 
 	public function setParameters($parameters)
 	{
-		if (is_array($parameters) && count($parameters) > 0) {
-			$this->parameters = Neon::encode($parameters);
-		} else {
-			$this->parameters = null;
-		}
-		
+		$this->parameters = $parameters;
+		return $this;
+	}
+    
+    public function setParameter($parameter, $value)
+	{
+        $this->parameters[$parameter] = $value;
 		return $this;
 	}
 
