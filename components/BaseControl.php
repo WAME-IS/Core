@@ -211,18 +211,22 @@ class BaseControl extends UI\Control
      */
     public function getComponentParameters()
     {
-        $position = $this->componentInPosition->position->getParameters();
-        $component = $this->componentInPosition->component->getParameters();
+        if($this->componentInPosition) {
+            $position = $this->componentInPosition->position->getParameters();
+            $component = $this->componentInPosition->component->getParameters();
 
-        $parameters = [];
+            $parameters = [];
 
-        foreach ($position as $key => $value) {
-            if ($value != '') {
-                $parameters[$key] = $value;
+            foreach ($position as $key => $value) {
+                if ($value != '') {
+                    $parameters[$key] = $value;
+                }
             }
-        }
 
-        return array_replace($component, $parameters);
+            return array_replace($component, $parameters);
+        } else {
+            return [];
+        }
     }
 
     /**
