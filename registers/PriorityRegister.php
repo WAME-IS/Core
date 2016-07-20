@@ -168,9 +168,9 @@ class PriorityRegister implements IRegister
 
     public function offsetUnset($key)
     {
-        foreach ($this->array as $service) {
+        foreach ($this->array as $index => $service) {
             if ($service['name'] == $key) {
-                unset($service);
+                unset($this->array[$index]);
                 break;
             }
         }

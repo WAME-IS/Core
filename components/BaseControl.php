@@ -47,7 +47,7 @@ class BaseControl extends UI\Control
         parent::__construct($parent, $name);
 
         $this->container = $container;
-        $container->callInjects($this);
+//        $container->callInjects($this);
 
         $this->status = new ControlStatus($this);
         $this->componentParameters = new ParametersCombiner();
