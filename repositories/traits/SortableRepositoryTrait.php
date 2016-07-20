@@ -44,7 +44,11 @@ trait SortableRepositoryTrait
     {
 		$get = $this->get($criteria, $order);
 
-		return $get->sort + 1;
-	}
+        if ($get) {
+            return $get->sort + 1;
+        } else {
+            return 1;
+        }
+    }
 
 }
