@@ -3,17 +3,19 @@
 namespace Wame\Core\Components;
 
 use Nette\Application\UI;
+use Nette\Caching\IStorage;
 use Nette\ComponentModel\IContainer;
 use Nette\DI\Container;
 use Nette\InvalidStateException;
-use Nette\Caching\IStorage;
 use Wame\ComponentModule\Entities\ComponentEntity;
 use Wame\ComponentModule\Entities\ComponentInPositionEntity;
 use Wame\ComponentModule\Paremeters\ArrayParameterSource;
 use Wame\ComponentModule\Paremeters\IParameterReader;
 use Wame\ComponentModule\Paremeters\ParametersCombiner;
-use Wame\Core\Status\ControlStatus;
 use Wame\Core\Cache\TemplatingCache;
+use Wame\Core\Status\ControlStatus;
+use Wame\Core\Status\ControlStatuses;
+use Wame\ComponentModule\Components\PositionControlLoader;
 
 class BaseControl extends UI\Control
 {
@@ -47,9 +49,9 @@ class BaseControl extends UI\Control
         parent::__construct($parent, $name);
 
         $this->container = $container;
-//        $container->callInjects($this);
+        $container->callInjects($this);
 
-        $this->status = new ControlStatus($this);
+        $this->status = new ControlStatus($this, $container->getByType(ControlStatuses::class));
         $this->componentParameters = new ParametersCombiner();
         $this->componentCache = new TemplatingCache($container->getByType(IStorage::class));
     }
@@ -57,11 +59,14 @@ class BaseControl extends UI\Control
     protected function attached($control)
     {
         parent::attached($control);
+
         if (!$this->status) {
             throw new InvalidStateException("Control " . get_class($this) . " doesn't call default __construct method.");
         }
         $this->status->callListeners(null, false);
         $this->componentCache->setName($this->getUniqueId());
+
+        $this->container->getByType(PositionControlLoader::class)->load($this);
     }
 
     /**
@@ -180,6 +185,21 @@ class BaseControl extends UI\Control
         }
 
         return $template;
+    }
+
+    public function willRender($method, $params = null)
+    {
+        $renderParams = null;
+        if ($params) {
+            $renderParams = new ArrayParameterSource($params);
+            $this->componentParameters->add($renderParams);
+        }
+        
+        $this->componentCache->cachedOutput([$this, $method]);
+
+        if ($renderParams) {
+            $this->componentParameters->remove($renderParams);
+        }
     }
 
     /**

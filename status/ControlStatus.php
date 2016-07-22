@@ -5,6 +5,7 @@ namespace Wame\Core\Status;
 use Nette\Application\UI\Control;
 use Nette\Object;
 use Nette\Utils\ArrayHash;
+use Wame\Core\Status\Event\ControlStatusSetEvent;
 
 class ControlStatus extends Object
 {
@@ -52,7 +53,7 @@ class ControlStatus extends Object
 
     public function set($name, $value)
     {
-        $event = new \Wame\Core\Mode\Event\ControlStatusSetEvent($this, $name, $value);
+        $event = new ControlStatusSetEvent($this, $name, $value);
         $this->controlStatuses->onSet($event);
 
         $name = $event->getName();

@@ -71,9 +71,9 @@ class PriorityRegister implements IRegister
     public function remove($name)
     {
         if (is_object($name)) {
-            foreach ($this as $name => $service) {
+            foreach ($this->array as $index => $service) {
                 if ($service['service'] == $name) {
-                    unset($this[$name]);
+                    unset($this[$index]);
                     break;
                 }
             }

@@ -21,7 +21,7 @@ abstract class BasePresenter extends Presenter
     /** h4kuna Gettext latte translator trait */
     use \h4kuna\Gettext\InjectTranslator;
 
-    /** FormGroup getter trait */
+/** FormGroup getter trait */
     use \Wame\DynamicObject\Forms\FormGroup;
 
     /** @var LoaderFactory @inject */
@@ -44,16 +44,13 @@ abstract class BasePresenter extends Presenter
 
     /** @var ControlStatus */
     public $status;
-    
     public $meta;
-    
 
-    public function __construct()
+    public function injectStatus(\Wame\Core\Status\ControlStatuses $controlStatuses)
     {
-        parent::__construct();
-        $this->status = new ControlStatus($this);
+        $this->status = new ControlStatus($this, $controlStatuses);
     }
-    
+
     protected function startup()
     {
         parent::startup();
@@ -150,7 +147,7 @@ abstract class BasePresenter extends Presenter
         $dirs[] = $dir . '/templates';
 
         $paths = [];
-        
+
         if ($this->isAjax()) {
             foreach ($dirs as $dir) {
                 array_push($paths, "$dir/$presenter/ajax-$this->view.latte");

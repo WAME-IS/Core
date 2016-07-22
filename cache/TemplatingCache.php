@@ -15,7 +15,7 @@ class TemplatingCache extends Object
 
     /** @var array */
     private $settings;
-    
+
     /** @var string */
     private $name;
 
@@ -42,7 +42,7 @@ class TemplatingCache extends Object
         $this->addSettings([Cache::TAGS => [$tag]]);
         return $this;
     }
-    
+
     /**
      * @param string $expiration
      */
@@ -51,7 +51,7 @@ class TemplatingCache extends Object
         $this->addSettings([Cache::EXPIRATION => $expiration]);
         return $this;
     }
-    
+
     /**
      * @param array $settings
      */
@@ -60,19 +60,31 @@ class TemplatingCache extends Object
         $this->settings = array_merge_recursive($this->settings, $settings);
         return $this;
     }
-    
+
     /**
      * The most important function. Call this function to cache result of render.
      * @param type $callback
      */
-    public function cachedOutput($callback)
+    public function cachedOutput($callback, $args = null)
     {
-        if(!$this->name) {
+        if (!$this->name) {
             throw new InvalidArgumentException("Name has to be set.");
         }
-        if($active = $this->cache->start($this->name)) {
-            call_user_func_array($callback);
-            $active->end($this->settings);
+        if ($this->settings) {
+            if ($active = $this->cache->start($this->name)) {
+                if ($args) {
+                    call_user_func_array($callback, $args);
+                } else {
+                    call_user_func($callback);
+                }
+                $active->end($this->settings);
+            }
+        } else {
+            if ($args) {
+                call_user_func_array($callback, $args);
+            } else {
+                call_user_func($callback);
+            }
         }
     }
 }
