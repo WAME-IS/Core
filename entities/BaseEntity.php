@@ -11,6 +11,7 @@ class BaseEntity extends \Kdyby\Doctrine\Entities\BaseEntity
 {
     public function __call($name, $args) 
     {
+        //TODO nechavame to tu? Co je toto za fix?
         if ($cb = static::extensionMethod($name)) {
 			/** @var \Nette\Callback $cb */
 			array_unshift($args, $this);

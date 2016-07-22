@@ -19,7 +19,7 @@ class BaseControl extends UI\Control
 {
 
     const DEFAULT_TEMPLATE = 'default.latte',
-        COMPONENT_TYPE_CLASS = 'component-%s';
+        COMPONENT_TYPE_CLASS = 'cnt-%s';
 
     /** @var Container */
     protected $container;
