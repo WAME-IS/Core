@@ -12,15 +12,19 @@ class ControlStatus extends Object
     /** @var Control */
     private $control;
 
+    /** @var ControlStatuses */
+//    private $controlStatuses;
+    
     /** @var ArrayHash */
     private $params;
 
     /** @var array */
     private $listeners = [];
 
-    public function __construct(Control $control)
+    public function __construct(Control $control/* TODO, \Wame\Core\Model\ControlStatuses $controlStatuses*/)
     {
         $this->control = $control;
+//        $this->controlStatuses = $controlStatuses;
         $this->params = new ArrayHash();
     }
 
@@ -48,7 +52,16 @@ class ControlStatus extends Object
 
     public function set($name, $value)
     {
-        $this->params->$name = $value;
+        $event = new \Wame\Core\Mode\Event\ControlStatusSetEvent($this, $name, $value);
+//        $this->controlStatuses->onSet($event);
+        foreach (ControlStatuses::$onSet as $callback) {
+            call_user_func($callback, $event);
+        }
+        
+        $name = $event->getName();
+        $value = $event->getValue();
+        
+        $this->params->$name = $value;    
         $this->callListeners($name, 'force');
     }
 
