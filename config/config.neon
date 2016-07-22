@@ -99,6 +99,8 @@ services:
     jwlCssMinFilter: Joseki\Webloader\CssMinFilter
     jwlJsMinFilter: Joseki\Webloader\JsMinFilter
 
+    - Wame\Core\Model\ControlStatuses
+
     nette.latteFactory:
         setup:
             - addFilter(timeAgo, @Wame\Core\Filters\TimeAgoFilter)
