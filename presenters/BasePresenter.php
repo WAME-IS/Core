@@ -7,7 +7,7 @@ use Nette\Application\IResponse;
 use Nette\Application\UI\ITemplate;
 use Nette\Application\UI\Multiplier;
 use Nette\Application\UI\Presenter;
-use Wame\Core\Model\ControlStatus;
+use Wame\Core\Status\ControlStatus;
 use Wame\DynamicObject\Components\IFormControlFactory;
 use Wame\HeadControl\HeadControl;
 use Wame\ComponentModule\Components\PositionControlLoader;

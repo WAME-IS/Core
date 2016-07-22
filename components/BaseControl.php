@@ -12,7 +12,7 @@ use Wame\ComponentModule\Entities\ComponentInPositionEntity;
 use Wame\ComponentModule\Paremeters\ArrayParameterSource;
 use Wame\ComponentModule\Paremeters\IParameterReader;
 use Wame\ComponentModule\Paremeters\ParametersCombiner;
-use Wame\Core\Model\ControlStatus;
+use Wame\Core\Status\ControlStatus;
 use Wame\Core\Cache\TemplatingCache;
 
 class BaseControl extends UI\Control

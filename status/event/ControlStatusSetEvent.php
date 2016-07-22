@@ -1,9 +1,9 @@
 <?php
 
-namespace Wame\Core\Mode\Event;
+namespace Wame\Core\Status\Event;
 
 use Nette\Object;
-use Wame\Core\Model\ControlStatus;
+use Wame\Core\Status\ControlStatus;
 
 class ControlStatusSetEvent extends Object {
 

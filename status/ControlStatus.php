@@ -1,6 +1,6 @@
 <?php
 
-namespace Wame\Core\Model;
+namespace Wame\Core\Status;
 
 use Nette\Application\UI\Control;
 use Nette\Object;
@@ -13,18 +13,18 @@ class ControlStatus extends Object
     private $control;
 
     /** @var ControlStatuses */
-//    private $controlStatuses;
-    
+    private $controlStatuses;
+
     /** @var ArrayHash */
     private $params;
 
     /** @var array */
     private $listeners = [];
 
-    public function __construct(Control $control/* TODO, \Wame\Core\Model\ControlStatuses $controlStatuses*/)
+    public function __construct(Control $control, ControlStatuses $controlStatuses)
     {
         $this->control = $control;
-//        $this->controlStatuses = $controlStatuses;
+        $this->controlStatuses = $controlStatuses;
         $this->params = new ArrayHash();
     }
 
@@ -42,7 +42,7 @@ class ControlStatus extends Object
                 $this->listeners[$name] = [];
             }
             $this->listeners[$name][] = $callback;
-            if($value) {
+            if ($value) {
                 call_user_func_array($callback, [$value]);
             }
         } else {
@@ -53,15 +53,12 @@ class ControlStatus extends Object
     public function set($name, $value)
     {
         $event = new \Wame\Core\Mode\Event\ControlStatusSetEvent($this, $name, $value);
-//        $this->controlStatuses->onSet($event);
-        foreach (ControlStatuses::$onSet as $callback) {
-            call_user_func($callback, $event);
-        }
-        
+        $this->controlStatuses->onSet($event);
+
         $name = $event->getName();
         $value = $event->getValue();
-        
-        $this->params->$name = $value;    
+
+        $this->params->$name = $value;
         $this->callListeners($name, 'force');
     }
 

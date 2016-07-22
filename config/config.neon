@@ -100,7 +100,7 @@ services:
     jwlCssMinFilter: Joseki\Webloader\CssMinFilter
     jwlJsMinFilter: Joseki\Webloader\JsMinFilter
 
-    - Wame\Core\Model\ControlStatuses
+    - Wame\Core\Status\ControlStatuses
 
     nette.latteFactory:
         setup:

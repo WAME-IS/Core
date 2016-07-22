@@ -1,6 +1,6 @@
 <?php
 
-namespace Wame\Core\Model;
+namespace Wame\Core\Status;
 
 use Nette\Object;
 
@@ -15,6 +15,6 @@ class ControlStatuses extends Object
      * 
      * @var callable[]
      */
-    public static $onSet = [];
+    public $onSet = [];
 
 }
