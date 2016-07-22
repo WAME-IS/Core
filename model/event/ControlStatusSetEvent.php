@@ -5,8 +5,7 @@ namespace Wame\Core\Mode\Event;
 use Nette\Object;
 use Wame\Core\Model\ControlStatus;
 
-class ControlStatusSetEvent extends Object
-{
+class ControlStatusSetEvent extends Object {
 
     /** @var ControlStatus */
     private $status;
@@ -17,32 +16,30 @@ class ControlStatusSetEvent extends Object
     /** @var mixed */
     private $value;
 
-    public function __construct(ControlStatus $status, $name, $value)
-    {
+    public function __construct(ControlStatus $status, $name, $value) {
         $this->status = $status;
         $this->name = $name;
         $this->value = $value;
     }
 
     /**
-     * @return ControlStatustion getStatus()
-      {
-      return $this->status;
-      }
+     * @return ControlStatustion 
+     */
+    public function getStatus() {
+        return $this->status;
+    }
 
-      /**
+    /**
      * @return string
      */
-    function getName()
-    {
+    function getName() {
         return $this->name;
     }
 
     /**
      * @return mixed
      */
-    function getValue()
-    {
+    function getValue() {
         return $this->value;
     }
 
@@ -50,8 +47,7 @@ class ControlStatusSetEvent extends Object
      * @param string $name
      * @return ControlStatusSetEvent This event
      */
-    function setName($name)
-    {
+    function setName($name) {
         $this->name = $name;
         return $this;
     }
@@ -60,9 +56,9 @@ class ControlStatusSetEvent extends Object
      * @param mixed $value
      * @return ControlStatusSetEvent This event
      */
-    function setValue($value)
-    {
+    function setValue($value) {
         $this->value = $value;
         return $this;
     }
+
 }
