@@ -76,8 +76,9 @@ class BaseRepository extends Object implements IRepository
     public $user;
 
     /** @var EntityRepository */
-    public $entity;
+    protected $entity;
 
+    
     public function __construct(
         Container $container, EntityManager $entityManager, GettextSetup $translator, User $user, $entityClass = null
     ) {
@@ -212,4 +213,8 @@ class BaseRepository extends Object implements IRepository
 		return true;
 	}
 	
+    public function createQueryBuilder($alias = null) {
+        return $this->entity->createQueryBuilder($alias);
+    }
+    
 }
