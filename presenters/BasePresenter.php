@@ -252,6 +252,10 @@ abstract class BasePresenter extends Presenter
         $this->entityManager->flush();
     }
 
+    /**
+     * Get presenter status
+     * @return ControlStatus
+     */
     function getStatus()
     {
         return $this->status;
