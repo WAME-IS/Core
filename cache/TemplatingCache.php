@@ -19,6 +19,9 @@ class TemplatingCache extends Object
     /** @var string */
     private $name;
 
+    /** @var boolean */
+    private $enabled = false;
+
     public function __construct(IStorage $cacheStorage, $name = null)
     {
         $this->cache = new Cache($cacheStorage, "Wame.Templating.Cache");
@@ -58,7 +61,16 @@ class TemplatingCache extends Object
     public function addSettings($settings)
     {
         $this->settings = array_merge_recursive($this->settings, $settings);
+        $this->enable();
         return $this;
+    }
+
+    /**
+     * Enable caching of this template
+     */
+    public function enable()
+    {
+        $this->enabled = true;
     }
 
     /**
@@ -70,7 +82,7 @@ class TemplatingCache extends Object
         if (!$this->name) {
             throw new InvalidArgumentException("Name has to be set.");
         }
-        if ($this->settings) {
+        if ($this->enabled) {
             if ($active = $this->cache->start($this->name)) {
                 if ($args) {
                     call_user_func_array($callback, $args);
