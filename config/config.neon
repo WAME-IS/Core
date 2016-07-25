@@ -37,6 +37,7 @@ extensions:
     doctrineExtension: Kappa\Doctrine\DI\DoctrineExtension
     doctrineMPTT: Kappa\DoctrineMPTT\DI\DoctrineMPTTExtension
     dynamicDiscriminatorMap: IPub\DoctrineDynamicDiscriminatorMap\DI\DoctrineDynamicDiscriminatorMapExtension
+    replicator: Kdyby\Replicator\DI\ReplicatorExtension
 
 doctrine:
     driver: %database.driver%
