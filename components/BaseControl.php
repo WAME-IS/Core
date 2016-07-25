@@ -76,7 +76,7 @@ class BaseControl extends UI\Control
      * @param ComponentInPositionEntity $componentInPosition
      * @return BaseControl
      */
-    public function setComponentInPosition($type, $componentInPosition)
+    public function setComponentInPosition($componentInPosition)
     {
         $this->componentInPosition = $componentInPosition;
         $this->component = $componentInPosition->component;
@@ -86,9 +86,7 @@ class BaseControl extends UI\Control
             new ArrayParameterSource($componentInPosition->getParameters()), 'componentInPosition', 30);
         $this->componentParameters->add(
             new ArrayParameterSource($this->component->getParameters()), 'component', 20);
-        $this->componentParameters->add(
-            new ArrayParameterSource(['container' => ['class' => sprintf(self::COMPONENT_TYPE_CLASS, $type)]]), 'componentDefaultClass', 1);
-
+        
         //update template if specified in parameters
         $template = $this->getComponentParameter("template");
         if ($template) {
@@ -195,7 +193,7 @@ class BaseControl extends UI\Control
             $this->componentParameters->add($renderParams);
         }
         
-        $this->componentCache->cachedOutput([$this, $method]);
+        $this->componentCache->cachedOutput([$this, $method], $params);
 
         if ($renderParams) {
             $this->componentParameters->remove($renderParams);
