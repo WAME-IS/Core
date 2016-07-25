@@ -85,7 +85,7 @@ class BaseControl extends UI\Control
             new ArrayParameterSource($componentInPosition->getParameters()), 'componentInPosition', 30);
         $this->componentParameters->add(
             new ArrayParameterSource($this->component->getParameters()), 'component', 20);
-        
+
         //update template if specified in parameters
         $template = $this->getComponentParameter("template");
         if ($template) {
@@ -186,17 +186,39 @@ class BaseControl extends UI\Control
 
     public function willRender($method, $params = null)
     {
-        $renderParams = null;
-        if ($params) {
-            $renderParams = new ArrayParameterSource($params);
-            $this->componentParameters->add($renderParams);
-        }
-        
-        $this->componentCache->cachedOutput([$this, $method], $params);
+        $this->componentCache->cachedOutput(function() use ($method, $params) {
+            $reflection = new \Nette\Reflection\Method($this, $method);
 
-        if ($renderParams) {
-            $this->componentParameters->remove($renderParams);
-        }
+            $renderParamsSource = null;
+            if ($params && $reflection->getParameters()) {
+
+                $i = 0;
+                $namedParams = [];
+                foreach ($reflection->getParameters() as $paramRefl) {
+                    if ($i >= count($params)) {
+                        break;
+                    }
+                    $namedParams[$paramRefl->getName()] = $params[$i];
+                    $i++;
+                }
+
+                $renderParamsSource = new ArrayParameterSource($namedParams);
+                $this->componentParameters->add($renderParamsSource);
+            }
+
+            $loadedParams = [];
+            foreach ($reflection->getParameters() as $paramRefl) {
+                $loadedParams[$paramRefl->getName()] = $this->getComponentParameter($paramRefl->getName());
+            }
+
+            //Pre-render
+            call_user_func_array([$this, $method], $loadedParams);
+            //Post-render
+
+            if ($renderParamsSource) {
+                $this->componentParameters->remove($renderParamsSource);
+            }
+        }, $params);
     }
 
     /**
