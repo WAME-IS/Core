@@ -58,6 +58,8 @@ abstract class BasePresenter extends Presenter
     {
         parent::startup();
         $this->positionControlLoader->load($this);
+        
+        \Kdyby\Replicator\Container::register();
     }
 
     /** @return CssLoader */
