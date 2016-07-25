@@ -2,11 +2,14 @@
 
 namespace Wame\Core\Components;
 
-use Nette\Application\UI;
+use Nette\Application\UI\Control;
 use Nette\Caching\IStorage;
 use Nette\ComponentModel\IContainer;
 use Nette\DI\Container;
 use Nette\InvalidStateException;
+use Nette\Reflection\Method;
+use Nette\Security\User;
+use Wame\ComponentModule\Components\PositionControlLoader;
 use Wame\ComponentModule\Entities\ComponentEntity;
 use Wame\ComponentModule\Entities\ComponentInPositionEntity;
 use Wame\ComponentModule\Paremeters\ArrayParameterSource;
@@ -15,9 +18,8 @@ use Wame\ComponentModule\Paremeters\ParametersCombiner;
 use Wame\Core\Cache\TemplatingCache;
 use Wame\Core\Status\ControlStatus;
 use Wame\Core\Status\ControlStatuses;
-use Wame\ComponentModule\Components\PositionControlLoader;
 
-class BaseControl extends UI\Control
+class BaseControl extends Control
 {
 
     const DEFAULT_TEMPLATE = 'default.latte';
@@ -43,6 +45,9 @@ class BaseControl extends UI\Control
     /** @var TemplatingCache */
     protected $componentCache;
 
+    /** @var User */
+    protected $user;
+
     public function __construct(Container $container, IContainer $parent = NULL, $name = NULL)
     {
         parent::__construct($parent, $name);
@@ -53,6 +58,14 @@ class BaseControl extends UI\Control
         $this->status = new ControlStatus($this, $container->getByType(ControlStatuses::class));
         $this->componentParameters = new ParametersCombiner();
         $this->componentCache = new TemplatingCache($container->getByType(IStorage::class));
+    }
+
+    /**
+     * @internal
+     */
+    public function injectUser(User $user)
+    {
+        $this->user = $user;
     }
 
     protected function attached($control)
@@ -86,12 +99,6 @@ class BaseControl extends UI\Control
         $this->componentParameters->add(
             new ArrayParameterSource($this->component->getParameters()), 'component', 20);
 
-        //update template if specified in parameters
-        $template = $this->getComponentParameter("template");
-        if ($template) {
-            $this->setTemplateFile($template);
-        }
-
         return $this;
     }
 
@@ -104,29 +111,30 @@ class BaseControl extends UI\Control
     public function setTemplateFile($template)
     {
         $this->templateFile = $template;
-
         return $this;
     }
 
     /**
-     * Get template file path
-     * 
-     * @return BaseControl
+     * Fills template with selected template file path
      */
     public function getTemplateFile()
     {
+        if ($this->template->getFile()) {
+            return;
+        }
+
         $filePath = dirname($this->getReflection()->getFileName());
         $dir = explode(DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR . 'wame' . DIRECTORY_SEPARATOR, $filePath, 2)[1];
 
         $file = $this->findTemplate($dir);
 
         if (!$file) {
-            throw new \Exception(sprintf(_('%s and %s can not be found in %s.'), $this->templateFile, self::DEFAULT_TEMPLATE, $dir));
+            throw new InvalidStateException(sprintf(_('%s and %s can not be found in %s.'), $this->templateFile, self::DEFAULT_TEMPLATE, $dir));
         }
 
         $this->template->setFile($file);
 
-        return $this;
+        return;
     }
 
     /**
@@ -184,10 +192,21 @@ class BaseControl extends UI\Control
         return $template;
     }
 
+    /**
+     * Function called before render
+     */
+    public function beforeRender()
+    {
+        
+    }
+
+    /**
+     * @internal
+     */
     public function willRender($method, $params = null)
     {
         $this->componentCache->cachedOutput(function() use ($method, $params) {
-            $reflection = new \Nette\Reflection\Method($this, $method);
+            $reflection = new Method($this, $method);
 
             $renderParamsSource = null;
             if ($params && $reflection->getParameters()) {
@@ -211,9 +230,9 @@ class BaseControl extends UI\Control
                 $loadedParams[$paramRefl->getName()] = $this->getComponentParameter($paramRefl->getName());
             }
 
-            //Pre-render
             call_user_func_array([$this, $method], $loadedParams);
-            //Post-render
+            
+            $this->componentRender();
 
             if ($renderParamsSource) {
                 $this->componentParameters->remove($renderParamsSource);
@@ -222,16 +241,25 @@ class BaseControl extends UI\Control
     }
 
     /**
-     * Render methods
+     * Method called after execution of any render method.
      */
-    public function componentRender()
+    protected function componentRender()
     {
-        $this->getTemplateFile();
-
-        if (!isset($this->template->lang)) {
-            $this->template->lang = $this->parent->getParameter('lang');
+        //find template if specified in parameters
+        if (!$this->templateFile) {
+            $this->setTemplateFile($this->getComponentParameter("template"));
         }
 
+        //include default values into template
+        if (!isset($this->template->user)) {
+            $this->template->user = $this->user;
+        }
+        if (!isset($this->template->lang)) {
+            $this->template->lang = $this->getPresenter()->lang;
+        }
+
+        //render template
+        $this->getTemplateFile();
         $this->template->render();
     }
 

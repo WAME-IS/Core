@@ -4,13 +4,16 @@ namespace App\Core\Presenters;
 
 use Kdyby\Doctrine\EntityManager;
 use Nette\Application\IResponse;
+use Nette\Application\UI\Control;
 use Nette\Application\UI\ITemplate;
 use Nette\Application\UI\Multiplier;
 use Nette\Application\UI\Presenter;
+use Wame\ComponentModule\Components\PositionControlLoader;
+use Wame\Core\Components\BaseControl;
 use Wame\Core\Status\ControlStatus;
+use Wame\Core\Status\ControlStatuses;
 use Wame\DynamicObject\Components\IFormControlFactory;
 use Wame\HeadControl\HeadControl;
-use Wame\ComponentModule\Components\PositionControlLoader;
 use WebLoader\Nette\CssLoader;
 use WebLoader\Nette\JavaScriptLoader;
 use WebLoader\Nette\LoaderFactory;
@@ -46,7 +49,7 @@ abstract class BasePresenter extends Presenter
     public $status;
     public $meta;
 
-    public function injectStatus(\Wame\Core\Status\ControlStatuses $controlStatuses)
+    public function injectStatus(ControlStatuses $controlStatuses)
     {
         $this->status = new ControlStatus($this, $controlStatuses);
     }
@@ -212,6 +215,23 @@ abstract class BasePresenter extends Presenter
         array_push($list, VENDOR_PATH . '/' . PACKAGIST_NAME . '/' . $modulePath . '/presenters/templates/@layout.latte');
 
         return $list;
+    }
+
+    protected function beforeRender()
+    {
+        parent::beforeRender();
+
+        $this->callBeforeRenders($this);
+    }
+
+    private function callBeforeRenders(Control $control)
+    {
+        foreach ($control->getComponents() as $subControl) {
+            if($subControl instanceof BaseControl) {
+                $subControl->beforeRender();
+            }
+            $this->callBeforeRenders($subControl);
+        }
     }
 
     /**
