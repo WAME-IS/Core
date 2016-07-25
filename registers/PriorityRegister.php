@@ -13,7 +13,7 @@ class PriorityRegister implements IRegister
     private $type;
 
     /** @var array */
-    private $array;
+    protected $array;
 
     /**
      * @param string $type Name of class accepted in this register

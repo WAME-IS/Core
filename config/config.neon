@@ -107,3 +107,8 @@ services:
             - addFilter(timeAgo, @Wame\Core\Filters\TimeAgoFilter)
 
     - Wame\Core\Filters\TimeAgoFilter
+
+    - Wame\Core\Forms\IStatusTypeFormContainerFactory
+
+    StatusTypeRegister:
+        class: Wame\Core\Registers\StatusTypeRegister
