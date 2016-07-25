@@ -20,8 +20,7 @@ use Wame\ComponentModule\Components\PositionControlLoader;
 class BaseControl extends UI\Control
 {
 
-    const DEFAULT_TEMPLATE = 'default.latte',
-        COMPONENT_TYPE_CLASS = 'cnt-%s';
+    const DEFAULT_TEMPLATE = 'default.latte';
 
     /** @var Container */
     protected $container;
