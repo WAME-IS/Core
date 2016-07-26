@@ -110,7 +110,12 @@ class BaseControl extends Control
      */
     public function setTemplateFile($template)
     {
+        if(!\Nette\Utils\Strings::contains($template, "\.")) {
+            $template .= '.latte';
+        }
+        
         $this->templateFile = $template;
+        
         return $this;
     }
 
@@ -209,18 +214,20 @@ class BaseControl extends Control
             $reflection = new Method($this, $method);
 
             $renderParamsSource = null;
-            if ($params && $reflection->getParameters()) {
+            if ($params) {
 
-                $i = 0;
-                $namedParams = [];
-                foreach ($reflection->getParameters() as $paramRefl) {
-                    if ($i >= count($params)) {
-                        break;
+                foreach ($params as $key => $value) {
+                    if(is_numeric($key)) {
+                        if(!isset($reflection->getParameters()[$key])) {
+                            continue;
+                        }
+                        $paramRefl = $reflection->getParameters()[$key];
+                        $namedParams[$paramRefl->getName()] = $value;
+                    } else {
+                        $namedParams[$key] = $value;
                     }
-                    $namedParams[$paramRefl->getName()] = $params[$i];
-                    $i++;
                 }
-
+                
                 $renderParamsSource = new ArrayParameterSource($namedParams);
                 $this->componentParameters->add($renderParamsSource);
             }
