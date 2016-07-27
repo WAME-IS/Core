@@ -135,12 +135,10 @@ abstract class BasePresenter extends Presenter
      */
     public function formatTemplateFiles($way = '')
     {
-        $name = $this->getName();
-        $presenter = substr($name, strrpos(':' . $name, ':'));
+        $presenter = $this->getTemplatePresenter();
         $module = $this->getModule();
 
-        $dir = dirname($this->getReflection()->getFileName());
-        $dir = is_dir("$dir/templates") ? $dir : dirname($dir);
+        $dir = $this->getTemplatesFolder();
 
         $dirs = [];
 
@@ -176,13 +174,11 @@ abstract class BasePresenter extends Presenter
      */
     public function formatLayoutTemplateFiles($modulePath = 'Core', $way = '')
     {
-        $name = $this->getName();
-        $presenter = substr($name, strrpos(':' . $name, ':'));
+        $presenter = $this->getTemplatePresenter();
         $module = $this->getModule();
         $layout = $this->layout ? $this->layout : 'layout';
 
-        $dir = dirname($this->getReflection()->getFileName());
-        $dir = is_dir("$dir/templates") ? $dir : dirname($dir);
+        $dir = $this->getTemplatesFolder();
 
         $dirs = [];
 
@@ -199,6 +195,8 @@ abstract class BasePresenter extends Presenter
         if ($this->isAjax()) {
             $list[] = __DIR__ . '/templates/@modalLayout.latte';
         }
+        
+        $name = $this->getName();
 
         foreach ($dirs as $dir) {
             array_push($list, "$dir/$presenter/@$layout.latte", "$dir/$presenter.@$layout.latte");
@@ -218,6 +216,18 @@ abstract class BasePresenter extends Presenter
         array_push($list, VENDOR_PATH . '/' . PACKAGIST_NAME . '/' . $modulePath . '/presenters/templates/@layout.latte');
 
         return $list;
+    }
+    
+    protected function getTemplatePresenter()
+    {
+        return substr($this->getName(), strrpos(':' . $this->getName(), ':'));
+    }
+    
+    protected function getTemplatesFolder()
+    {
+        $dir = dirname($this->getReflection()->getFileName());
+        $dir = is_dir("$dir/templates") ? $dir : dirname($dir);
+        return $dir;
     }
 
     protected function beforeRender()
