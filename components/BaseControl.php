@@ -48,6 +48,7 @@ class BaseControl extends Control
     /** @var User */
     protected $user;
 
+    
     public function __construct(Container $container, IContainer $parent = NULL, $name = NULL)
     {
         parent::__construct($parent, $name);
@@ -110,7 +111,7 @@ class BaseControl extends Control
      */
     public function setTemplateFile($template)
     {
-        if(!\Nette\Utils\Strings::contains($template, "\.")) {
+        if(!\Nette\Utils\Strings::contains($template, ".")) {
             $template .= '.latte';
         }
         
