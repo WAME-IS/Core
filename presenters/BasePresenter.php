@@ -3,6 +3,7 @@
 namespace App\Core\Presenters;
 
 use Kdyby\Doctrine\EntityManager;
+use Kdyby\Replicator\Container;
 use Nette\Application\IResponse;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\ITemplate;
@@ -58,8 +59,8 @@ abstract class BasePresenter extends Presenter
     {
         parent::startup();
         $this->positionControlLoader->load($this);
-        
-        \Kdyby\Replicator\Container::register();
+
+        Container::register();
     }
 
     /** @return CssLoader */
@@ -229,10 +230,12 @@ abstract class BasePresenter extends Presenter
     private function callBeforeRenders(Control $control)
     {
         foreach ($control->getComponents() as $subControl) {
-            if($subControl instanceof BaseControl) {
+            if ($subControl instanceof BaseControl) {
                 $subControl->beforeRender();
             }
-            $this->callBeforeRenders($subControl);
+            if ($subControl instanceof Control) {
+                $this->callBeforeRenders($subControl);
+            }
         }
     }
 
