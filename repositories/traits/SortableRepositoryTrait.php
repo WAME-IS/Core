@@ -50,5 +50,19 @@ trait SortableRepositoryTrait
             return 1;
         }
     }
+    
+    
+    public function moveAfter($item, $afterId)
+    {
+        $after = $this->get(['id' => $afterId]);
+        
+        $item->sort = $after->sort + 1;
+        
+        $lower = $this->find(['sort >=' => $item->sort + 1, 'id !=' => $item->id]);
+        
+        foreach($lower as $l) {
+            $l->sort++;
+        }
+    }
 
 }

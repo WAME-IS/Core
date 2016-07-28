@@ -38,6 +38,9 @@ extensions:
     doctrineMPTT: Kappa\DoctrineMPTT\DI\DoctrineMPTTExtension
     dynamicDiscriminatorMap: IPub\DoctrineDynamicDiscriminatorMap\DI\DoctrineDynamicDiscriminatorMapExtension
     replicator: Kdyby\Replicator\DI\ReplicatorExtension
+    filtersExtension: Zenify\DoctrineFilters\DI\FiltersExtension
+    eventDispatcherExtension: Symnedi\EventDispatcher\DI\EventDispatcherExtension
+
 
 doctrine:
     driver: %database.driver%
@@ -103,10 +106,14 @@ services:
 
     - Wame\Core\Status\ControlStatuses
 
+    # Doctrine filters
+#    - Wame\Core\Doctrine\Filters\SoftdeletableFilter
+
     nette.latteFactory:
         setup:
             - addFilter(timeAgo, @Wame\Core\Filters\TimeAgoFilter)
 
+    # Filters
     - Wame\Core\Filters\TimeAgoFilter
 
     - Wame\Core\Forms\IStatusTypeFormContainerFactory

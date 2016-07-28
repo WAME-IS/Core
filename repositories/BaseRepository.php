@@ -213,7 +213,8 @@ class BaseRepository extends Object implements IRepository
 		return true;
 	}
 	
-    public function createQueryBuilder($alias = null) {
+    public function createQueryBuilder($alias = null)
+    {
         return $this->entity->createQueryBuilder($alias);
     }
     
