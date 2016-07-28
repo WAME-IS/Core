@@ -107,7 +107,7 @@ services:
     - Wame\Core\Status\ControlStatuses
 
     # Doctrine filters
-#    - Wame\Core\Doctrine\Filters\SoftdeletableFilter
+    - Wame\Core\Doctrine\Filters\SoftdeletableFilter
 
     nette.latteFactory:
         setup:
