@@ -25,7 +25,7 @@ abstract class BasePresenter extends Presenter
     /** h4kuna Gettext latte translator trait */
     use \h4kuna\Gettext\InjectTranslator;
 
-/** FormGroup getter trait */
+    /** FormGroup getter trait */
     use \Wame\DynamicObject\Forms\FormGroup;
 
     /** @var LoaderFactory @inject */
@@ -49,6 +49,10 @@ abstract class BasePresenter extends Presenter
     /** @var ControlStatus */
     public $status;
     public $meta;
+    
+    public $onBeforeRender = [];
+    
+    public $onAfterRender = [];
 
     public function injectStatus(ControlStatuses $controlStatuses)
     {
@@ -264,6 +268,18 @@ abstract class BasePresenter extends Presenter
         $template->siteTitle = null;
 
         return $template;
+    }
+    
+    protected function beforeRender()
+    {
+        parent::beforeRender();
+        $this->onBeforeRender();
+    }
+    
+    protected function afterRender()
+    {
+        parent::afterRender();
+        $this->onAfterRender();
     }
 
     /**

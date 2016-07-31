@@ -44,6 +44,20 @@ class BaseControl extends Control
 
     /** @var TemplatingCache */
     protected $componentCache;
+    
+    
+    /**
+     *
+     * @var type 
+     */
+    public $onBeforeRender = [];
+
+    /**
+     *
+     * @var type 
+     */
+    public $onAfterRender = [];
+
 
     /** @var User */
     protected $user;
@@ -238,10 +252,14 @@ class BaseControl extends Control
                 $loadedParams[$paramRefl->getName()] = $this->getComponentParameter($paramRefl->getName());
             }
 
+            $this->onBeforeRender();
+            
             call_user_func_array([$this, $method], $loadedParams);
             
             $this->componentRender();
 
+            $this->onAfterRender();
+            
             if ($renderParamsSource) {
                 $this->componentParameters->remove($renderParamsSource);
             }
