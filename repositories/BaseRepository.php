@@ -10,7 +10,6 @@ use Kdyby\Events\EventManager;
 use Nette\DI\Container;
 use Nette\Object;
 use Nette\Security\User;
-use ReflectionClass;
 use Wame\Core\Event\RepositoryEntitySetEvent;
 
 interface IRepository
@@ -216,6 +215,11 @@ class BaseRepository extends Object implements IRepository
     public function createQueryBuilder($alias = null)
     {
         return $this->entity->createQueryBuilder($alias);
+    }
+    
+    public function getEntityName()
+    {
+        return $this->entity->getClassName();
     }
     
 }
