@@ -11,6 +11,7 @@ use Nette\DI\Container;
 use Nette\Object;
 use Nette\Security\User;
 use Wame\Core\Event\RepositoryEntitySetEvent;
+use Wame\Core\Registers\RepositoryRegister;
 
 interface IRepository
 {
@@ -222,6 +223,9 @@ class BaseRepository extends Object implements IRepository
     
     public function getEntityName()
     {
+        if(!$this->entity) {
+            return null;
+        }
         return $this->entity->getClassName();
     }
     

@@ -234,25 +234,6 @@ abstract class BasePresenter extends Presenter
         return $dir;
     }
 
-    protected function beforeRender()
-    {
-        parent::beforeRender();
-
-        $this->callBeforeRenders($this);
-    }
-
-    private function callBeforeRenders(Control $control)
-    {
-        foreach ($control->getComponents() as $subControl) {
-            if ($subControl instanceof BaseControl) {
-                $subControl->beforeRender();
-            }
-            if ($subControl instanceof Control) {
-                $this->callBeforeRenders($subControl);
-            }
-        }
-    }
-
     /**
      * Create template
      * Append vars to template
@@ -274,6 +255,20 @@ abstract class BasePresenter extends Presenter
     {
         parent::beforeRender();
         $this->onBeforeRender();
+        $this->callBeforeRenders($this);
+    }
+    
+    private function callBeforeRenders(Control $control)
+    {
+        //TODO check if it can be removed
+        foreach ($control->getComponents() as $subControl) {
+            if ($subControl instanceof BaseControl) {
+                $subControl->beforeRender();
+            }
+            if ($subControl instanceof Control) {
+                $this->callBeforeRenders($subControl);
+            }
+        }
     }
     
     protected function afterRender()
