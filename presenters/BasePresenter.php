@@ -4,28 +4,30 @@ namespace App\Core\Presenters;
 
 use Kdyby\Doctrine\EntityManager;
 use Kdyby\Replicator\Container;
-use Nette\Application\IResponse;
 use Nette\Application\UI\Control;
-use Nette\Application\UI\ITemplate;
 use Nette\Application\UI\Multiplier;
 use Nette\Application\UI\Presenter;
+use Nette\Http\IResponse;
+use Nette\Templating\ITemplate;
 use Wame\ComponentModule\Components\PositionControlLoader;
 use Wame\Core\Components\BaseControl;
 use Wame\Core\Status\ControlStatus;
 use Wame\Core\Status\ControlStatuses;
 use Wame\DynamicObject\Components\IFormControlFactory;
-use Wame\HeadControl\HeadControl;
+use Wame\HeadControl\Comopnents\IMetaControl;
+use Wame\HeadControl\Components\IHeadControlFactory;
+use Wame\HeadControl\Registers\MetaTypeRegister;
 use WebLoader\Nette\CssLoader;
 use WebLoader\Nette\JavaScriptLoader;
 use WebLoader\Nette\LoaderFactory;
 
-abstract class BasePresenter extends Presenter
+abstract class BasePresenter extends Presenter implements IMetaControl
 {
 
     /** h4kuna Gettext latte translator trait */
     use \h4kuna\Gettext\InjectTranslator;
 
-    /** FormGroup getter trait */
+/** FormGroup getter trait */
     use \Wame\DynamicObject\Forms\FormGroup;
 
     /** @var LoaderFactory @inject */
@@ -37,8 +39,11 @@ abstract class BasePresenter extends Presenter
     /** @persistent */
     public $id;
 
-    /** @var HeadControl @inject */
-    public $headControl;
+    /** @var MetaTypeRegister */
+    public $metaTypeRegister;
+
+    /** @var IHeadControlFactory */
+    public $IHeadControlFactory;
 
     /** @var IFormControlFactory @inject */
     public $IFormControlFactory;
@@ -48,10 +53,7 @@ abstract class BasePresenter extends Presenter
 
     /** @var ControlStatus */
     public $status;
-    public $meta;
-    
     public $onBeforeRender = [];
-    
     public $onAfterRender = [];
 
     public function injectStatus(ControlStatuses $controlStatuses)
@@ -59,10 +61,17 @@ abstract class BasePresenter extends Presenter
         $this->status = new ControlStatus($this, $controlStatuses);
     }
 
+    public function injectHeadControl(MetaTypeRegister $metaTypeRegister, IHeadControlFactory $IHeadControlFactory)
+    {
+        $this->metaTypeRegister = $metaTypeRegister;
+        $this->IHeadControlFactory = $IHeadControlFactory;
+    }
+
     protected function startup()
     {
         parent::startup();
         $this->positionControlLoader->load($this);
+        $this->bindMeta($this);
 
         Container::register();
     }
@@ -82,7 +91,7 @@ abstract class BasePresenter extends Presenter
     // TODO: presunut do global component loadera
     public function createComponentHeadControl()
     {
-        return $this->headControl;
+        return $this->IHeadControlFactory->create();
     }
 
     /**
@@ -199,7 +208,7 @@ abstract class BasePresenter extends Presenter
         if ($this->isAjax()) {
             $list[] = __DIR__ . '/templates/@modalLayout.latte';
         }
-        
+
         $name = $this->getName();
 
         foreach ($dirs as $dir) {
@@ -221,12 +230,12 @@ abstract class BasePresenter extends Presenter
 
         return $list;
     }
-    
+
     protected function getTemplatePresenter()
     {
         return substr($this->getName(), strrpos(':' . $this->getName(), ':'));
     }
-    
+
     protected function getTemplatesFolder()
     {
         $dir = dirname($this->getReflection()->getFileName());
@@ -250,14 +259,14 @@ abstract class BasePresenter extends Presenter
 
         return $template;
     }
-    
+
     protected function beforeRender()
     {
         parent::beforeRender();
         $this->onBeforeRender();
         $this->callBeforeRenders($this);
     }
-    
+
     private function callBeforeRenders(Control $control)
     {
         //TODO check if it can be removed
@@ -270,7 +279,7 @@ abstract class BasePresenter extends Presenter
             }
         }
     }
-    
+
     protected function afterRender()
     {
         parent::afterRender();
@@ -293,8 +302,29 @@ abstract class BasePresenter extends Presenter
      * Get presenter status
      * @return ControlStatus
      */
-    function getStatus()
+    public function getStatus()
     {
         return $this->status;
+    }
+
+    public function bindMeta(IMetaControl $control)
+    {
+        $this->metaTypeRegister->getByName('title')->setContent($control->getTitle());
+        $this->metaTypeRegister->getByName('description')->setContent($control->getDescription());
+    }
+
+    public function getTitle()
+    {
+        return "TODO not implemented";
+    }
+
+    public function getDescription()
+    {
+        return "TODO not implemented";
+    }
+
+    public function getKeywords()
+    {
+        return "TODO not implemented";
     }
 }
