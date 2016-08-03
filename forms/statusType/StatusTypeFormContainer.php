@@ -3,7 +3,6 @@
 namespace Wame\Core\Forms;
 
 use Wame\DynamicObject\Forms\BaseFormContainer;
-use Wame\FileModule\Registers\FileRegister;
 use Wame\Core\Registers\StatusTypeRegister;
 
 interface IStatusTypeFormContainerFactory

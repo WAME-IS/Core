@@ -31,6 +31,8 @@ class FormFactory extends Control
 	public function createForm()
 	{
 		$form = new Form;
+        
+        $form->setParent();
 		
 		$form->setRenderer(new \Tomaj\Form\Renderer\BootstrapVerticalRenderer);
 
