@@ -69,7 +69,7 @@ class ControlStatus extends Object
             $value = $this->params->$name;
             if(is_callable($value)) {
                 $value = call_user_func($value);
-                $this->set($name, $value);
+                $this->params->$name = $value;
             }
             return $value;
         }
@@ -109,5 +109,10 @@ class ControlStatus extends Object
                 }
             }
         }
+    }
+    
+    public function getAllLocal()
+    {
+        return $this->params;
     }
 }
