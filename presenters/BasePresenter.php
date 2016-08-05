@@ -27,7 +27,7 @@ abstract class BasePresenter extends Presenter implements IMetaControl
     /** h4kuna Gettext latte translator trait */
     use \h4kuna\Gettext\InjectTranslator;
 
-/** FormGroup getter trait */
+    /** FormGroup getter trait */
     use \Wame\DynamicObject\Forms\FormGroup;
 
     /** @var LoaderFactory @inject */
@@ -53,7 +53,19 @@ abstract class BasePresenter extends Presenter implements IMetaControl
 
     /** @var ControlStatus */
     public $status;
+
+    /**
+     * Event
+     * 
+     * @var callable[] 
+     */
     public $onBeforeRender = [];
+
+    /**
+     * Event
+     * 
+     * @var callable[] 
+     */
     public $onAfterRender = [];
 
     public function injectStatus(ControlStatuses $controlStatuses)
