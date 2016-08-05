@@ -66,7 +66,12 @@ class ControlStatus extends Object
     private function recursiveGet($name)
     {
         if (isset($this->params->$name)) {
-            return $this->params->$name;
+            $value = $this->params->$name;
+            if(is_callable($value)) {
+                $value = call_user_func($value);
+                $this->set($name, $value);
+            }
+            return $value;
         }
         $parent = $this->control->getParent();
         if ($parent && method_exists($parent, "getStatus")) {
