@@ -24,6 +24,7 @@ application:
 
 
 session:
+    autoStart: true
     expiration: 14 days
 
 
@@ -93,6 +94,7 @@ webloader:
                 - live-form-validation.js
                 - /wame-add-param-to-url/add-param-to-url.js
                 - /wame-bootstrap-modal/bootstrap-modal.js
+                - init.js
             fileFilters:
                 - @jwlJsMinFilter
 
