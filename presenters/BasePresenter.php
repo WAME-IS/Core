@@ -14,14 +14,13 @@ use Wame\Core\Components\BaseControl;
 use Wame\Core\Status\ControlStatus;
 use Wame\Core\Status\ControlStatuses;
 use Wame\DynamicObject\Components\IFormControlFactory;
-use Wame\HeadControl\Comopnents\IMetaControl;
 use Wame\HeadControl\Components\IHeadControlFactory;
 use Wame\HeadControl\Registers\MetaTypeRegister;
 use WebLoader\Nette\CssLoader;
 use WebLoader\Nette\JavaScriptLoader;
 use WebLoader\Nette\LoaderFactory;
 
-abstract class BasePresenter extends Presenter implements IMetaControl
+abstract class BasePresenter extends Presenter
 {
 
     /** h4kuna Gettext latte translator trait */
@@ -83,8 +82,6 @@ abstract class BasePresenter extends Presenter implements IMetaControl
     {
         parent::startup();
         $this->positionControlLoader->load($this);
-        $this->bindMeta($this);
-
         Container::register();
     }
 
@@ -317,26 +314,5 @@ abstract class BasePresenter extends Presenter implements IMetaControl
     public function getStatus()
     {
         return $this->status;
-    }
-
-    public function bindMeta(IMetaControl $control)
-    {
-        $this->metaTypeRegister->getByName('title')->setContent($control->getTitle());
-        $this->metaTypeRegister->getByName('description')->setContent($control->getDescription());
-    }
-
-    public function getTitle()
-    {
-        return "TODO not implemented";
-    }
-
-    public function getDescription()
-    {
-        return "TODO not implemented";
-    }
-
-    public function getKeywords()
-    {
-        return "TODO not implemented";
     }
 }
