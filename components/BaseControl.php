@@ -44,8 +44,7 @@ class BaseControl extends Control
 
     /** @var TemplatingCache */
     protected $componentCache;
-    
-    
+
     /**
      *
      * @var type 
@@ -58,11 +57,9 @@ class BaseControl extends Control
      */
     public $onAfterRender = [];
 
-
     /** @var User */
     protected $user;
 
-    
     public function __construct(Container $container, IContainer $parent = NULL, $name = NULL)
     {
         parent::__construct($parent, $name);
@@ -110,9 +107,9 @@ class BaseControl extends Control
 
         //add paramter sources
         $this->componentParameters->add(
-            new ArrayParameterSource($componentInPosition->getParameters()), 'componentInPosition', ['priority' => 30]);
+            new ArrayParameterSource($componentInPosition->getParameters()), 'componentInPosition', 30);
         $this->componentParameters->add(
-            new ArrayParameterSource($this->component->getParameters()), 'component', ['priority' => 20]);
+            new ArrayParameterSource($this->component->getParameters()), 'component', 20);
 
         return $this;
     }
@@ -125,12 +122,12 @@ class BaseControl extends Control
      */
     public function setTemplateFile($template)
     {
-        if(!\Nette\Utils\Strings::contains($template, ".")) {
+        if (!\Nette\Utils\Strings::contains($template, ".")) {
             $template .= '.latte';
         }
-        
+
         $this->templateFile = $template;
-        
+
         return $this;
     }
 
@@ -232,8 +229,8 @@ class BaseControl extends Control
             if ($params) {
 
                 foreach ($params as $key => $value) {
-                    if(is_numeric($key)) {
-                        if(!isset($reflection->getParameters()[$key])) {
+                    if (is_numeric($key)) {
+                        if (!isset($reflection->getParameters()[$key])) {
                             continue;
                         }
                         $paramRefl = $reflection->getParameters()[$key];
@@ -242,7 +239,7 @@ class BaseControl extends Control
                         $namedParams[$key] = $value;
                     }
                 }
-                
+
                 $renderParamsSource = new ArrayParameterSource($namedParams);
                 $this->componentParameters->add($renderParamsSource);
             }
@@ -253,13 +250,15 @@ class BaseControl extends Control
             }
 
             $this->onBeforeRender();
-            
+
+            //Pre-render
             call_user_func_array([$this, $method], $loadedParams);
-            
+            //Post-render
+
             $this->componentRender();
 
             $this->onAfterRender();
-            
+
             if ($renderParamsSource) {
                 $this->componentParameters->remove($renderParamsSource);
             }
@@ -339,6 +338,23 @@ class BaseControl extends Control
     public function getComponentParameter($parameter, $parameterReader = null)
     {
         return $this->componentParameters->getParameter($parameter, $parameterReader);
+    }
+
+    /**
+     * Get component parameter or return defualt value if no parameter is found
+     * 
+     * @param string $parameter Name of parameter
+     * @param mixed $default Defualt value if no parameter is found
+     * @param IParameterReader|array $parameterReader
+     * @return string
+     */
+    public function getComponentParameterDefault($parameter, $default, $parameterReader = null)
+    {
+        $param = $this->componentParameters->getParameter($parameter, $parameterReader);
+        if ($param) {
+            return $param;
+        }
+        return $default;
     }
 
     /**
