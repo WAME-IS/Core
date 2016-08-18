@@ -43,7 +43,7 @@ class PriorityRegister implements IRegister
             throw new InvalidArgumentException2("Trying to insert invalid service.");
         }
 
-        if ((new ClassType(get_class($service)))->is($this->type)) {
+        if (is_a($service, $this->type)) {
 
             if (!$name) {
                 $name = $this->getDefaultName($service);
