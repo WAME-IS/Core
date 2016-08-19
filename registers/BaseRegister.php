@@ -13,7 +13,7 @@ use RecursiveArrayIterator;
  *
  * @author Dominik Gmiterko <ienze@ienze.me>
  */
-class BaseRegister extends Object implements IRegister
+abstract class BaseRegister extends Object implements IRegister
 {
 
     /** @var string Type */

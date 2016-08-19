@@ -96,9 +96,9 @@ class BaseControl extends Control
 
         //add paramter sources
         $this->componentParameters->add(
-            new ArrayParameterSource($componentInPosition->getParameters()), 'componentInPosition', 30);
+            new ArrayParameterSource($componentInPosition->getParameters()), 'componentInPosition', ['priority' => 30]);
         $this->componentParameters->add(
-            new ArrayParameterSource($this->component->getParameters()), 'component', 20);
+            new ArrayParameterSource($this->component->getParameters()), 'component', ['priority' => 20]);
 
         return $this;
     }

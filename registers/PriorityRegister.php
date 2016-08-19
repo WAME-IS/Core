@@ -30,8 +30,15 @@ class PriorityRegister implements IRegister
      * @param object $service
      * @param string $name
      */
-    public function add($service, $name = null, $priority = 0)
+    public function add($service, $name = null, $parameters = [])
     {
+        $defaultParameters = [
+            'priority' => 0,
+            'domain' => null
+        ];
+        
+        $parameters = array_merge($defaultParameters, $parameters);
+        
         if (!$service) {
             throw new InvalidArgumentException2("Trying to insert invalid service.");
         }
@@ -43,15 +50,15 @@ class PriorityRegister implements IRegister
             }
 
             $index = $this->getIndexByName($name);
-            if ($index >= 0) {
+            if ($index >= 0) { // edit
                 $this->array[$index]['service'] = $service;
-                $this->array[$index]['priority'] = $priority;
-            } else {
-                $this->array[] = ['name' => $name, 'service' => $service, 'priority' => $priority];
+                $this->array[$index]['parameters'] = array_merge($this->array[$index]['parameters'], $parameters);
+            } else { // create
+                $this->array[] = ['name' => $name, 'service' => $service, 'parameters' => $parameters];
             }
 
             usort($this->array, function($s1, $s2) {
-                return $s2['priority'] - $s1['priority'];
+                return $s2['parameters']['priority'] - $s1['parameters']['priority'];
             });
         } else {
             throw new InvalidArgumentException2("Trying to register class " . get_class($service) . " into register of " . $this->type);
@@ -135,6 +142,22 @@ class PriorityRegister implements IRegister
         return array_map(function($s) {
             return $s['service'];
         }, $this->array);
+    }
+    
+    /**
+     * Get by domain
+     * @param string $domain
+     * @return array
+     */
+    public function getByDomain($domain)
+    {
+        return array_map(function($s) {
+            return $s['service'];
+        }, array_filter($this->array,
+            function($s) use($domain) {
+                return $s['parameters']['domain'] == $domain || $s['parameters']['domain'] == null;
+            }
+        ));
     }
 
     /**
