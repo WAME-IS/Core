@@ -67,7 +67,7 @@ class PriorityRegister implements IRegister
     
     protected function getDefaultName($service)
     {
-        return get_class($service);
+        return \Wame\Utils\Strings::getClassName($service);
     }
 
     /**
@@ -158,6 +158,26 @@ class PriorityRegister implements IRegister
                 return $s['parameters']['domain'] == $domain || $s['parameters']['domain'] == null;
             }
         ));
+    }
+    
+    /**
+     * Get parameter
+     * 
+     * @param string $serviceName   service name
+     * @return array
+     */
+    public function getParameter($serviceName)
+    {
+        foreach($this->array as $item) {
+            if($item['name'] == $serviceName) {
+                return $item['parameters'];
+            }
+        }
+    }
+    
+    public function getArray()
+    {
+        return $this->array;
     }
 
     /**
