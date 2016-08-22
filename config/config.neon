@@ -123,4 +123,4 @@ services:
     StatusTypeRegister:
         class: Wame\Core\Registers\StatusTypeRegister
 
-    - RepositoryRegister
+    - Wame\Core\Registers\RepositoryRegister
