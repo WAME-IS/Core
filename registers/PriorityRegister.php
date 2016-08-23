@@ -37,6 +37,10 @@ class PriorityRegister implements IRegister
             'domain' => null
         ];
         
+        if(!is_array($parameters)) {
+            throw new \Nette\InvalidArgumentException("Third parameter in register ".get_class($this)." has to be array of parameters. '".$parameters."' given.");
+        }
+        
         $parameters = array_merge($defaultParameters, $parameters);
         
         if (!$service) {
