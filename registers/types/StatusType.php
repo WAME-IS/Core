@@ -2,7 +2,7 @@
 
 namespace Wame\Core\Registers\Types;
 
-class StatusType implements IRegisterType
+abstract class StatusType implements IRegisterType
 {
     /** @var string */
     private $alias;
@@ -11,7 +11,7 @@ class StatusType implements IRegisterType
     /** {@inheritDoc} */
     public function getAlias()
     {
-        $this->alias;
+        return $this->alias;
     }
 
     /** {@inheritDoc} */
@@ -19,5 +19,10 @@ class StatusType implements IRegisterType
     {
         $this->alias = $alias;
     }
+    
+    /**
+     * @return string Name of entity
+     */
+    public abstract function getEntityName();
     
 }

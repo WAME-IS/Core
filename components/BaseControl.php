@@ -9,6 +9,7 @@ use Nette\DI\Container;
 use Nette\InvalidStateException;
 use Nette\Reflection\Method;
 use Nette\Security\User;
+use Nette\Utils\Strings;
 use Wame\ComponentModule\Components\PositionControlLoader;
 use Wame\ComponentModule\Entities\ComponentEntity;
 use Wame\ComponentModule\Entities\ComponentInPositionEntity;
@@ -16,6 +17,7 @@ use Wame\ComponentModule\Paremeters\ArrayParameterSource;
 use Wame\ComponentModule\Paremeters\IParameterReader;
 use Wame\ComponentModule\Paremeters\ParametersCombiner;
 use Wame\Core\Cache\TemplatingCache;
+use Wame\Core\Cache\TemplatingCacheFactory;
 use Wame\Core\Status\ControlStatus;
 use Wame\Core\Status\ControlStatuses;
 
@@ -46,14 +48,16 @@ class BaseControl extends Control
     protected $componentCache;
 
     /**
-     *
-     * @var type 
+     * Event called before rendeing of control
+     * 
+     * @var callable[] 
      */
     public $onBeforeRender = [];
 
     /**
-     *
-     * @var type 
+     * Event called after rendeing of control
+     * 
+     * @var callable[] 
      */
     public $onAfterRender = [];
 
@@ -69,7 +73,7 @@ class BaseControl extends Control
 
         $this->status = new ControlStatus($this, $container->getByType(ControlStatuses::class));
         $this->componentParameters = new ParametersCombiner();
-        $this->componentCache = new TemplatingCache($container->getByType(IStorage::class));
+        $this->componentCache = $container->getByType(TemplatingCacheFactory::class)->create();
     }
 
     /**
@@ -107,9 +111,9 @@ class BaseControl extends Control
 
         //add paramter sources
         $this->componentParameters->add(
-            new ArrayParameterSource($componentInPosition->getParameters()), 'componentInPosition', 30);
+            new ArrayParameterSource($componentInPosition->getParameters()), 'componentInPosition', ['priority' => 30]);
         $this->componentParameters->add(
-            new ArrayParameterSource($this->component->getParameters()), 'component', 20);
+            new ArrayParameterSource($this->component->getParameters()), 'component', ['priority' => 20]);
 
         return $this;
     }
@@ -122,7 +126,7 @@ class BaseControl extends Control
      */
     public function setTemplateFile($template)
     {
-        if (!\Nette\Utils\Strings::contains($template, ".")) {
+        if (!Strings::contains($template, ".")) {
             $template .= '.latte';
         }
 
@@ -222,7 +226,7 @@ class BaseControl extends Control
      */
     public function willRender($method, $params = null)
     {
-        $this->componentCache->cachedOutput(function() use ($method, $params) {
+        $this->componentCache->cachedOutput($this, function() use ($method, $params) {
             $reflection = new Method($this, $method);
 
             $renderParamsSource = null;

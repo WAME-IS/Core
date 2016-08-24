@@ -2,10 +2,13 @@
 
 namespace Wame\Core\Cache;
 
+use Nette\Application\UI\Control;
 use Nette\Caching\Cache;
 use Nette\Caching\IStorage;
+use Nette\ComponentModel\Container;
 use Nette\InvalidArgumentException;
 use Nette\Object;
+use Wame\Core\Components\BaseControl;
 
 class TemplatingCache extends Object
 {
@@ -22,6 +25,10 @@ class TemplatingCache extends Object
     /** @var boolean */
     private $enabled = false;
 
+    /**
+     * @param IStorage $cacheStorage
+     * @param string $name
+     */
     public function __construct(IStorage $cacheStorage, $name = null)
     {
         $this->cache = new Cache($cacheStorage, "Wame.Templating.Cache");
@@ -35,6 +42,14 @@ class TemplatingCache extends Object
     function setName($name)
     {
         $this->name = $name;
+    }
+
+    /**
+     * @return string
+     */
+    function getName()
+    {
+        return $this->name;
     }
 
     /**
@@ -75,13 +90,19 @@ class TemplatingCache extends Object
 
     /**
      * The most important function. Call this function to cache result of render.
-     * @param type $callback
+     * 
+     * @param Control $control
+     * @param callable $callback
+     * @param array $args
      */
-    public function cachedOutput($callback, $args = null)
+    public function cachedOutput($control, $callback, $args = null)
     {
+        $this->addChildCaches($control);
+
         if (!$this->name) {
             throw new InvalidArgumentException("Name has to be set.");
         }
+
         if ($this->enabled) {
             if ($active = $this->cache->start($this->name)) {
                 if ($args) {
@@ -96,6 +117,23 @@ class TemplatingCache extends Object
                 call_user_func_array($callback, $args);
             } else {
                 call_user_func($callback);
+            }
+        }
+    }
+
+    /**
+     * @param Control $control
+     */
+    private function addChildCaches($control)
+    {
+        if ($control instanceof Container) {
+            foreach ($control->getComponents() as $subcontrol) {
+                if ($subcontrol instanceof BaseControl) {
+                    $name = $subcontrol->getComponentCache()->getName();
+                    $this->addSettings([
+                        Cache::ITEMS => [$name]
+                    ]);
+                }
             }
         }
     }

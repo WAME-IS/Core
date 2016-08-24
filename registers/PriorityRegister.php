@@ -2,8 +2,10 @@
 
 namespace Wame\Core\Registers;
 
-use Nette\Reflection\ClassType;
+use Nette\InvalidArgumentException;
 use RecursiveArrayIterator;
+use Wame\Core\Registers\Types\IRegisterType;
+use Wame\Utils\Strings;
 use WebLoader\InvalidArgumentException as InvalidArgumentException2;
 
 class PriorityRegister implements IRegister
@@ -36,13 +38,13 @@ class PriorityRegister implements IRegister
             'priority' => 0,
             'domain' => null
         ];
-        
-        if(!is_array($parameters)) {
-            throw new \Nette\InvalidArgumentException("Third parameter in register ".get_class($this)." has to be array of parameters. '".$parameters."' given.");
+
+        if (!is_array($parameters)) {
+            throw new InvalidArgumentException("Third parameter in register " . get_class($this) . " has to be array of parameters. '" . $parameters . "' given.");
         }
-        
+
         $parameters = array_merge($defaultParameters, $parameters);
-        
+
         if (!$service) {
             throw new InvalidArgumentException2("Trying to insert invalid service.");
         }
@@ -51,6 +53,10 @@ class PriorityRegister implements IRegister
 
             if (!$name) {
                 $name = $this->getDefaultName($service);
+            }
+
+            if ($service instanceof IRegisterType) {
+                $service->setAlias($name);
             }
 
             $index = $this->getIndexByName($name);
@@ -68,10 +74,10 @@ class PriorityRegister implements IRegister
             throw new InvalidArgumentException2("Trying to register class " . get_class($service) . " into register of " . $this->type);
         }
     }
-    
+
     protected function getDefaultName($service)
     {
-        return \Wame\Utils\Strings::getClassName($service);
+        return Strings::getClassName($service);
     }
 
     /**
@@ -147,7 +153,7 @@ class PriorityRegister implements IRegister
             return $s['service'];
         }, $this->array);
     }
-    
+
     /**
      * Get by domain
      * @param string $domain
@@ -157,13 +163,12 @@ class PriorityRegister implements IRegister
     {
         return array_map(function($s) {
             return $s['service'];
-        }, array_filter($this->array,
-            function($s) use($domain) {
+        }, array_filter($this->array, function($s) use($domain) {
                 return $s['parameters']['domain'] == $domain || $s['parameters']['domain'] == null;
             }
         ));
     }
-    
+
     /**
      * Get parameter
      * 
@@ -172,13 +177,13 @@ class PriorityRegister implements IRegister
      */
     public function getParameter($serviceName)
     {
-        foreach($this->array as $item) {
-            if($item['name'] == $serviceName) {
+        foreach ($this->array as $item) {
+            if ($item['name'] == $serviceName) {
                 return $item['parameters'];
             }
         }
     }
-    
+
     public function getArray()
     {
         return $this->array;
