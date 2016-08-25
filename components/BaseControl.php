@@ -21,7 +21,7 @@ use Wame\Core\Cache\TemplatingCacheFactory;
 use Wame\Core\Status\ControlStatus;
 use Wame\Core\Status\ControlStatuses;
 
-class BaseControl extends Control
+abstract class BaseControl extends Control
 {
 
     const DEFAULT_TEMPLATE = 'default.latte';

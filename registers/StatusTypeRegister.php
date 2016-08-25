@@ -11,4 +11,13 @@ class StatusTypeRegister extends PriorityRegister
         parent::__construct(StatusType::class);
     }
     
+    public function getByEntityClass($class)
+    {
+        foreach ($this->array as $service) {
+            if ($service['service']->getEntityName() == $class) {
+                return $service['service'];
+            }
+        }
+        return null;
+    }
 }
