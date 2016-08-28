@@ -9,8 +9,10 @@ use Nette\Application\UI\Multiplier;
 use Nette\Application\UI\Presenter;
 use Nette\Http\IResponse;
 use Nette\Templating\ITemplate;
+use Nette\Utils\Strings;
 use Wame\ComponentModule\Components\PositionControlLoader;
 use Wame\Core\Components\BaseControl;
+use Wame\Core\Event\PresenterStageChangeEvent;
 use Wame\Core\Status\ControlStatus;
 use Wame\Core\Status\ControlStatuses;
 use Wame\DynamicObject\Components\IFormControlFactory;
@@ -26,7 +28,7 @@ abstract class BasePresenter extends Presenter
     /** h4kuna Gettext latte translator trait */
     use \h4kuna\Gettext\InjectTranslator;
 
-    /** FormGroup getter trait */
+/** FormGroup getter trait */
     use \Wame\DynamicObject\Forms\FormGroup;
 
     /** @var LoaderFactory @inject */
@@ -54,18 +56,12 @@ abstract class BasePresenter extends Presenter
     public $status;
 
     /**
-     * Event
+     * Event called whenever processing stage of presenter changes. Stages are: startup, action, signal, render, terminate
+     * Callback should have one argument of PresenterStageChangeEvent type
      * 
      * @var callable[] 
      */
-    public $onBeforeRender = [];
-
-    /**
-     * Event
-     * 
-     * @var callable[] 
-     */
-    public $onAfterRender = [];
+    public $onStageChange = [];
 
     public function injectStatus(ControlStatuses $controlStatuses)
     {
@@ -81,6 +77,7 @@ abstract class BasePresenter extends Presenter
     protected function startup()
     {
         parent::startup();
+        $this->onStageChange(new PresenterStageChangeEvent($this, 'startup'));
         $this->positionControlLoader->load($this);
         Container::register();
     }
@@ -272,7 +269,7 @@ abstract class BasePresenter extends Presenter
     protected function beforeRender()
     {
         parent::beforeRender();
-        $this->onBeforeRender();
+        $this->onStageChange(new PresenterStageChangeEvent($this, 'render'));
         $this->callBeforeRenders($this);
     }
 
@@ -292,7 +289,23 @@ abstract class BasePresenter extends Presenter
     protected function afterRender()
     {
         parent::afterRender();
-        $this->onAfterRender();
+        $this->onStageChange(new PresenterStageChangeEvent($this, 'terminate'));
+    }
+
+    protected function tryCall($method, array $params)
+    {
+        $callEvent = Strings::startsWith($method, 'action');
+        if ($callEvent) {
+            $this->onStageChange(new PresenterStageChangeEvent($this, 'action'));
+        }
+        
+        $tryCallResult = parent::tryCall($method, $params);
+        
+        if ($callEvent) {
+            $this->onStageChange(new PresenterStageChangeEvent($this, 'signal'));
+        }
+        
+        return $tryCallResult;
     }
 
     /**
