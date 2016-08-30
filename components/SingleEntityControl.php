@@ -25,6 +25,12 @@ abstract class SingleEntityControl extends BaseControl implements DataLoaderCont
     {
         parent::__construct($container);
 
+        if(!is_a($entity, $this->getEntityType())) {
+            $e = new \Nette\InvalidArgumentException("Invalid entity type");
+            $e->entity = $entity;
+            throw $e;
+        }
+        
         $this->getStatus()->get($this->getEntityType(), function($entity) {
             if (!$entity) {
                 throw new BadRequestException("Entity with this id doesn't exist");
