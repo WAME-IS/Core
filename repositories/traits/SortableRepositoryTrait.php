@@ -52,16 +52,59 @@ trait SortableRepositoryTrait
     }
     
     
-    public function moveAfter($item, $afterId)
+    /**
+     * Move before
+     * 
+     * @param integer $itemId   item id
+     * @param integer $nextId   next id
+     */
+    public function moveBefore($itemId, $nextId)
     {
-        $after = $this->get(['id' => $afterId]);
+        $item = $this->get(['id' => $itemId]);
+        $next = $this->get(['id' => $nextId]);
         
-        $item->sort = $after->sort + 1;
+        $item->sort = $next->sort;
         
-        $lower = $this->find(['sort >=' => $item->sort + 1, 'id !=' => $item->id]);
+        $higher = $this->find(['sort >=' => $item->sort, 'position' => $item->position, 'id !=' => $item->id]);
         
-        foreach($lower as $l) {
+        foreach($higher as $l) {
             $l->sort++;
+        }
+    }
+    
+    /**
+     * Move after
+     * 
+     * @param integer $itemId   item id
+     * @param integer $prevId   prev id
+     */
+    public function moveAfter($itemId, $prevId)
+    {
+        $item = $this->get(['id' => $itemId]);
+        $prev = $this->get(['id' => $prevId]);
+        
+        $item->sort = $prev->sort + 1;
+        
+        $higher = $this->find(['sort >' => $item->sort, 'position' => $item->position, 'id !=' => $item->id]);
+        
+        foreach($higher as $l) {
+            $l->sort++;
+        }
+    }
+    
+    /**
+     * Move
+     * 
+     * @param integer $itemId   item id
+     * @param integer $prevId   prev id
+     * @param integer $nextId   next id
+     */
+    public function move($itemId, $prevId, $nextId)
+    {
+        if($nextId) {
+            $this->moveBefore($itemId, $nextId);
+        } elseif ($prevId) {
+            $this->moveAfter($itemId, $prevId);
         }
     }
 

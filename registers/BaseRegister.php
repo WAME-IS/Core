@@ -7,6 +7,7 @@ use Nette\Object;
 use Nette\Reflection\ClassType;
 use Nette\Utils\ArrayHash;
 use RecursiveArrayIterator;
+use Wame\Core\Registers\Types\IRegisterType;
 
 /**
  * BaseRegister
@@ -47,6 +48,10 @@ abstract class BaseRegister extends Object implements IRegister
 
             if (!$name) {
                 $name = $this->getDefaultName($service);
+            }
+            
+            if ($service instanceof IRegisterType) {
+                $service->setAlias($name);
             }
 
             $this->array[$name] = $service;
