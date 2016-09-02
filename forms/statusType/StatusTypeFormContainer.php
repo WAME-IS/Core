@@ -36,7 +36,7 @@ class StatusTypeFormContainer extends BaseFormContainer
         
         foreach($types as $type) {
             /* @var $type \Wame\Core\Registers\Types\IStatusType */
-            $pairs[$type->getStatusName()] = $type->getTitle();
+            $pairs[$type->getAlias()] = $type->getTitle();
         }
 		
 		$form->addSelect('statusType', _('Status type'), $pairs)
