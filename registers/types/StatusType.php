@@ -21,6 +21,14 @@ abstract class StatusType implements IRegisterType
     }
     
     /**
+     * @deprecated
+     */
+    public function getStatusName() //TODO remove when not used
+    {
+        return $this->getAlias();
+    }
+    
+    /**
      * @return string Name of entity
      */
     public abstract function getEntityName();
