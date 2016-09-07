@@ -24,12 +24,13 @@ use Wame\Core\Status\ControlStatuses;
 abstract class BaseControl extends Control
 {
 
-    const 
+    const
         DEFAULT_TEMPLATE = 'default.latte',
         PARAM_CONTAINER = 'container',
         CONTAINER_DEFAULT = [
             'tag' => 'div'
-        ];
+        ],
+        COMPONENT_ID_CLASS = 'cnt-%s';
 
     /** @var Container */
     protected $container;
@@ -66,6 +67,9 @@ abstract class BaseControl extends Control
      */
     public $onAfterRender = [];
 
+    /** @var boolean */
+    protected $hasContainer;
+
     /** @var User */
     protected $user;
 
@@ -79,6 +83,8 @@ abstract class BaseControl extends Control
         $this->status = new ControlStatus($this, $container->getByType(ControlStatuses::class));
         $this->componentParameters = new ParametersCombiner();
         $this->componentCache = $container->getByType(TemplatingCacheFactory::class)->create();
+        $this->componentParameters->add(
+            new ArrayParameterSource(['container' => ['class' => sprintf(self::COMPONENT_ID_CLASS, get_class($this))]]), 'componentDefaultClass', ['priority' => 1]);
         $this->bindContainers();
     }
 
@@ -300,11 +306,20 @@ abstract class BaseControl extends Control
 
     private function bindContainers()
     {
+        if (!$this->hasContainer) {
+            return;
+        }
         $this->onBeforeRender[] = function() {
+            if (!$this->hasContainer) {
+                return;
+            }
             Helpers::renderContainerStart(Helpers::getContainer($this, self::CONTAINER_DEFAULT, self::PARAM_CONTAINER));
         };
         $this->onAfterRender[] = function() {
-            Helpers::renderContainerStart(Helpers::getContainer($this, self::CONTAINER_DEFAULT, self::PARAM_CONTAINER));
+            if (!$this->hasContainer) {
+                return;
+            }
+            Helpers::renderContainerEnd(Helpers::getContainer($this, self::CONTAINER_DEFAULT, self::PARAM_CONTAINER));
         };
     }
 
