@@ -20,6 +20,7 @@ use Wame\Core\Cache\TemplatingCache;
 use Wame\Core\Cache\TemplatingCacheFactory;
 use Wame\Core\Status\ControlStatus;
 use Wame\Core\Status\ControlStatuses;
+use Wame\Utils\Strings as Strings2;
 
 abstract class BaseControl extends Control
 {
@@ -68,7 +69,7 @@ abstract class BaseControl extends Control
     public $onAfterRender = [];
 
     /** @var boolean */
-    protected $hasContainer;
+    protected $hasContainer = true;
 
     /** @var User */
     protected $user;
@@ -83,8 +84,11 @@ abstract class BaseControl extends Control
         $this->status = new ControlStatus($this, $container->getByType(ControlStatuses::class));
         $this->componentParameters = new ParametersCombiner();
         $this->componentCache = $container->getByType(TemplatingCacheFactory::class)->create();
+        
+        $type = Strings2::getClassName(get_class($this));
         $this->componentParameters->add(
-            new ArrayParameterSource(['container' => ['class' => sprintf(self::COMPONENT_ID_CLASS, get_class($this))]]), 'componentDefaultClass', ['priority' => 1]);
+            new ArrayParameterSource(['container' => ['class' => sprintf(self::COMPONENT_ID_CLASS, $type)]]), 'componentDefaultClass', ['priority' => 1]);
+        
         $this->bindContainers();
     }
 
