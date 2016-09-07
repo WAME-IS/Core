@@ -3,7 +3,6 @@
 namespace Wame\Core\Components;
 
 use Nette\Application\UI\Control;
-use Nette\Caching\IStorage;
 use Nette\ComponentModel\IContainer;
 use Nette\DI\Container;
 use Nette\InvalidStateException;
@@ -13,6 +12,7 @@ use Nette\Utils\Strings;
 use Wame\ComponentModule\Components\PositionControlLoader;
 use Wame\ComponentModule\Entities\ComponentEntity;
 use Wame\ComponentModule\Entities\ComponentInPositionEntity;
+use Wame\ComponentModule\Helpers\Helpers;
 use Wame\ComponentModule\Paremeters\ArrayParameterSource;
 use Wame\ComponentModule\Paremeters\IParameterReader;
 use Wame\ComponentModule\Paremeters\ParametersCombiner;
@@ -24,7 +24,12 @@ use Wame\Core\Status\ControlStatuses;
 abstract class BaseControl extends Control
 {
 
-    const DEFAULT_TEMPLATE = 'default.latte';
+    const 
+        DEFAULT_TEMPLATE = 'default.latte',
+        PARAM_CONTAINER = 'container',
+        CONTAINER_DEFAULT = [
+            'tag' => 'div'
+        ];
 
     /** @var Container */
     protected $container;
@@ -74,6 +79,7 @@ abstract class BaseControl extends Control
         $this->status = new ControlStatus($this, $container->getByType(ControlStatuses::class));
         $this->componentParameters = new ParametersCombiner();
         $this->componentCache = $container->getByType(TemplatingCacheFactory::class)->create();
+        $this->bindContainers();
     }
 
     /**
@@ -290,6 +296,16 @@ abstract class BaseControl extends Control
         //render template
         $this->getTemplateFile();
         $this->template->render();
+    }
+
+    private function bindContainers()
+    {
+        $this->onBeforeRender[] = function() {
+            Helpers::renderContainerStart(Helpers::getContainer($this, self::CONTAINER_DEFAULT, self::PARAM_CONTAINER));
+        };
+        $this->onAfterRender[] = function() {
+            Helpers::renderContainerStart(Helpers::getContainer($this, self::CONTAINER_DEFAULT, self::PARAM_CONTAINER));
+        };
     }
 
     /**
