@@ -67,9 +67,7 @@ class PriorityRegister implements IRegister
                 $this->array[] = ['name' => $name, 'service' => $service, 'parameters' => $parameters];
             }
 
-            usort($this->array, function($s1, $s2) {
-                return $s2['parameters']['priority'] - $s1['parameters']['priority'];
-            });
+            $this->resort();
         } else {
             throw new InvalidArgumentException2("Trying to register class " . get_class($service) . " into register of " . $this->type);
         }
@@ -97,6 +95,14 @@ class PriorityRegister implements IRegister
         } else {
             unset($this[$name]);
         }
+        $this->resort();
+    }
+
+    private function resort()
+    {
+        usort($this->array, function($s1, $s2) {
+            return $s2['parameters']['priority'] - $s1['parameters']['priority'];
+        });
     }
 
     /**
