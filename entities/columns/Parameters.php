@@ -2,6 +2,7 @@
 
 namespace Wame\Core\Entities\Columns;
 
+
 trait Parameters
 {
     /**
@@ -14,7 +15,11 @@ trait Parameters
 
 	public function getParameters()
 	{
-		return $this->parameters;
+        if ($this->parameters) {
+            return  $this->parameters;
+        } else {
+            return [];
+        }
 	}
 	
 	
@@ -35,6 +40,7 @@ trait Parameters
 		$this->parameters = $parameters;
 		return $this;
 	}
+    
     
     public function setParameter($parameter, $value)
 	{
