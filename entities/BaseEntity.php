@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\MappedSuperclass
  */
-class BaseEntity extends \Kdyby\Doctrine\Entities\BaseEntity
+abstract class BaseEntity extends \Kdyby\Doctrine\Entities\BaseEntity
 {
     public function __call($name, $args) 
     {

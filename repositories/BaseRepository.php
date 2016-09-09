@@ -5,13 +5,9 @@ namespace Wame\Core\Repositories;
 use h4kuna\Gettext\GettextSetup;
 use Kdyby\Doctrine\EntityManager;
 use Kdyby\Doctrine\EntityRepository;
-use Kdyby\Events\EventArgsList;
-use Kdyby\Events\EventManager;
 use Nette\DI\Container;
 use Nette\Object;
 use Nette\Security\User;
-use Wame\Core\Event\RepositoryEntitySetEvent;
-use Wame\Core\Registers\RepositoryRegister;
 
 interface IRepository
 {
@@ -77,35 +73,31 @@ class BaseRepository extends Object implements IRepository
 
     /** @var EntityRepository */
     protected $entity;
+    
+    /** @var string */
+    protected $entityClass;
 
     
-    public function __construct(
-        Container $container, EntityManager $entityManager, GettextSetup $translator, User $user, $entityClass = null
-    ) {
+    public function __construct($entityClass)
+    {
+        if(!is_string($entityClass)) {
+            throw new \Nette\InvalidArgumentException('Argument must be an instance of string');
+        }
+        
+        $this->entityClass = $entityClass;
+    }
+    
+    
+    public function injectRepository(Container $container, EntityManager $entityManager, GettextSetup $translator, User $user, \Wame\Core\Registers\RepositoryRegister $repositoryRegister)
+    {
         $this->container = $container;
         $this->entityManager = $entityManager;
         $this->lang = $translator->getLanguage();
         $this->user = $user;
-
-        if ($entityClass) {
-            $this->setEntityClass($entityClass);
-        }
-    }
-
-    public function setEntityClass($entityClass)
-    {
-        $en = 'Wame\\Core\\Repositories\\BaseRepository::onEntitynNameSet';
-        $eventtManager = $this->container->getByType(EventManager::class);
+        $this->entity = $this->entityManager->getRepository($this->entityClass);
         
-        if ($eventtManager->hasListeners($en)) {
-            $event = new RepositoryEntitySetEvent($entityClass);
-            $eventtManager->dispatchEvent($en, new EventArgsList([$event]));
-            $this->entity = $this->entityManager->getRepository($event->getEntityName());
-        } else {
-            $this->entity = $this->entityManager->getRepository($entityClass);
-        }
-        
-        $this->container->getByType(RepositoryRegister::class)->add($this, $entityClass);
+        // register repository |
+        $repositoryRegister->add($this, $this->entityClass);
     }
 
     /**
@@ -221,12 +213,29 @@ class BaseRepository extends Object implements IRepository
         return $this->entity->createQueryBuilder($alias);
     }
     
+    /**
+     * Get entity name
+     * 
+     * @return string
+     */
     public function getEntityName()
     {
         if(!$this->entity) {
             return null;
         }
         return $this->entity->getClassName();
+    }
+    
+    /**
+     * Get new entity
+     * 
+     * @return \Wame\Core\Repositories\entityName
+     */
+    public function getNewEntity()
+    {
+        $entityName = $this->getEntityName();
+        
+        return new $entityName();
     }
     
 }

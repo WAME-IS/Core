@@ -5,7 +5,7 @@ namespace Wame\Core\Entities\Columns;
 trait Parameters
 {
     /**
-     * @ORM\Column(name="parameters", type="neon", nullable=true)
+     * @ORM\Column(name="parameters", type="neon", length=512, nullable=true)
      */
     protected $parameters = null;
 	

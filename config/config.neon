@@ -110,6 +110,9 @@ services:
     # Doctrine filters
     - Wame\Core\Doctrine\Filters\SoftdeletableFilter
 
+    # Doctrine listeners
+    - {class: Wame\Core\Events\PrePersistListener, tags: [kdyby.subscriber]}
+
     nette.latteFactory:
         setup:
             - addFilter(timeAgo, @Wame\Core\Filters\TimeAgoFilter)

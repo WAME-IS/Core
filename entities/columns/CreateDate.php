@@ -21,9 +21,9 @@ trait CreateDate
 
 	/** set ************************************************************/
 	
-	public function setCreateDate($createDate)
+	public function setCreateDate($createDate = null)
 	{
-		$this->createDate = $createDate;
+		$this->createDate = $createDate ?: \Wame\Utils\Date::toDateTime('now');
 		
 		return $this;
 	}

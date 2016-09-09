@@ -232,7 +232,7 @@ class FormFactory
 	/**
 	 * Set default values in form containers
 	 */
-	public function setDefaultValues()
+	protected function setDefaultValues()
 	{
 		foreach ($this->formContainers as $container) {
 			if (method_exists($container['service'], 'setDefaultValues')) {

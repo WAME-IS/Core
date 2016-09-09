@@ -7,7 +7,7 @@ trait Status
 	/**
 	 * @ORM\Column(name="status", type="integer", length=1, nullable=true)
 	 */
-	protected $status;
+	protected $status = 1;
 
 	
 	/** get ************************************************************/

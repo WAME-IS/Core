@@ -21,9 +21,9 @@ trait EditDate
 
 	/** set ************************************************************/
 
-	public function setEditDate($editDate)
+	public function setEditDate($editDate = null)
 	{
-		$this->editDate = $editDate;
+		$this->editDate = $editDate ?: \Wame\Utils\Date::toDateTime('now');
 		
 		return $this;
 	}
