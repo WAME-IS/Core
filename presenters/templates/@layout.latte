@@ -4,13 +4,10 @@
 		<meta charset="utf-8">
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
+        
+        {control headControl}
 
 		<title>{ifset #title}{include title|striptags} | {/ifset}CMS WAME Admin</title>
-		
-		{* jQuery & jQueryUI *}
-        <link rel="stylesheet" href="https://code.jquery.com/ui/1.11.3/themes/smoothness/jquery-ui.css">
-		<script src="https://code.jquery.com/jquery-1.12.3.min.js" integrity="sha256-aaODHAgvwQW1bFOGXMeX+pC4PZIPsvn2h1sArYOhgXQ=" crossorigin="anonymous"></script>
-		<script src="https://code.jquery.com/ui/1.11.4/jquery-ui.min.js" integrity="sha256-xNjb53/rY+WmG+4L6tTl9m6PpqknWZvRt0rO1SRnJzw=" crossorigin="anonymous"></script>
 
 		{block head}
 			{control css}
@@ -25,17 +22,24 @@
 	</head>
 	
 	<body>
-		<header class="jumbotron">header</header>
+		<header class="header">
+            <div n:foreach="$flashes as $flash" n:class="'alert alert-dismissible fade in alert-'.$flash->type" role="alert">                
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                {$flash->message}
+            </div>
+            
+            {position coreLayoutHeader}
+        </header>
 		
-		<div n:foreach="$flashes as $flash" n:class="flash, $flash->type">{$flash->message}</div>
-
-		<div class="row">
-			<div class="col-sm-10 col-md-8 col-sm-offset-1 col-md-offset-2">
-				{ifset #content} 
-					{include #content}
-				{/ifset}
-			</div>
-		</div>
+        {ifset #content} 
+            <div> {include #content} </div>
+        {/ifset}
+        
+        <footer class="footer">
+            {position coreLayoutFooter}
+        </footer>
 
         <script>var id = {$id};</script>
 		{block scripts}

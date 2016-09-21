@@ -127,3 +127,8 @@ services:
 
     - Wame\Core\Cache\TemplatingCacheFactory
     - Wame\Core\Registers\RepositoryRegister
+
+
+decorator:
+    BaseRepository:
+        inject: yes
