@@ -35,9 +35,9 @@ class FormFactory
 		$form = new Form;
         
         $form->setParent();
-		
-//		$form->setRenderer(new \Tomaj\Form\Renderer\BootstrapVerticalRenderer);
-		$form->setRenderer(new \Wame\Core\Models\MaterialDesignRenderer);
+        
+		$form->setRenderer(new \Tomaj\Form\Renderer\BootstrapVerticalRenderer);
+//		$form->setRenderer(new \Wame\Core\Models\MaterialDesignRenderer);
 
 		$this->getActionForm($form);
 		

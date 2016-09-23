@@ -18,7 +18,7 @@ class MaterialDesignRenderer extends DefaultFormRenderer
             'item' => 'p',
         ),
         'group' => array(
-            'container' => 'div',
+            'container' => 'div class="group"',
             'label' => 'legend',
             'description' => 'p',
         ),
@@ -90,9 +90,15 @@ class MaterialDesignRenderer extends DefaultFormRenderer
             }
         // Radio
             elseif ($control instanceof Controls\RadioList) {
-                $control->getSeparatorPrototype()->setName('div')->addClass('with-gap');
+//                $control->getSeparatorPrototype()->setName('p');
+                $control->getLabelPrototype()->setName('p');
+                $control->getControlPrototype()->addClass('with-gap');
+                
+//                dump($control);
             }
         }
+        
+//        exit;
 
         return parent::render($form, $mode);
     }
