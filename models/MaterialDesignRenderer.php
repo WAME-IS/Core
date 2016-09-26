@@ -72,7 +72,7 @@ class MaterialDesignRenderer extends DefaultFormRenderer
         foreach ($form->getControls() as $control) {
             if ($control instanceof Controls\Button) {
                 if (strpos($control->getControlPrototype()->getClass(), 'btn') === FALSE) {
-                    $control->getControlPrototype()->addClass(empty($usedPrimary) ? 'btn' : 'btn-flat');
+                    $control->getControlPrototype()->addClass(empty($usedPrimary) ? 'btn btn-success' : 'btn btn-default');
                     $usedPrimary = true;
                 }
             } 
@@ -86,19 +86,16 @@ class MaterialDesignRenderer extends DefaultFormRenderer
             } 
         // Checkbox
             elseif ($control instanceof Controls\Checkbox || $control instanceof Controls\CheckboxList) {
-                $control->getSeparatorPrototype()->setName('div')->addClass('filled-in');
+                $control->getSeparatorPrototype()->setName('div');
+                $control->getControlPrototype()->addClass('filled-in');
             }
         // Radio
             elseif ($control instanceof Controls\RadioList) {
 //                $control->getSeparatorPrototype()->setName('p');
-                $control->getLabelPrototype()->setName('p');
+                $control->getLabelPrototype()->setName('small');
                 $control->getControlPrototype()->addClass('with-gap');
-                
-//                dump($control);
             }
         }
-        
-//        exit;
 
         return parent::render($form, $mode);
     }
