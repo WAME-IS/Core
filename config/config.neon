@@ -130,11 +130,15 @@ services:
     - Wame\Core\Cache\TemplatingCacheFactory
     - Wame\Core\Registers\RepositoryRegister
 
+    # Commands
+    fixtureCommand:
+        class: Wame\CoreModule\Commands\FixtureCommand
+        tags: [kdyby.console.command]
+
 
 fixtures:
     locale: "sk_SK"
     seed: 1
-
 
 decorator:
     BaseRepository:
