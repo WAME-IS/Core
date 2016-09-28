@@ -212,7 +212,7 @@ abstract class BasePresenter extends Presenter
         $list = [];
 
         if ($this->isAjax()) {
-            $list[] = __DIR__ . '/templates/@modalLayout.latte';
+            $list[] = VENDOR_PATH . '/wame/' . $modulePath . '/presenters/templates/@modalLayout.latte';
         }
 
         $name = $this->getName();
