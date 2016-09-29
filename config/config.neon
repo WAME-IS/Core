@@ -67,11 +67,15 @@ webloader:
             remoteFiles:
                 - https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css
                 - https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css
+                - https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css
+
             files:
                 - wame/custom-bootstrap.less
+
             fileFilters:
                 - @lessFilter
                 - @jwlCssMinFilter
+
             watchFiles:
                 - {files: ['*.less'], from: wame/}
 
@@ -81,6 +85,8 @@ webloader:
             remoteFiles:
                 - https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js
                 - https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js
+                - https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js
+
             files:
 #				- ../components/jquery/js/jquery.min.js
 #				- ../components/jquery-ui/jquery-ui.min.js
@@ -96,6 +102,7 @@ webloader:
                 - /wame-add-param-to-url/add-param-to-url.js
                 - /wame-bootstrap-modal/bootstrap-modal.js
                 - init.js
+
             fileFilters:
                 - @jwlJsMinFilter
 
