@@ -109,6 +109,11 @@ webloader:
                 - @jwlJsMinFilter
 
 
+tracy:
+    bar:
+        - Nextras\MailPanel\MailPanel(%tempDir%/mail-panel-latte)
+
+
 services:
     # WebLoader
     wlCssFilter: WebLoader\Filter\CssUrlsFilter(%appDir%/../private/stylesheets/)
@@ -143,6 +148,10 @@ services:
     fixtureCommand:
         class: Wame\CoreModule\Commands\FixtureCommand
         tags: [kdyby.console.command]
+
+    nette.mailer:
+        class: Nette\Mail\IMailer
+        factory: Nextras\MailPanel\FileMailer(%tempDir%/mail-panel-mails)
 
 
 fixtures:
