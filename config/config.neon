@@ -86,6 +86,8 @@ webloader:
                 - https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js
                 - https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js
                 - https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js
+#               FONT AWESOME embed code
+                - https://use.fontawesome.com/c81c8277da.js
 
             files:
 #				- ../components/jquery/js/jquery.min.js
