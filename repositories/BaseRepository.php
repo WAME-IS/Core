@@ -8,6 +8,7 @@ use Kdyby\Doctrine\EntityRepository;
 use Nette\DI\Container;
 use Nette\Object;
 use Nette\Security\User;
+use Wame\Core\Registers\RepositoryRegister;
 
 interface IRepository
 {
@@ -16,6 +17,15 @@ interface IRepository
 
 class BaseRepository extends Object implements IRepository
 {
+    /** @var integer */
+    const STATUS_DELETED = 0;
+
+    /** @var integer */
+    const STATUS_ENABLED = 1;
+
+    /** @var integer */
+    const STATUS_DISABLED = 2;
+
 
     /**
      * Event called when entity is created
@@ -77,7 +87,12 @@ class BaseRepository extends Object implements IRepository
     /** @var string */
     protected $entityClass;
 
-    
+
+    /**
+     * BaseRepository constructor.
+     *
+     * @param string $entityClass  entity class
+     */
     public function __construct($entityClass)
     {
         if(!is_string($entityClass)) {
@@ -86,8 +101,17 @@ class BaseRepository extends Object implements IRepository
         
         $this->entityClass = $entityClass;
     }
-    
-    
+
+
+    /**
+     * Inject repository
+     *
+     * @param Container $container                      container
+     * @param EntityManager $entityManager              entity manager
+     * @param GettextSetup $translator                  transtor
+     * @param User $user                                user
+     * @param RepositoryRegister $repositoryRegister    repository register
+     */
     public function injectRepository(Container $container, EntityManager $entityManager, GettextSetup $translator, User $user, \Wame\Core\Registers\RepositoryRegister $repositoryRegister)
     {
         $this->container = $container;
@@ -103,7 +127,7 @@ class BaseRepository extends Object implements IRepository
     /**
      * Get table prefix
      * 
-     * @return string	Returns prefix
+     * @return string
      */
     public function getPrefix()
     {
@@ -115,7 +139,7 @@ class BaseRepository extends Object implements IRepository
      * 
      * @param array $criteria	criteria
      * @param array $orderBy	order by
-     * @return BaseEntity		entity
+     * @return BaseEntity
      */
     public function get($criteria = [], $orderBy = [])
     {
@@ -124,11 +148,12 @@ class BaseRepository extends Object implements IRepository
 
     /**
      * Get all entries by criteria
-     * 
-     * @param array $criteria	criteria
-     * @param array $orderBy	order by
-     * @param string $limit		limit
-     * @param string $offset	offset
+     *
+     * @param array $criteria   criteria
+     * @param array $orderBy    order by
+     * @param string $limit     limit
+     * @param string $offset    offset
+     * @return array
      */
     public function find($criteria = [], $orderBy = [], $limit = null, $offset = null)
     {
@@ -138,11 +163,11 @@ class BaseRepository extends Object implements IRepository
     /**
      * Get all entries in pairs
      * 
-     * @param Array $criteria	criteria
-     * @param String $value		value
-     * @param Array $orderBy	order by
-     * @param String $key		key
-     * @return Array			entries
+     * @param array $criteria	criteria
+     * @param string $value		value
+     * @param array $orderBy	order by
+     * @param string $key		key
+     * @return array
      */
     public function findPairs($criteria = [], $value = null, $orderBy = [], $key = 'id')
     {
@@ -152,9 +177,9 @@ class BaseRepository extends Object implements IRepository
     /**
      * Get all entries in pairs
      * 
-     * @param Array $criteria	criteria
+     * @param array $criteria	criteria
      * @param String $key		key
-     * @return Array			entries
+     * @return array
      */
     public function findAssoc($criteria = [], $key = 'id')
     {
@@ -165,7 +190,7 @@ class BaseRepository extends Object implements IRepository
      * Return count of entities
      * 
      * @param array $criteria	criteria
-     * @return integer			count
+     * @return integer
      */
     public function countBy($criteria = [])
     {
@@ -175,8 +200,8 @@ class BaseRepository extends Object implements IRepository
     /**
      * Get rows by key
      * 
-     * @param array $criteria
-     * @param string $key
+     * @param array $criteria   criteria
+     * @param string $key       key
      * @return array
      */
     public function getList($criteria = [], $key = 'id')
@@ -191,12 +216,13 @@ class BaseRepository extends Object implements IRepository
         
         return $return;
     }
-    
-	/**
-	 * Remove entities
-	 * 
-	 * @param type $criteria	criteria
-	 */
+
+    /**
+     * Remove entities
+     *
+     * @param array $criteria
+     * @return bool
+     */
 	public function remove($criteria = [])
 	{
 		$entities = $this->find($criteria);
@@ -225,11 +251,11 @@ class BaseRepository extends Object implements IRepository
         }
         return $this->entity->getClassName();
     }
-    
+
     /**
      * Get new entity
-     * 
-     * @return \Wame\Core\Repositories\entityName
+     *
+     * @return mixed
      */
     public function getNewEntity()
     {

@@ -4,28 +4,45 @@ namespace Wame\Core\Events;
 
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Nette\Security\User;
+use Wame\Core\Entities\BaseEntity;
 
+/**
+ * Class PrePersistListener
+ *
+ * @package Wame\Core\Events
+ */
 class PrePersistListener implements \Kdyby\Events\Subscriber
 {
+    /**
+     * PrePersistListener constructor.
+     *
+     * @param User $user    user
+     */
     public function __construct(User $user)
     {
         $this->user = $user;
     }
     
-    
+
+    /** {@inheritdoc} */
     public function getSubscribedEvents()
     {
         return [\Kdyby\Doctrine\Events::prePersist];
     }
-    
+
+    /**
+     * Pre persist
+     *
+     * @param LifecycleEventArgs $lifecycleEventArgs
+     */
     public function prePersist(LifecycleEventArgs $lifecycleEventArgs)
     {
         $entity = $lifecycleEventArgs->getEntity();
         
         $this->setCreateDate($entity);
-//        $this->setEditDate($entity);
+        $this->setEditDate($entity);
         $this->setCreateUser($entity);
-//        $this->setEditUser($entity);
+        $this->setEditUser($entity);
     }
     
     
@@ -45,6 +62,7 @@ class PrePersistListener implements \Kdyby\Events\Subscriber
     
     /**
      * Set editDate
+     *
      * @param BaseEntity $entity    entity
      */
     private function setEditDate($entity)
