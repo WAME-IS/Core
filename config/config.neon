@@ -149,6 +149,10 @@ services:
         class: Wame\CoreModule\Commands\FixtureCommand
         tags: [kdyby.console.command]
 
+    loadDataFixturesDoctrineCommand:
+        class: Wame\CoreModule\Commands\LoadDataFixturesDoctrineCommand
+        tags: [kdyby.console.command]
+
     nette.mailer:
         class: Nette\Mail\IMailer
         factory: Nextras\MailPanel\FileMailer(%tempDir%/mail-panel-mails)
