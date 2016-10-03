@@ -95,7 +95,7 @@ class PrePersistListener implements \Kdyby\Events\Subscriber
      */
     private function setEditUser($entity)
     {
-        if(property_exists($entity, 'createUser')) {
+        if(property_exists($entity, 'editUser')) {
             if(!$entity->getEditUser()) {
                 $entity->setEditUser($this->user->getEntity());
             }
