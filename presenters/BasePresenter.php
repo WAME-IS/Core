@@ -17,6 +17,7 @@ use Wame\Core\Status\ControlStatus;
 use Wame\Core\Status\ControlStatuses;
 use Wame\DynamicObject\Components\IFormControlFactory;
 use Wame\HeadControl\Components\IHeadControlFactory;
+use Wame\GoogleAnalyticsModule\Components\IGoogleAnalyticsControlFactory;
 use Wame\HeadControl\Registers\MetaTypeRegister;
 use WebLoader\Nette\CssLoader;
 use WebLoader\Nette\JavaScriptLoader;
@@ -24,13 +25,13 @@ use WebLoader\Nette\LoaderFactory;
 
 abstract class BasePresenter extends Presenter
 {
-
     /** h4kuna Gettext latte translator trait */
     use \h4kuna\Gettext\InjectTranslator;
 
     /** FormGroup getter trait */
     use \Wame\DynamicObject\Forms\FormGroup;
 
+    
     /** @var LoaderFactory @inject */
     public $webLoader;
 
@@ -45,6 +46,9 @@ abstract class BasePresenter extends Presenter
 
     /** @var IHeadControlFactory */
     public $IHeadControlFactory;
+    
+    /** @var IGoogleAnalyticsControlFactory @inject */
+    public $IGoogleAnalyticsControlFactory;
 
     /** @var IFormControlFactory @inject */
     public $IFormControlFactory;
@@ -63,6 +67,9 @@ abstract class BasePresenter extends Presenter
      */
     public $onStageChange = [];
 
+    
+    /** injects ***************************************************************/
+    
     public function injectStatus(ControlStatuses $controlStatuses)
     {
         $this->status = new ControlStatus($this, $controlStatuses);
@@ -74,6 +81,9 @@ abstract class BasePresenter extends Presenter
         $this->IHeadControlFactory = $IHeadControlFactory;
     }
 
+    
+    /** lifecycle *************************************************************/
+    
     protected function startup()
     {
         parent::startup();
@@ -81,36 +91,38 @@ abstract class BasePresenter extends Presenter
         $this->positionControlLoader->load($this);
         Container::register();
     }
-
-    /** @return CssLoader */
-    protected function createComponentCss()
-    {
-        return $this->webLoader->createCssLoader('default');
-    }
-
-    /** @return JavaScriptLoader */
-    protected function createComponentJs()
-    {
-        return $this->webLoader->createJavaScriptLoader('default');
-    }
-
-    // TODO: presunut do global component loadera
-    public function createComponentHeadControl()
-    {
-        return $this->IHeadControlFactory->create();
-    }
-
+    
     /**
-     * Form control
+     * End of presenter cycle
      * 
-     * @return IFormControlFactory
+     * @param IResponse $response
      */
-    protected function createComponentForm()
+    protected function shutdown($response)
     {
-        return new Multiplier(function ($formName) {
-            return $this->IFormControlFactory->create($formName);
-        });
+        parent::shutdown($response);
+
+        $this->entityManager->flush();
     }
+    
+    /**
+     * Before renderer
+     */
+    protected function beforeRender()
+    {
+        parent::beforeRender();
+        $this->onStageChange(new PresenterStageChangeEvent($this, 'render'));
+        $this->callBeforeRenders($this);
+    }
+    
+    /**
+     * After renderer
+     */
+    protected function afterRender()
+    {
+        parent::afterRender();
+        $this->onStageChange(new PresenterStageChangeEvent($this, 'terminate'));
+    }
+    
 
     /**
      * Return module name
@@ -265,33 +277,16 @@ abstract class BasePresenter extends Presenter
 
         return $template;
     }
-
-    protected function beforeRender()
+    
+    /**
+     * Get presenter status
+     * @return ControlStatus
+     */
+    public function getStatus()
     {
-        parent::beforeRender();
-        $this->onStageChange(new PresenterStageChangeEvent($this, 'render'));
-        $this->callBeforeRenders($this);
+        return $this->status;
     }
-
-    private function callBeforeRenders(Control $control)
-    {
-        //TODO check if it can be removed
-        foreach ($control->getComponents() as $subControl) {
-            if ($subControl instanceof BaseControl) {
-                $subControl->beforeRender();
-            }
-            if ($subControl instanceof Control) {
-                $this->callBeforeRenders($subControl);
-            }
-        }
-    }
-
-    protected function afterRender()
-    {
-        parent::afterRender();
-        $this->onStageChange(new PresenterStageChangeEvent($this, 'terminate'));
-    }
-
+    
     protected function tryCall($method, array $params)
     {
         $callEvent = Strings::startsWith($method, 'action');
@@ -307,25 +302,58 @@ abstract class BasePresenter extends Presenter
         
         return $tryCallResult;
     }
+    
+    
+    private function callBeforeRenders(Control $control)
+    {
+        //TODO check if it can be removed
+        foreach ($control->getComponents() as $subControl) {
+            if ($subControl instanceof BaseControl) {
+                $subControl->beforeRender();
+            }
+            if ($subControl instanceof Control) {
+                $this->callBeforeRenders($subControl);
+            }
+        }
+    }
+    
+    
+    /** components ************************************************************/
+
+    /** @return CssLoader */
+    protected function createComponentCss()
+    {
+        return $this->webLoader->createCssLoader('default');
+    }
+
+    /** @return JavaScriptLoader */
+    protected function createComponentJs()
+    {
+        return $this->webLoader->createJavaScriptLoader('default');
+    }
+
+    // TODO: presunut do global component loadera
+    protected function createComponentHeadControl()
+    {
+        return $this->IHeadControlFactory->create();
+    }
+    
+    // TODO: presunut do global component loadera
+    protected function createComponentGoogleAnalyticsControl()
+    {
+        return $this->IGoogleAnalyticsControlFactory->create();
+    }
 
     /**
-     * End of presenter cycle
+     * Form control
      * 
-     * @param IResponse $response
+     * @return IFormControlFactory
      */
-    protected function shutdown($response)
+    protected function createComponentForm()
     {
-        parent::shutdown($response);
-
-        $this->entityManager->flush();
+        return new Multiplier(function ($formName) {
+            return $this->IFormControlFactory->create($formName);
+        });
     }
-
-    /**
-     * Get presenter status
-     * @return ControlStatus
-     */
-    public function getStatus()
-    {
-        return $this->status;
-    }
+    
 }
