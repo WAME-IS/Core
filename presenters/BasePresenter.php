@@ -356,4 +356,12 @@ abstract class BasePresenter extends Presenter
         });
     }
     
+    
+    public function handleRedrawComponent()
+    {
+        $params = $this->getParameter('ccc');
+        
+        $this[$params]->redrawControl();
+    }
+    
 }
