@@ -82,7 +82,7 @@ class BaseRepository extends Object implements IRepository
     public $user;
 
     /** @var EntityRepository */
-    protected $entity;
+    public $entity;
     
     /** @var string */
     protected $entityClass;

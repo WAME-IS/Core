@@ -16,8 +16,8 @@ use Wame\Core\Event\PresenterStageChangeEvent;
 use Wame\Core\Status\ControlStatus;
 use Wame\Core\Status\ControlStatuses;
 use Wame\DynamicObject\Components\IFormControlFactory;
-use Wame\HeadControl\Components\IHeadControlFactory;
 use Wame\GoogleAnalyticsModule\Components\IGoogleAnalyticsControlFactory;
+use Wame\HeadControl\Components\IHeadControlFactory;
 use Wame\HeadControl\Registers\MetaTypeRegister;
 use WebLoader\Nette\CssLoader;
 use WebLoader\Nette\JavaScriptLoader;
@@ -83,7 +83,19 @@ abstract class BasePresenter extends Presenter
 
     
     /** lifecycle *************************************************************/
-    
+
+    /**
+     * Handle redraw component
+     */
+    public function handleRedrawControl()
+    {
+        $name = $this->getParameter('name');
+
+        if($name) {
+            $this[$name]->redrawControl();
+        }
+    }
+
     protected function startup()
     {
         parent::startup();
@@ -354,14 +366,6 @@ abstract class BasePresenter extends Presenter
         return new Multiplier(function ($formName) {
             return $this->IFormControlFactory->create($formName);
         });
-    }
-    
-    
-    public function handleRedrawComponent()
-    {
-        $params = $this->getParameter('ccc');
-        
-        $this[$params]->redrawControl();
     }
     
 }
