@@ -31,7 +31,7 @@ abstract class BasePresenter extends Presenter
     /** FormGroup getter trait */
     use \Wame\DynamicObject\Forms\FormGroup;
 
-    
+
     /** @var LoaderFactory @inject */
     public $webLoader;
 
@@ -46,7 +46,7 @@ abstract class BasePresenter extends Presenter
 
     /** @var IHeadControlFactory */
     public $IHeadControlFactory;
-    
+
     /** @var IGoogleAnalyticsControlFactory @inject */
     public $IGoogleAnalyticsControlFactory;
 
@@ -62,14 +62,14 @@ abstract class BasePresenter extends Presenter
     /**
      * Event called whenever processing stage of presenter changes. Stages are: startup, action, signal, render, terminate
      * Callback should have one argument of PresenterStageChangeEvent type
-     * 
-     * @var callable[] 
+     *
+     * @var callable[]
      */
     public $onStageChange = [];
 
-    
+
     /** injects ***************************************************************/
-    
+
     public function injectStatus(ControlStatuses $controlStatuses)
     {
         $this->status = new ControlStatus($this, $controlStatuses);
@@ -81,7 +81,7 @@ abstract class BasePresenter extends Presenter
         $this->IHeadControlFactory = $IHeadControlFactory;
     }
 
-    
+
     /** lifecycle *************************************************************/
 
     /**
@@ -103,10 +103,10 @@ abstract class BasePresenter extends Presenter
         $this->positionControlLoader->load($this);
         Container::register();
     }
-    
+
     /**
      * End of presenter cycle
-     * 
+     *
      * @param IResponse $response
      */
     protected function shutdown($response)
@@ -115,7 +115,7 @@ abstract class BasePresenter extends Presenter
 
         $this->entityManager->flush();
     }
-    
+
     /**
      * Before renderer
      */
@@ -125,7 +125,7 @@ abstract class BasePresenter extends Presenter
         $this->onStageChange(new PresenterStageChangeEvent($this, 'render'));
         $this->callBeforeRenders($this);
     }
-    
+
     /**
      * After renderer
      */
@@ -134,11 +134,11 @@ abstract class BasePresenter extends Presenter
         parent::afterRender();
         $this->onStageChange(new PresenterStageChangeEvent($this, 'terminate'));
     }
-    
+
 
     /**
      * Return module name
-     * 
+     *
      * @param string $name
      * @return string
      */
@@ -155,7 +155,7 @@ abstract class BasePresenter extends Presenter
 
     /**
      * Return custom template
-     * 
+     *
      * @return string
      */
     public function getCustomTemplate()
@@ -173,7 +173,7 @@ abstract class BasePresenter extends Presenter
      * Return template file
      * use current Module, Presenter
      * resolve customTemplates
-     * 
+     *
      * @return array
      */
     public function formatTemplateFiles($way = '')
@@ -212,7 +212,7 @@ abstract class BasePresenter extends Presenter
      * Return layout file
      * use current Module, Presenter
      * resolve customTemplates
-     * 
+     *
      * @return array
      */
     public function formatLayoutTemplateFiles($modulePath = 'Core', $way = '')
@@ -234,7 +234,7 @@ abstract class BasePresenter extends Presenter
         $dirs[] = $dir . '/templates';
 
         $list = [];
-        
+
         if ($this->isAjax() && $this->getHttpRequest()->getHeader("X-Modal") == true) {
             $list[] = VENDOR_PATH . '/wame/' . $modulePath . '/presenters/templates/@modalLayout.latte';
         }
@@ -276,7 +276,7 @@ abstract class BasePresenter extends Presenter
     /**
      * Create template
      * Append vars to template
-     * 
+     *
      * @return ITemplate
      */
     public function createTemplate()
@@ -286,10 +286,11 @@ abstract class BasePresenter extends Presenter
         $template->lang = $this->lang;
         $template->id = $this->id;
         $template->siteTitle = null;
+        $template->subTitle = null;
 
         return $template;
     }
-    
+
     /**
      * Get presenter status
      * @return ControlStatus
@@ -298,24 +299,24 @@ abstract class BasePresenter extends Presenter
     {
         return $this->status;
     }
-    
+
     protected function tryCall($method, array $params)
     {
         $callEvent = Strings::startsWith($method, 'action');
         if ($callEvent) {
             $this->onStageChange(new PresenterStageChangeEvent($this, 'action'));
         }
-        
+
         $tryCallResult = parent::tryCall($method, $params);
-        
+
         if ($callEvent) {
             $this->onStageChange(new PresenterStageChangeEvent($this, 'signal'));
         }
-        
+
         return $tryCallResult;
     }
-    
-    
+
+
     private function callBeforeRenders(Control $control)
     {
         //TODO check if it can be removed
@@ -328,8 +329,8 @@ abstract class BasePresenter extends Presenter
             }
         }
     }
-    
-    
+
+
     /** components ************************************************************/
 
     /** @return CssLoader */
@@ -349,7 +350,7 @@ abstract class BasePresenter extends Presenter
     {
         return $this->IHeadControlFactory->create();
     }
-    
+
     // TODO: presunut do global component loadera
     protected function createComponentGoogleAnalyticsControl()
     {
@@ -358,7 +359,7 @@ abstract class BasePresenter extends Presenter
 
     /**
      * Form control
-     * 
+     *
      * @return IFormControlFactory
      */
     protected function createComponentForm()
@@ -367,5 +368,5 @@ abstract class BasePresenter extends Presenter
             return $this->IFormControlFactory->create($formName);
         });
     }
-    
+
 }
