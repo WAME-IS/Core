@@ -2,6 +2,9 @@
 
 namespace Wame\Core\Entities\Columns;
 
+use Nette\Utils\Strings;
+
+
 trait Slug
 {
 	/**
@@ -9,7 +12,7 @@ trait Slug
 	 */
 	protected $slug;
 
-	
+
 	/** get ************************************************************/
 
 	public function getSlug()
@@ -22,9 +25,9 @@ trait Slug
 
 	public function setSlug($slug)
 	{
-		$this->slug = $slug;
-		
+		$this->slug = Strings::webalize($slug);
+
 		return $this;
 	}
-	
+
 }
