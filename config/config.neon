@@ -58,6 +58,15 @@ doctrine:
         Wame\Core\Entities: %appDir%/../vendor/wame/Core/entities
     types:
         neon: Wame\Core\Doctrine\Types\NeonType
+        # https://github.com/beberlei/DoctrineExtensions/blob/master/config/mysql.yml
+    dql:
+        numeric:
+            acos: DoctrineExtensions\Query\Mysql\Acos
+            cos: DoctrineExtensions\Query\Mysql\Cos
+            sin: DoctrineExtensions\Query\Mysql\Sin
+        string:
+            radians: DoctrineExtensions\Query\Mysql\Radians
+        
 
 
 webloader:
