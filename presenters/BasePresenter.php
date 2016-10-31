@@ -93,8 +93,6 @@ abstract class BasePresenter extends Presenter
         $this->onStageChange(new PresenterStageChangeEvent($this, 'startup'));
         $this->positionControlLoader->load($this);
         Container::register();
-        
-        $this->checkPermission();
     }
 
     /**
@@ -348,29 +346,6 @@ abstract class BasePresenter extends Presenter
         return new Multiplier(function ($formName) {
             return $this->IFormControlFactory->create($formName);
         });
-    }
-
-    
-    /**
-     * Check permission
-     */
-    private function checkPermission()
-    {
-        $module = substr(\Wame\Utils\Validators::validateModuleName($this->getModule()), 0, -6);
-        $presenter = $this->getName();
-        
-        $resource = 'Default';
-        
-        if(in_array($presenter, $this->permissionObject->getResources())) {
-            $resource = $presenter;
-        } else if (in_array($module, $this->permissionObject->getResources())) {
-            $resource = $module;
-        }
-        
-        if (!$this->user->isAllowed($resource, $this->getAction())) {
-            // TODO: redirect to parent
-            $this->redirect(':Admin:Dashboard:');
-        }
     }
     
 }
