@@ -16,8 +16,6 @@ use Wame\Core\Event\PresenterStageChangeEvent;
 use Wame\Core\Status\ControlStatus;
 use Wame\Core\Status\ControlStatuses;
 use Wame\DynamicObject\Components\IFormControlFactory;
-use Wame\GoogleAnalyticsModule\Components\IGoogleAnalyticsControlFactory;
-use Wame\HeadControl\Components\IHeadControlFactory;
 use Wame\HeadControl\Registers\MetaTypeRegister;
 use WebLoader\Nette\CssLoader;
 use WebLoader\Nette\JavaScriptLoader;
@@ -44,12 +42,6 @@ abstract class BasePresenter extends Presenter
     /** @var MetaTypeRegister */
     public $metaTypeRegister;
 
-    /** @var IHeadControlFactory */
-    public $IHeadControlFactory;
-
-    /** @var IGoogleAnalyticsControlFactory @inject */
-    public $IGoogleAnalyticsControlFactory;
-
     /** @var IFormControlFactory @inject */
     public $IFormControlFactory;
 
@@ -75,10 +67,9 @@ abstract class BasePresenter extends Presenter
         $this->status = new ControlStatus($this, $controlStatuses);
     }
 
-    public function injectHeadControl(MetaTypeRegister $metaTypeRegister, IHeadControlFactory $IHeadControlFactory)
+    public function injectHeadControl(MetaTypeRegister $metaTypeRegister)
     {
         $this->metaTypeRegister = $metaTypeRegister;
-        $this->IHeadControlFactory = $IHeadControlFactory;
     }
 
 
@@ -102,6 +93,8 @@ abstract class BasePresenter extends Presenter
         $this->onStageChange(new PresenterStageChangeEvent($this, 'startup'));
         $this->positionControlLoader->load($this);
         Container::register();
+        
+        $this->checkPermission();
     }
 
     /**
@@ -345,18 +338,6 @@ abstract class BasePresenter extends Presenter
         return $this->webLoader->createJavaScriptLoader('default');
     }
 
-    // TODO: presunut do global component loadera
-    protected function createComponentHeadControl()
-    {
-        return $this->IHeadControlFactory->create();
-    }
-
-    // TODO: presunut do global component loadera
-    protected function createComponentGoogleAnalyticsControl()
-    {
-        return $this->IGoogleAnalyticsControlFactory->create();
-    }
-
     /**
      * Form control
      *
@@ -369,4 +350,27 @@ abstract class BasePresenter extends Presenter
         });
     }
 
+    
+    /**
+     * Check permission
+     */
+    private function checkPermission()
+    {
+        $module = substr(\Wame\Utils\Validators::validateModuleName($this->getModule()), 0, -6);
+        $presenter = $this->getName();
+        
+        $resource = 'Default';
+        
+        if(in_array($presenter, $this->permissionObject->getResources())) {
+            $resource = $presenter;
+        } else if (in_array($module, $this->permissionObject->getResources())) {
+            $resource = $module;
+        }
+        
+        if (!$this->user->isAllowed($resource, $this->getAction())) {
+            // TODO: redirect to parent
+            $this->redirect(':Admin:Dashboard:');
+        }
+    }
+    
 }
