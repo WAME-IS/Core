@@ -20,6 +20,8 @@ use Wame\HeadControl\Registers\MetaTypeRegister;
 use WebLoader\Nette\CssLoader;
 use WebLoader\Nette\JavaScriptLoader;
 use WebLoader\Nette\LoaderFactory;
+use Wame\LanguageModule\Gettext\Dictionary;
+
 
 abstract class BasePresenter extends Presenter
 {
@@ -47,6 +49,9 @@ abstract class BasePresenter extends Presenter
 
     /** @var PositionControlLoader @inject */
     public $positionControlLoader;
+
+    /** @var Dictionary @inject */
+    public $dictionary;
 
     /** @var ControlStatus */
     public $status;
@@ -347,5 +352,5 @@ abstract class BasePresenter extends Presenter
             return $this->IFormControlFactory->create($formName);
         });
     }
-    
+
 }
