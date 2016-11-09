@@ -200,6 +200,8 @@ abstract class BasePresenter extends Presenter
         foreach ($dirs as $dir) {
             array_push($paths, "$dir/$presenter/$this->view.latte");
         }
+        
+        \Tracy\Debugger::barDump($paths);
 
         return $paths;
     }

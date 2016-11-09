@@ -24,7 +24,6 @@ use Wame\Utils\Strings as Strings2;
 
 abstract class BaseControl extends Control
 {
-
     const
         DEFAULT_TEMPLATE = 'default.latte',
         PARAM_CONTAINER = 'container',
@@ -33,6 +32,21 @@ abstract class BaseControl extends Control
         ],
         COMPONENT_ID_CLASS = 'cnt-%s';
 
+    
+    /**
+     * Event called before rendeing of control
+     * 
+     * @var callable[] 
+     */
+    public $onBeforeRender = [];
+
+    /**
+     * Event called after rendeing of control
+     * 
+     * @var callable[] 
+     */
+    public $onAfterRender = [];
+    
     /** @var Container */
     protected $container;
 
@@ -54,26 +68,17 @@ abstract class BaseControl extends Control
     /** @var TemplatingCache */
     protected $componentCache;
 
-    /**
-     * Event called before rendeing of control
-     * 
-     * @var callable[] 
-     */
-    public $onBeforeRender = [];
-
-    /**
-     * Event called after rendeing of control
-     * 
-     * @var callable[] 
-     */
-    public $onAfterRender = [];
-
     /** @var boolean */
     protected $hasContainer = true;
 
     /** @var User */
     protected $user;
+    
+    
+    
+    use \Wame\ComponentModule\Traits\TComponentStatusType;
 
+    
     public function __construct(Container $container, IContainer $parent = NULL, $name = NULL)
     {
         parent::__construct($parent, $name);
@@ -91,7 +96,8 @@ abstract class BaseControl extends Control
         
         $this->bindContainers();
     }
-
+    
+    
     /**
      * @internal
      */
@@ -100,6 +106,7 @@ abstract class BaseControl extends Control
         $this->user = $user;
     }
 
+    
     protected function attached($control)
     {
         parent::attached($control);
@@ -290,6 +297,8 @@ abstract class BaseControl extends Control
      */
     protected function componentRender()
     {
+        if($this->disableRenderByStatusEntity()) return;
+        
         //find template if specified in parameters
         if (!$this->templateFile) {
             $this->setTemplateFile($this->getComponentParameter("template"));
@@ -414,4 +423,5 @@ abstract class BaseControl extends Control
     {
         return $this->status;
     }
+    
 }
