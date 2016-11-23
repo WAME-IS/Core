@@ -18,6 +18,7 @@ msgstr ""
 "X-Domain: Core\n"
 
 #: /Users/MacMini2/Weby/GIT/cms-wame-admin-4.0.0/vendor/wame/Core/components/BaseControl.php:169
+#: /Users/MacMini2/Weby/GIT/cms-wame-admin-4.0.0/vendor/wame/Core/components/BaseControl.php:191
 msgid "%s and %s can not be found in %s."
 msgstr ""
 
@@ -30,5 +31,16 @@ msgid "Select status type"
 msgstr ""
 
 #: /Users/MacMini2/Weby/GIT/cms-wame-admin-4.0.0/vendor/wame/Core/temp/latteCompiler/core-presenters-templates-modallayout-latte.php:22
+#: /Users/MacMini2/Weby/GIT/cms-wame-admin-4.0.0/vendor/wame/Core/temp/latteCompiler/core-presenters-templates-modallayout-latte.php:14
+#: /Users/MacMini2/Weby/GIT/cms-wame-admin-4.0.0/vendor/wame/Core/temp/latteCompiler/users-macmini2-weby-git-cms-wame-admin-4-0-0-vendor-wame-core-presenters-templates-modallayout-latte.php:14
+#: /Users/MacMini2/Weby/GIT/cms-wame-admin-4.0.0/vendor/wame/Core/temp/latteCompiler/58342575277ae.php:14
+#: /Users/MacMini2/Weby/GIT/cms-wame-admin-4.0.0/vendor/wame/Core/temp/latteCompiler/583426bbb42bc.php:14
+#: /Users/MacMini2/Weby/GIT/cms-wame-admin-4.0.0/vendor/wame/Core/temp/latteCompiler/5834290b12a83.php:14
+#: /Users/MacMini2/Weby/GIT/cms-wame-admin-4.0.0/vendor/wame/Core/temp/latteCompiler/58342986bb031.php:14
+#: /Users/MacMini2/Weby/GIT/cms-wame-admin-4.0.0/vendor/wame/Core/temp/latteCompiler/583429e3603f2.php:14
+#: /Users/MacMini2/Weby/GIT/cms-wame-admin-4.0.0/vendor/wame/Core/temp/latteCompiler/58342f7ae3663.php:14
+#: /Users/MacMini2/Weby/GIT/cms-wame-admin-4.0.0/vendor/wame/Core/temp/latteCompiler/583431e9e4391.php:14
+#: /Users/MacMini2/Weby/GIT/cms-wame-admin-4.0.0/vendor/wame/Core/temp/latteCompiler/583432448398e.php:14
+#: /Users/MacMini2/Weby/GIT/cms-wame-admin-4.0.0/vendor/wame/Core/temp/latteCompiler/58343328be485.php:14
 msgid "Close"
 msgstr ""
