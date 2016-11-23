@@ -95,8 +95,11 @@ abstract class BasePresenter extends Presenter
     protected function startup()
     {
         parent::startup();
+
         $this->onStageChange(new PresenterStageChangeEvent($this, 'startup'));
+        $this->dictionary->setDomain($this);
         $this->positionControlLoader->load($this);
+
         Container::register();
     }
 
@@ -118,6 +121,8 @@ abstract class BasePresenter extends Presenter
     protected function beforeRender()
     {
         parent::beforeRender();
+        
+        $this->dictionary->setDomain($this);
         $this->onStageChange(new PresenterStageChangeEvent($this, 'render'));
         $this->callBeforeRenders($this);
     }
