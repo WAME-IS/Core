@@ -8,7 +8,7 @@ use Nette\DI\Container;
 use Nette\InvalidStateException;
 use Nette\Reflection\Method;
 use Nette\Security\User;
-use Nette\Utils\Strings;
+use Wame\Utils\Strings;
 use Wame\ComponentModule\Components\PositionControlLoader;
 use Wame\ComponentModule\Entities\ComponentEntity;
 use Wame\ComponentModule\Entities\ComponentInPositionEntity;
@@ -20,33 +20,31 @@ use Wame\Core\Cache\TemplatingCache;
 use Wame\Core\Cache\TemplatingCacheFactory;
 use Wame\Core\Status\ControlStatus;
 use Wame\Core\Status\ControlStatuses;
-use Wame\Utils\Strings as Strings2;
+use Wame\LanguageModule\Gettext\Dictionary;
+
 
 abstract class BaseControl extends Control
 {
-    const
-        DEFAULT_TEMPLATE = 'default.latte',
-        PARAM_CONTAINER = 'container',
-        CONTAINER_DEFAULT = [
-            'tag' => 'div'
-        ],
-        COMPONENT_ID_CLASS = 'cnt-%s';
+    const DEFAULT_TEMPLATE = 'default.latte';
+    const PARAM_CONTAINER = 'container';
+    const CONTAINER_DEFAULT = ['tag' => 'div'];
+    const COMPONENT_ID_CLASS = 'cnt-%s';
 
-    
+
     /**
      * Event called before rendeing of control
-     * 
-     * @var callable[] 
+     *
+     * @var callable[]
      */
     public $onBeforeRender = [];
 
     /**
      * Event called after rendeing of control
-     * 
-     * @var callable[] 
+     *
+     * @var callable[]
      */
     public $onAfterRender = [];
-    
+
     /** @var Container */
     protected $container;
 
@@ -73,31 +71,34 @@ abstract class BaseControl extends Control
 
     /** @var User */
     protected $user;
-    
-    
-    
+
+    /** @var Dictionary */
+    protected $dictionary;
+
+
     use \Wame\ComponentModule\Traits\TComponentStatusType;
 
-    
+
     public function __construct(Container $container, IContainer $parent = NULL, $name = NULL)
     {
         parent::__construct($parent, $name);
 
-        $this->container = $container;
         $container->callInjects($this);
+
+        $this->container = $container;
 
         $this->status = new ControlStatus($this, $container->getByType(ControlStatuses::class));
         $this->componentParameters = new ParametersCombiner();
         $this->componentCache = $container->getByType(TemplatingCacheFactory::class)->create();
-        
-        $type = Strings2::getClassName(get_class($this));
+
+        $type = Strings::getClassName(get_class($this));
         $this->componentParameters->add(
             new ArrayParameterSource(['container' => ['class' => sprintf(self::COMPONENT_ID_CLASS, $type)]]), 'componentDefaultClass', ['priority' => 1]);
-        
+
         $this->bindContainers();
     }
-    
-    
+
+
     /**
      * @internal
      */
@@ -106,7 +107,17 @@ abstract class BaseControl extends Control
         $this->user = $user;
     }
 
-    
+
+    /**
+     * @internal
+     */
+    public function injectDictionary(Dictionary $dictionary)
+    {
+        $this->dictionary = $dictionary;
+        $this->dictionary->setDomain($this);
+    }
+
+
     protected function attached($control)
     {
         parent::attached($control);
@@ -114,15 +125,17 @@ abstract class BaseControl extends Control
         if (!$this->status) {
             throw new InvalidStateException("Control " . get_class($this) . " doesn't call default __construct method.");
         }
+
         $this->status->callListeners(null, false);
         $this->componentCache->setName($this->getUniqueId());
 
         $this->container->getByType(PositionControlLoader::class)->load($this);
     }
 
+
     /**
      * Set component in position
-     * 
+     *
      * @param string $type
      * @param ComponentInPositionEntity $componentInPosition
      * @return BaseControl
@@ -141,9 +154,10 @@ abstract class BaseControl extends Control
         return $this;
     }
 
+
     /**
      * Set template file
-     * 
+     *
      * @param string $template
      * @return BaseControl
      */
@@ -157,6 +171,7 @@ abstract class BaseControl extends Control
 
         return $this;
     }
+
 
     /**
      * Fills template with selected template file path
@@ -181,9 +196,10 @@ abstract class BaseControl extends Control
         return;
     }
 
+
     /**
      * Find the most appropriate template
-     * 
+     *
      * @param string $dir
      * @return string
      */
@@ -219,10 +235,11 @@ abstract class BaseControl extends Control
         return $file;
     }
 
+
     /**
      * Return custom temp
      * late
-     * 
+     *
      * @return string
      */
     private function getCustomTemplate()
@@ -236,19 +253,23 @@ abstract class BaseControl extends Control
         return $template;
     }
 
+
     /**
      * Function called before render
      */
     public function beforeRender()
     {
-        
+
     }
+
 
     /**
      * @internal
      */
     public function willRender($method, $params = null)
     {
+        $this->dictionary->setDomain($this);
+
         $this->componentCache->cachedOutput($this, function() use ($method, $params) {
             $reflection = new Method($this, $method);
 
@@ -292,13 +313,14 @@ abstract class BaseControl extends Control
         }, $params);
     }
 
+
     /**
      * Method called after execution of any render method.
      */
     protected function componentRender()
     {
         if($this->disableRenderByStatusEntity()) return;
-        
+
         //find template if specified in parameters
         if (!$this->templateFile) {
             $this->setTemplateFile($this->getComponentParameter("template"));
@@ -312,10 +334,13 @@ abstract class BaseControl extends Control
             $this->template->lang = $this->getPresenter()->lang;
         }
 
+//        $this->dictionary->setDomain($this);
+
         //render template
         $this->getTemplateFile();
         $this->template->render();
     }
+
 
     private function bindContainers()
     {
@@ -336,9 +361,10 @@ abstract class BaseControl extends Control
         };
     }
 
+
     /**
      * Retrun component title
-     * 
+     *
      * @return string
      */
     public function getTitle()
@@ -346,9 +372,10 @@ abstract class BaseControl extends Control
         return $this->component->getTitle();
     }
 
+
     /**
      * Retrun component description
-     * 
+     *
      * @return string
      */
     public function getDescription()
@@ -356,9 +383,10 @@ abstract class BaseControl extends Control
         return $this->component->getDescription();
     }
 
+
     /**
      * Retrun component type
-     * 
+     *
      * @return string
      */
     public function getType()
@@ -366,9 +394,10 @@ abstract class BaseControl extends Control
         return $this->component->getType();
     }
 
+
     /**
      * Retrun component parameters object
-     * 
+     *
      * @return ParametersCombiner
      */
     public function getComponentParameters()
@@ -376,9 +405,10 @@ abstract class BaseControl extends Control
         return $this->componentParameters;
     }
 
+
     /**
      * Get component parameter
-     * 
+     *
      * @param string $parameter Name of parameter
      * @param IParameterReader|array $parameterReader
      * @return string
@@ -388,9 +418,10 @@ abstract class BaseControl extends Control
         return $this->componentParameters->getParameter($parameter, $parameterReader);
     }
 
+
     /**
      * Get component parameter or return defualt value if no parameter is found
-     * 
+     *
      * @param string $parameter Name of parameter
      * @param mixed $default Defualt value if no parameter is found
      * @param IParameterReader|array $parameterReader
@@ -405,15 +436,17 @@ abstract class BaseControl extends Control
         return $default;
     }
 
+
     /**
      * Get component cache settings
-     * 
+     *
      * @return ComponentCache
      */
     function getComponentCache()
     {
         return $this->componentCache;
     }
+
 
     /**
      * Get presenter status
@@ -423,5 +456,5 @@ abstract class BaseControl extends Control
     {
         return $this->status;
     }
-    
+
 }
