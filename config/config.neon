@@ -13,12 +13,12 @@ php:
 
 nette:
     container:
-        debugger: TRUE
+        debugger: true
 
 
 application:
     errorPresenter: Error
-    catchExceptions: FALSE
+    catchExceptions: true
     mapping:
         *: App\*Module\Presenters\*Presenter
 
