@@ -121,7 +121,7 @@ abstract class BasePresenter extends Presenter
     protected function beforeRender()
     {
         parent::beforeRender();
-        
+
         $this->dictionary->setDomain($this);
         $this->onStageChange(new PresenterStageChangeEvent($this, 'render'));
         $this->callBeforeRenders($this);
@@ -238,6 +238,8 @@ abstract class BasePresenter extends Presenter
 
         if ($this->isAjax() && $this->getHttpRequest()->getHeader("X-Modal") == true) {
             $list[] = VENDOR_PATH . '/wame/' . $modulePath . '/presenters/templates/@modalLayout.latte';
+        } elseif ($this->isAjax() && $this->getHttpRequest()->getHeader("X-Component") == true) {
+            $list[] = VENDOR_PATH . '/wame/Core/presenters/templates/@emptyLayout.latte';
         }
 
         $name = $this->getName();
