@@ -10,10 +10,9 @@ use Nette\Object;
 use Nette\Security\User;
 use Wame\Core\Registers\RepositoryRegister;
 
-interface IRepository
-{
-    
-}
+
+interface IRepository { }
+
 
 class BaseRepository extends Object implements IRepository
 {
@@ -29,42 +28,42 @@ class BaseRepository extends Object implements IRepository
 
     /**
      * Event called when entity is created
-     * 
+     *
      * Parameters of event:
      * \Nette\Forms\Form $form
      * array $values
      * \Wame\Core\Entities\BaseEntity $entity
-     * 
+     *
      * @var callable[]
      */
     public $onCreate = [];
 
     /**
      * Event called when entity is being read
-     * 
+     *
      * Parameters of event:
      * int $id
-     * 
+     *
      * @var callable[]
      */
     public $onRead = [];
 
     /**
      * Event called when entity is updated
-     * 
+     *
      * Parameters of event:
      * int $id
-     * 
+     *
      * @var callable[]
      */
     public $onUpdate = [];
 
     /**
      * Event called when entity is deleted
-     * 
+     *
      * Parameters of event:
      * int $id
-     * 
+     *
      * @var callable[]
      */
     public $onDelete = [];
@@ -83,7 +82,7 @@ class BaseRepository extends Object implements IRepository
 
     /** @var EntityRepository */
     public $entity;
-    
+
     /** @var string */
     protected $entityClass;
 
@@ -95,10 +94,10 @@ class BaseRepository extends Object implements IRepository
      */
     public function __construct($entityClass)
     {
-        if(!is_string($entityClass)) {
+        if (!is_string($entityClass)) {
             throw new \Nette\InvalidArgumentException('Argument must be an instance of string');
         }
-        
+
         $this->entityClass = $entityClass;
     }
 
@@ -119,14 +118,15 @@ class BaseRepository extends Object implements IRepository
         $this->lang = $translator->getLanguage();
         $this->user = $user;
         $this->entity = $this->entityManager->getRepository($this->entityClass);
-        
-        // register repository |
+
+        // register repository
         $repositoryRegister->add($this, $this->entityClass);
     }
 
+
     /**
      * Get table prefix
-     * 
+     *
      * @return string
      */
     public function getPrefix()
@@ -134,9 +134,10 @@ class BaseRepository extends Object implements IRepository
         return $this->container->parameters['database']['prefix'];
     }
 
+
     /**
      * Get one entity by criteria
-     * 
+     *
      * @param array $criteria	criteria
      * @param array $orderBy	order by
      * @return BaseEntity
@@ -145,6 +146,7 @@ class BaseRepository extends Object implements IRepository
     {
         return $this->entity->findOneBy($criteria, $orderBy);
     }
+
 
     /**
      * Get all entries by criteria
@@ -160,9 +162,10 @@ class BaseRepository extends Object implements IRepository
         return $this->entity->findBy($criteria, $orderBy, $limit, $offset);
     }
 
+
     /**
      * Get all entries in pairs
-     * 
+     *
      * @param array $criteria	criteria
      * @param string $value		value
      * @param array $orderBy	order by
@@ -174,9 +177,10 @@ class BaseRepository extends Object implements IRepository
         return $this->entity->findPairs($criteria, $value, $orderBy, $key);
     }
 
+
     /**
      * Get all entries in pairs
-     * 
+     *
      * @param array $criteria	criteria
      * @param String $key		key
      * @return array
@@ -186,9 +190,10 @@ class BaseRepository extends Object implements IRepository
         return $this->entity->findAssoc($criteria, $key);
     }
 
+
     /**
      * Return count of entities
-     * 
+     *
      * @param array $criteria	criteria
      * @return integer
      */
@@ -197,9 +202,10 @@ class BaseRepository extends Object implements IRepository
         return $this->entity->countBy($criteria);
     }
 
+
     /**
      * Get rows by key
-     * 
+     *
      * @param array $criteria   criteria
      * @param string $key       key
      * @return array
@@ -213,9 +219,10 @@ class BaseRepository extends Object implements IRepository
         foreach ($rows as $row) {
             $return[$row->$key] = $row;
         }
-        
+
         return $return;
     }
+
 
     /**
      * Remove entities
@@ -226,31 +233,41 @@ class BaseRepository extends Object implements IRepository
 	public function remove($criteria = [])
 	{
 		$entities = $this->find($criteria);
-		
+
 		foreach($entities as $entity) {
 			$this->entityManager->remove($entity);
 		}
-		
+
 		return true;
 	}
-	
+
+
+	/**
+     * Create query builder
+     *
+     * @param type $alias
+     * @return type
+     */
     public function createQueryBuilder($alias = 'a')
     {
         return $this->entity->createQueryBuilder($alias);
     }
-    
+
+
     /**
      * Get entity name
-     * 
+     *
      * @return string
      */
     public function getEntityName()
     {
-        if(!$this->entity) {
+        if (!$this->entity) {
             return null;
         }
+
         return $this->entity->getClassName();
     }
+
 
     /**
      * Get new entity
@@ -260,8 +277,8 @@ class BaseRepository extends Object implements IRepository
     public function getNewEntity()
     {
         $entityName = $this->getEntityName();
-        
+
         return new $entityName();
     }
-    
+
 }
