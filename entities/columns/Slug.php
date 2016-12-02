@@ -9,8 +9,6 @@ trait Slug
 {
 	/**
 	 * @ORM\Column(name="slug", type="string", nullable=true)
-     * @ORM\GeneratedValue(strategy="CUSTOM")
-     * @ORM\CustomIdGenerator(class="Wame\Core\Doctrine\Generator\SlugGenerator")
 	 */
 	protected $slug;
 
