@@ -4,7 +4,9 @@ namespace Wame\Core\Events;
 
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Nette\Security\User;
+use Wame\Core\Doctrine\Filters\SoftdeletableFilter;
 use Wame\Core\Entities\BaseEntity;
+use Wame\Core\Registers\RepositoryRegister;
 
 /**
  * Class PrePersistListener
@@ -13,14 +15,26 @@ use Wame\Core\Entities\BaseEntity;
  */
 class PrePersistListener implements \Kdyby\Events\Subscriber
 {
+    /** @var User */
+    private $user;
+    
+    /** @var RepositoryRegister */
+    private $repositoryRegister;
+    
+    /** @var SoftdeletableFilter */
+    private $softdeletableFilter;
+    
+    
     /**
      * PrePersistListener constructor.
      *
      * @param User $user    user
      */
-    public function __construct(User $user)
+    public function __construct(User $user, RepositoryRegister $repositoryRegister, SoftdeletableFilter $softdeletableFilter)
     {
         $this->user = $user;
+        $this->repositoryRegister = $repositoryRegister;
+        $this->softdeletableFilter = $softdeletableFilter;
     }
     
 
@@ -43,6 +57,8 @@ class PrePersistListener implements \Kdyby\Events\Subscriber
         $this->setEditDate($entity);
         $this->setCreateUser($entity);
         $this->setEditUser($entity);
+        
+        $this->setSlug($entity);
     }
     
     
@@ -98,6 +114,43 @@ class PrePersistListener implements \Kdyby\Events\Subscriber
         if(property_exists($entity, 'editUser')) {
             if(!$entity->getEditUser()) {
                 $entity->setEditUser($this->user->getEntity());
+            }
+        }
+    }
+    
+    /**
+     * Set slug
+     * 
+     * @param type $entity
+     */
+    private function setSlug($entity)
+    {
+        if(property_exists($entity, 'slug')) {
+            $slugOrigin = $entity->getSlug();
+            
+            if($slugOrigin) {
+                $repository = $this->repositoryRegister->getByName($entity->getClassName());
+                $this->softdeletableFilter->isDisabled();
+                $entitiesWithSameSlug = $repository->find(['slug LIKE' => $slugOrigin . '%', 'id !=' => $entity->getId()], ['id' => 'DESC']);
+                $this->softdeletableFilter->isEnabled();
+
+                if(!empty($entitiesWithSameSlug)) {
+                    $postfixes = [];
+
+                    foreach($entitiesWithSameSlug as $ewss) {
+                        $r = preg_match_all("/$slugOrigin-?(\d+)$/", $ewss->getSlug(), $matches);
+
+                        if($r>0) {
+                            $postfixes[] = $matches[count($matches)-1][0];
+                        }
+                    }
+
+                    sort($postfixes);
+
+                    $oldPostfix = end($postfixes);
+                    $postfix = is_numeric($oldPostfix) ? ($oldPostfix + 1) : 2;
+                    $entity->setSlug($entity->getSlug() . '-' . $postfix);
+                }
             }
         }
     }
