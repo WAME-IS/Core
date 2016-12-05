@@ -11,7 +11,7 @@ trait Parameters
     protected $parameters = null;
 	
 	
-	/** get ************************************************************/
+	/** get *******************************************************************/
 
 	public function getParameters()
 	{
@@ -33,7 +33,7 @@ trait Parameters
 	}
 	
 	
-	/** set ************************************************************/
+	/** set *******************************************************************/
 
 	public function setParameters($parameters)
 	{
@@ -47,5 +47,13 @@ trait Parameters
         $this->parameters[$parameter] = $value;
 		return $this;
 	}
+    
+    
+    /** other *****************************************************************/
+    
+    public function hasParameter($parameter)
+    {
+        return array_key_exists($parameter, $this->parameters);
+    }
 
 }
