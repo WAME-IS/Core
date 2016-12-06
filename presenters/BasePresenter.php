@@ -332,6 +332,11 @@ abstract class BasePresenter extends Presenter
             }
         }
     }
+    
+    public function getEntity()
+    {
+        
+    }
 
 
     /** components ************************************************************/
