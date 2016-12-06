@@ -53,18 +53,25 @@ abstract class BaseItemRepository extends BaseRepository
      * @param integer $itemId   item id
      * @return BaseEntity[]
      */
-    public function findItems($type, $itemId = null)
+    public function findItems($type = null, $itemId = null, $main = null)
     {
         $qb = $this->entityManager->createQueryBuilder();
 		
 		$qb->select('i')
 			->from($this->getItemClassName(), 'ie')
-			->leftJoin($this->getClassName(), 'i', Join::WITH, "ie.{$this->getAlias()} = i")
-            ->andWhere('i.type = :type')->setParameter('type', $type);
+			->leftJoin($this->getClassName(), 'i', Join::WITH, "ie.{$this->getAlias()} = i");
+            
+        if($type) {
+            $qb->andWhere('i.type = :type')->setParameter('type', $type);
+        }
 		
 		if($itemId) {
             $qb->andWhere($qb->expr()->eq("ie.item_id", $itemId));
 		}
+        
+        if($main !== null) {
+            $qb->andWhere($qb->expr()->eq("ie.main", $main));
+        }
 
 		return $qb->getQuery()->getResult();
     }
