@@ -45,6 +45,8 @@ extensions:
 
 
 doctrine:
+#    metadataCache: apc
+#    queryCache: apc
     driver: %database.driver%
     host: %database.host%
     unix_socket: %database.unix_socket%
@@ -52,7 +54,7 @@ doctrine:
     user: %database.user%
     password: %database.password%
     port: %database.port%
-    autoGenerateProxyClasses: true
+    autoGenerateProxyClasses: %debugMode%
     metadata:
         App: %appDir%
         Wame\Core\Entities: %appDir%/../vendor/wame/Core/entities
