@@ -71,6 +71,8 @@ class PriorityRegister implements IRegister
         } else {
             throw new InvalidArgumentException2("Trying to register class " . get_class($service) . " into register of " . $this->type);
         }
+        
+        return $this;
     }
 
     protected function getDefaultName($service)
@@ -96,6 +98,8 @@ class PriorityRegister implements IRegister
             unset($this[$name]);
         }
         $this->resort();
+        
+        return $this;
     }
 
     private function resort()

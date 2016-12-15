@@ -456,5 +456,17 @@ abstract class BaseControl extends Control
     {
         return $this->status;
     }
+    
+    /**
+     * Load parameters
+     * 
+     * @param array $parameters parameters
+     */
+    protected function loadParameters($parameters)
+    {
+        foreach($parameters as $parameter) {
+            $this->template->$parameter = $this->getComponentParameter($parameter);
+        }
+    }
 
 }
