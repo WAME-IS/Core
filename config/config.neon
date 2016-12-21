@@ -152,11 +152,11 @@ services:
 
     # Commands
     fixtureCommand:
-        class: Wame\CoreModule\Commands\FixtureCommand
+        class: Wame\Core\Commands\FixtureCommand
         tags: [kdyby.console.command]
 
     loadDataFixturesDoctrineCommand:
-        class: Wame\CoreModule\Commands\LoadDataFixturesDoctrineCommand
+        class: Wame\Core\Commands\LoadDataFixturesDoctrineCommand
         tags: [kdyby.console.command]
 
 

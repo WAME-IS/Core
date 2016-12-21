@@ -1,6 +1,6 @@
 <?php
 
-namespace Wame\CoreModule\Commands;
+namespace Wame\Core\Commands;
 
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;

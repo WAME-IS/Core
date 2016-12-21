@@ -1,6 +1,6 @@
 <?php
 
-namespace Wame\CoreModule\Commands;
+namespace Wame\Core\Commands;
 
 use Doctrine\Common\DataFixtures\Executor\ORMExecutor;
 use Doctrine\Common\DataFixtures\Loader;
