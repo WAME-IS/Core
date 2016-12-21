@@ -9,12 +9,12 @@ trait TRegister
     /**
      * Get entity alias
      * 
-     * @param BaseEntity $entity
+     * @param BaseEntity|string $entity
      * @return string
      */
     public function getEntityAlias($register, $entity)
     {
-        $entityName = get_class($entity);
+        $entityName = ($entity instanceof \Wame\Core\Entities\BaseEntity) ? get_class($entity) : $entity;
         
         $alias = Collection::from($register->getArray())
                 ->reduce(function($tmp, $item) use($entityName) {
