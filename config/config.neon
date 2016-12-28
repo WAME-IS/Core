@@ -11,14 +11,9 @@ php:
     date.timezone: Europe/Bratislava
 
 
-nette:
-    container:
-        debugger: true
-
-
 application:
-    errorPresenter: Error
-    catchExceptions: true
+#    errorPresenter: Error
+#    catchExceptions: true
     mapping:
         *: App\*Module\Presenters\*Presenter
 
@@ -163,6 +158,7 @@ services:
 fixtures:
     locale: "sk_SK"
     seed: 1
+
 
 decorator:
     BaseRepository:
