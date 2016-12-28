@@ -188,8 +188,8 @@ abstract class BasePresenter extends Presenter
 
         $dirs[] = APP_PATH . '/' . $module . $way . '/presenters/templates';
 
-        if ($this->customTemplate) {
-            $dirs[] = TEMPLATES_PATH . '/' . $this->customTemplate . '/' . $module . $way . '/presenters/templates';
+        if ($this->getCustomTemplate()) {
+            $dirs[] = TEMPLATES_PATH . '/' . $this->getCustomTemplate() . '/' . $module . $way . '/presenters/templates';
         }
 
         $dirs[] = $dir . '/templates';
@@ -228,8 +228,8 @@ abstract class BasePresenter extends Presenter
 
         $dirs[] = APP_PATH . '/' . $module . $way . '/presenters/templates';
 
-        if ($this->customTemplate) {
-            $dirs[] = TEMPLATES_PATH . '/' . $this->customTemplate . '/' . $module . $way . '/presenters/templates';
+        if ($this->getCustomTemplate()) {
+            $dirs[] = TEMPLATES_PATH . '/' . $this->getCustomTemplate() . '/' . $module . $way . '/presenters/templates';
         }
 
         $dirs[] = $dir . '/templates';
@@ -255,8 +255,8 @@ abstract class BasePresenter extends Presenter
 
         array_push($list, APP_PATH . '/' . $modulePath . '/presenters/templates/@layout.latte');
 
-        if ($this->customTemplate) {
-            array_push($list, TEMPLATES_PATH . '/' . $this->customTemplate . '/' . $modulePath . '/presenters/templates/@layout.latte');
+        if ($this->getCustomTemplate()) {
+            array_push($list, TEMPLATES_PATH . '/' . $this->getCustomTemplate() . '/' . $modulePath . '/presenters/templates/@layout.latte');
         }
 
         array_push($list, VENDOR_PATH . '/' . PACKAGIST_NAME . '/' . $modulePath . '/presenters/templates/@layout.latte');
@@ -332,10 +332,10 @@ abstract class BasePresenter extends Presenter
             }
         }
     }
-    
+
     public function getEntity()
     {
-        
+
     }
 
 
