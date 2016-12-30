@@ -122,28 +122,39 @@ services:
     jwlCssMinFilter: Joseki\Webloader\CssMinFilter
     jwlJsMinFilter: Joseki\Webloader\JsMinFilter
 
+
     - Wame\Core\Status\ControlStatuses
+
 
     # Doctrine filters
     - Wame\Core\Doctrine\Filters\SoftdeletableFilter
 
+
     # Doctrine listeners
     - {class: Wame\Core\Events\PrePersistListener, tags: [kdyby.subscriber]}
 
+
+    # Latte filters
     nette.latteFactory:
         setup:
             - addFilter(timeAgo, @Wame\Core\Filters\TimeAgoFilter)
 
-    # Filters
     - Wame\Core\Filters\TimeAgoFilter
 
+
+    # Form containers
     - Wame\Core\Forms\IStatusTypeFormContainerFactory
 
+
+    # Registers
     StatusTypeRegister:
         class: Wame\Core\Registers\StatusTypeRegister
 
-    - Wame\Core\Cache\TemplatingCacheFactory
     - Wame\Core\Registers\RepositoryRegister
+
+
+    - Wame\Core\Cache\TemplatingCacheFactory
+
 
     # Commands
     fixtureCommand:
@@ -153,6 +164,7 @@ services:
     loadDataFixturesDoctrineCommand:
         class: Wame\Core\Commands\LoadDataFixturesDoctrineCommand
         tags: [kdyby.console.command]
+
 
 
 fixtures:
