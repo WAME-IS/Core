@@ -5,6 +5,7 @@ namespace Wame\Core\Repositories;
 use h4kuna\Gettext\GettextSetup;
 use Kdyby\Doctrine\EntityManager;
 use Kdyby\Doctrine\EntityRepository;
+use Kdyby\Doctrine\QueryBuilder;
 use Nette\DI\Container;
 use Nette\Object;
 use Nette\Security\User;
@@ -242,11 +243,11 @@ class BaseRepository extends Object implements IRepository
 	}
 
 
-	/**
+    /**
      * Create query builder
      *
-     * @param type $alias
-     * @return type
+     * @param string $alias
+     * @return QueryBuilder
      */
     public function createQueryBuilder($alias = 'a')
     {
