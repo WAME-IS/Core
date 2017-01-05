@@ -8,6 +8,7 @@ use Nette\DI\Container;
 use Nette\InvalidStateException;
 use Nette\Reflection\Method;
 use Nette\Security\User;
+use Wame\ComponentModule\Traits\TComponentStatusType;
 use Wame\Utils\Strings;
 use Wame\ComponentModule\Components\PositionControlLoader;
 use Wame\ComponentModule\Entities\ComponentEntity;
@@ -21,7 +22,6 @@ use Wame\Core\Cache\TemplatingCacheFactory;
 use Wame\Core\Status\ControlStatus;
 use Wame\Core\Status\ControlStatuses;
 use Wame\LanguageModule\Gettext\Dictionary;
-
 
 abstract class BaseControl extends Control
 {
@@ -76,7 +76,7 @@ abstract class BaseControl extends Control
     protected $dictionary;
 
 
-    use \Wame\ComponentModule\Traits\TComponentStatusType;
+    use TComponentStatusType;
 
 
     public function __construct(Container $container, IContainer $parent = NULL, $name = NULL)
@@ -101,15 +101,16 @@ abstract class BaseControl extends Control
 
     /**
      * @internal
+     * @param User $user
      */
     public function injectUser(User $user)
     {
         $this->user = $user;
     }
 
-
     /**
      * @internal
+     * @param Dictionary $dictionary
      */
     public function injectDictionary(Dictionary $dictionary)
     {
@@ -117,35 +118,18 @@ abstract class BaseControl extends Control
         $this->dictionary->setDomain($this);
     }
 
-
-    protected function attached($control)
-    {
-        parent::attached($control);
-
-        if (!$this->status) {
-            throw new InvalidStateException("Control " . get_class($this) . " doesn't call default __construct method.");
-        }
-
-        $this->status->callListeners(null, false);
-        $this->componentCache->setName($this->getUniqueId());
-
-        $this->container->getByType(PositionControlLoader::class)->load($this);
-    }
-
-
     /**
      * Set component in position
      *
-     * @param string $type
-     * @param ComponentInPositionEntity $componentInPosition
-     * @return BaseControl
+     * @param $componentInPosition
+     * @return $this
      */
     public function setComponentInPosition($componentInPosition)
     {
         $this->componentInPosition = $componentInPosition;
         $this->component = $componentInPosition->component;
 
-        //add paramter sources
+        //add parameter sources
         $this->componentParameters->add(
             new ArrayParameterSource($componentInPosition->getParameters()), 'componentInPosition', ['priority' => 30]);
         $this->componentParameters->add(
@@ -153,7 +137,6 @@ abstract class BaseControl extends Control
 
         return $this;
     }
-
 
     /**
      * Set template file
@@ -171,7 +154,6 @@ abstract class BaseControl extends Control
 
         return $this;
     }
-
 
     /**
      * Fills template with selected template file path
@@ -195,7 +177,6 @@ abstract class BaseControl extends Control
 
         return;
     }
-
 
     /**
      * Find the most appropriate template
@@ -235,25 +216,6 @@ abstract class BaseControl extends Control
         return $file;
     }
 
-
-    /**
-     * Return custom temp
-     * late
-     *
-     * @return string
-     */
-    private function getCustomTemplate()
-    {
-        if (isset($this->presenter->context->parameters['customTemplate'])) {
-            $template = $this->presenter->context->parameters['customTemplate'];
-        } else {
-            $template = null;
-        }
-
-        return $template;
-    }
-
-
     /**
      * Function called before render
      */
@@ -262,9 +224,10 @@ abstract class BaseControl extends Control
 
     }
 
-
     /**
      * @internal
+     * @param string $method
+     * @param array $params
      */
     public function willRender($method, $params = null)
     {
@@ -313,6 +276,110 @@ abstract class BaseControl extends Control
         }, $params);
     }
 
+    /**
+     * Return component title
+     *
+     * @return string
+     */
+    public function getTitle()
+    {
+        return $this->component->getTitle();
+    }
+
+    /**
+     * Return component description
+     *
+     * @return string
+     */
+    public function getDescription()
+    {
+        return $this->component->getDescription();
+    }
+
+    /**
+     * Return component type
+     *
+     * @return string
+     */
+    public function getType()
+    {
+        return $this->component->getType();
+    }
+
+    /**
+     * Return component parameters object
+     *
+     * @return ParametersCombiner
+     */
+    public function getComponentParameters()
+    {
+        return $this->componentParameters;
+    }
+
+    /**
+     * Get component parameter
+     *
+     * @param string $parameter Name of parameter
+     * @param IParameterReader|array $parameterReader
+     * @return string
+     */
+    public function getComponentParameter($parameter, $parameterReader = null)
+    {
+        return $this->componentParameters->getParameter($parameter, $parameterReader);
+    }
+
+    /**
+     * Get component parameter or return defualt value if no parameter is found
+     *
+     * @param string $parameter Name of parameter
+     * @param mixed $default Defualt value if no parameter is found
+     * @param IParameterReader|array $parameterReader
+     * @return string
+     */
+    public function getComponentParameterDefault($parameter, $default, $parameterReader = null)
+    {
+        $param = $this->componentParameters->getParameter($parameter, $parameterReader);
+        if ($param) {
+            return $param;
+        }
+        return $default;
+    }
+
+    /**
+     * Get component cache settings
+     *
+     * @return TemplatingCache
+     */
+    public function getComponentCache()
+    {
+        return $this->componentCache;
+    }
+
+    /**
+     * Get presenter status
+     *
+     * @return ControlStatus
+     */
+    public function getStatus()
+    {
+        return $this->status;
+    }
+
+
+    /** {@inheritdoc} */
+    protected function attached($control)
+    {
+        parent::attached($control);
+
+        if (!$this->status) {
+            throw new InvalidStateException("Control " . get_class($this) . " doesn't call default __construct method.");
+        }
+
+        $this->status->callListeners(null, false);
+        $this->componentCache->setName($this->getUniqueId());
+
+        $this->container->getByType(PositionControlLoader::class)->load($this);
+    }
 
     /**
      * Method called after execution of any render method.
@@ -334,14 +401,44 @@ abstract class BaseControl extends Control
             $this->template->lang = $this->getPresenter()->lang;
         }
 
-//        $this->dictionary->setDomain($this);
-
         //render template
         $this->getTemplateFile();
         $this->template->render();
     }
 
+    /**
+     * Load parameters
+     *
+     * @param array $parameters parameters
+     */
+    protected function loadParameters($parameters)
+    {
+        foreach($parameters as $parameter) {
+            $this->template->$parameter = $this->getComponentParameter($parameter);
+        }
+    }
 
+
+    /**
+     * Return custom temp
+     * late
+     *
+     * @return string
+     */
+    private function getCustomTemplate()
+    {
+        if (isset($this->presenter->context->parameters['customTemplate'])) {
+            $template = $this->presenter->context->parameters['customTemplate'];
+        } else {
+            $template = null;
+        }
+
+        return $template;
+    }
+
+    /**
+     * Bind containers
+     */
     private function bindContainers()
     {
         if (!$this->hasContainer) {
@@ -359,114 +456,6 @@ abstract class BaseControl extends Control
             }
             Helpers::renderContainerEnd(Helpers::getContainer($this, self::CONTAINER_DEFAULT, self::PARAM_CONTAINER));
         };
-    }
-
-
-    /**
-     * Retrun component title
-     *
-     * @return string
-     */
-    public function getTitle()
-    {
-        return $this->component->getTitle();
-    }
-
-
-    /**
-     * Retrun component description
-     *
-     * @return string
-     */
-    public function getDescription()
-    {
-        return $this->component->getDescription();
-    }
-
-
-    /**
-     * Retrun component type
-     *
-     * @return string
-     */
-    public function getType()
-    {
-        return $this->component->getType();
-    }
-
-
-    /**
-     * Retrun component parameters object
-     *
-     * @return ParametersCombiner
-     */
-    public function getComponentParameters()
-    {
-        return $this->componentParameters;
-    }
-
-
-    /**
-     * Get component parameter
-     *
-     * @param string $parameter Name of parameter
-     * @param IParameterReader|array $parameterReader
-     * @return string
-     */
-    public function getComponentParameter($parameter, $parameterReader = null)
-    {
-        return $this->componentParameters->getParameter($parameter, $parameterReader);
-    }
-
-
-    /**
-     * Get component parameter or return defualt value if no parameter is found
-     *
-     * @param string $parameter Name of parameter
-     * @param mixed $default Defualt value if no parameter is found
-     * @param IParameterReader|array $parameterReader
-     * @return string
-     */
-    public function getComponentParameterDefault($parameter, $default, $parameterReader = null)
-    {
-        $param = $this->componentParameters->getParameter($parameter, $parameterReader);
-        if ($param) {
-            return $param;
-        }
-        return $default;
-    }
-
-
-    /**
-     * Get component cache settings
-     *
-     * @return ComponentCache
-     */
-    function getComponentCache()
-    {
-        return $this->componentCache;
-    }
-
-
-    /**
-     * Get presenter status
-     * @return ControlStatus
-     */
-    public function getStatus()
-    {
-        return $this->status;
-    }
-    
-    /**
-     * Load parameters
-     * 
-     * @param array $parameters parameters
-     */
-    protected function loadParameters($parameters)
-    {
-        foreach($parameters as $parameter) {
-            $this->template->$parameter = $this->getComponentParameter($parameter);
-        }
     }
 
 }

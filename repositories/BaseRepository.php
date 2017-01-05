@@ -7,8 +7,10 @@ use Kdyby\Doctrine\EntityManager;
 use Kdyby\Doctrine\EntityRepository;
 use Kdyby\Doctrine\QueryBuilder;
 use Nette\DI\Container;
+use Nette\InvalidArgumentException;
 use Nette\Object;
 use Nette\Security\User;
+use Wame\Core\Entities\BaseEntity;
 use Wame\Core\Registers\RepositoryRegister;
 
 
@@ -33,7 +35,7 @@ class BaseRepository extends Object implements IRepository
      * Parameters of event:
      * \Nette\Forms\Form $form
      * array $values
-     * \Wame\Core\Entities\BaseEntity $entity
+     * BaseEntity $entity
      *
      * @var callable[]
      */
@@ -96,7 +98,7 @@ class BaseRepository extends Object implements IRepository
     public function __construct($entityClass)
     {
         if (!is_string($entityClass)) {
-            throw new \Nette\InvalidArgumentException('Argument must be an instance of string');
+            throw new InvalidArgumentException('Argument must be an instance of string');
         }
 
         $this->entityClass = $entityClass;
@@ -112,7 +114,7 @@ class BaseRepository extends Object implements IRepository
      * @param User $user                                user
      * @param RepositoryRegister $repositoryRegister    repository register
      */
-    public function injectRepository(Container $container, EntityManager $entityManager, GettextSetup $translator, User $user, \Wame\Core\Registers\RepositoryRegister $repositoryRegister)
+    public function injectRepository(Container $container, EntityManager $entityManager, GettextSetup $translator, User $user, RepositoryRegister $repositoryRegister)
     {
         $this->container = $container;
         $this->entityManager = $entityManager;
