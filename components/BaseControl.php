@@ -321,7 +321,7 @@ abstract class BaseControl extends Control
      *
      * @param string $parameter Name of parameter
      * @param IParameterReader|array $parameterReader
-     * @return string
+     * @return string|mixed
      */
     public function getComponentParameter($parameter, $parameterReader = null)
     {
