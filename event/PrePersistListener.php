@@ -3,6 +3,7 @@
 namespace Wame\Core\Events;
 
 use Doctrine\ORM\Event\LifecycleEventArgs;
+use Kdyby\Doctrine\Events;
 use Nette\Security\User;
 use Wame\Core\Doctrine\Filters\SoftdeletableFilter;
 use Wame\Core\Entities\BaseEntity;
@@ -23,12 +24,14 @@ class PrePersistListener implements \Kdyby\Events\Subscriber
     
     /** @var SoftdeletableFilter */
     private $softdeletableFilter;
-    
-    
+
+
     /**
      * PrePersistListener constructor.
      *
-     * @param User $user    user
+     * @param User $user
+     * @param RepositoryRegister $repositoryRegister
+     * @param SoftdeletableFilter $softdeletableFilter
      */
     public function __construct(User $user, RepositoryRegister $repositoryRegister, SoftdeletableFilter $softdeletableFilter)
     {
@@ -41,7 +44,7 @@ class PrePersistListener implements \Kdyby\Events\Subscriber
     /** {@inheritdoc} */
     public function getSubscribedEvents()
     {
-        return [\Kdyby\Doctrine\Events::prePersist];
+        return [Events::prePersist];
     }
 
     /**
@@ -65,7 +68,7 @@ class PrePersistListener implements \Kdyby\Events\Subscriber
     /**
      * Set createDate
      * 
-     * @param BaseEntity $entity    entity
+     * @param BaseEntity $entity entity
      */
     private function setCreateDate($entity)
     {
@@ -79,7 +82,7 @@ class PrePersistListener implements \Kdyby\Events\Subscriber
     /**
      * Set editDate
      *
-     * @param BaseEntity $entity    entity
+     * @param BaseEntity $entity entity
      */
     private function setEditDate($entity)
     {
@@ -93,7 +96,7 @@ class PrePersistListener implements \Kdyby\Events\Subscriber
     /**
      * Set createUser
      * 
-     * @param BaseEntity $entity    entity
+     * @param BaseEntity $entity entity
      */
     private function setCreateUser($entity)
     {
@@ -107,7 +110,7 @@ class PrePersistListener implements \Kdyby\Events\Subscriber
     /**
      * Set editUser
      * 
-     * @param BaseEntity $entity    entity
+     * @param BaseEntity $entity entity
      */
     private function setEditUser($entity)
     {
@@ -121,7 +124,7 @@ class PrePersistListener implements \Kdyby\Events\Subscriber
     /**
      * Set slug
      * 
-     * @param type $entity
+     * @param BaseEntity $entity entity
      */
     private function setSlug($entity)
     {

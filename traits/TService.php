@@ -16,6 +16,7 @@ trait TService
      */
     public function getRepositoryByEntityName($entityName)
     {
+        // TODO: zbavit sa $this->container, pretoze traita moze byt pouzita niekde kde nieje container
         $serviceName = key($this->container->findByTag($entityName));
         $service = $this->container->getService($serviceName);
 
@@ -25,4 +26,5 @@ trait TService
             throw new Exception('Repository not found.');
         }
     }
+
 }

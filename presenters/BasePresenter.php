@@ -2,13 +2,14 @@
 
 namespace App\Core\Presenters;
 
+use h4kuna\Gettext\InjectTranslator;
 use Kdyby\Doctrine\EntityManager;
 use Kdyby\Replicator\Container;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Multiplier;
 use Nette\Application\UI\Presenter;
 use Nette\Http\IResponse;
-use Nette\Templating\ITemplate;
+use Nette\Application\UI\ITemplate;
 use Nette\Utils\Strings;
 use Wame\ComponentModule\Components\PositionControlLoader;
 use Wame\Core\Components\BaseControl;
@@ -16,20 +17,20 @@ use Wame\Core\Event\PresenterStageChangeEvent;
 use Wame\Core\Status\ControlStatus;
 use Wame\Core\Status\ControlStatuses;
 use Wame\DynamicObject\Components\IFormControlFactory;
+use Wame\DynamicObject\Forms\FormGroup;
 use Wame\HeadControl\Registers\MetaTypeRegister;
 use WebLoader\Nette\CssLoader;
 use WebLoader\Nette\JavaScriptLoader;
 use WebLoader\Nette\LoaderFactory;
 use Wame\LanguageModule\Gettext\Dictionary;
 
-
 abstract class BasePresenter extends Presenter
 {
     /** h4kuna Gettext latte translator trait */
-    use \h4kuna\Gettext\InjectTranslator;
+    use InjectTranslator;
 
     /** FormGroup getter trait */
-    use \Wame\DynamicObject\Forms\FormGroup;
+    use FormGroup;
 
 
     /** @var LoaderFactory @inject */
@@ -67,11 +68,17 @@ abstract class BasePresenter extends Presenter
 
     /** injects ***************************************************************/
 
+    /**
+     * @param ControlStatuses $controlStatuses
+     */
     public function injectStatus(ControlStatuses $controlStatuses)
     {
         $this->status = new ControlStatus($this, $controlStatuses);
     }
 
+    /**
+     * @param MetaTypeRegister $metaTypeRegister
+     */
     public function injectHeadControl(MetaTypeRegister $metaTypeRegister)
     {
         $this->metaTypeRegister = $metaTypeRegister;
@@ -356,7 +363,7 @@ abstract class BasePresenter extends Presenter
     /**
      * Form control
      *
-     * @return IFormControlFactory
+     * @return Multiplier
      */
     protected function createComponentForm()
     {

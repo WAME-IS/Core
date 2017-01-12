@@ -9,7 +9,6 @@ use Wame\Core\Status\Event\ControlStatusSetEvent;
 
 class ControlStatus extends Object
 {
-
     /** @var Control */
     private $control;
 
@@ -22,6 +21,7 @@ class ControlStatus extends Object
     /** @var array */
     private $listeners = [];
 
+
     public function __construct(Control $control, ControlStatuses $controlStatuses)
     {
         $this->control = $control;
@@ -29,11 +29,13 @@ class ControlStatus extends Object
         $this->params = new ArrayHash();
     }
 
+
     /**
-     * 
+     * Get
+     *
      * @param string $name
      * @param callable $callback
-     * @return type
+     * @return mixed
      */
     public function get($name, $callback = null)
     {
@@ -51,6 +53,12 @@ class ControlStatus extends Object
         }
     }
 
+    /**
+     * Set
+     *
+     * @param string $name
+     * @param mixed $value
+     */
     public function set($name, $value)
     {
         $event = new ControlStatusSetEvent($this, $name, $value);
@@ -63,6 +71,13 @@ class ControlStatus extends Object
         $this->callListeners($name, 'force');
     }
 
+
+    /**
+     * Recursive get
+     *
+     * @param string $name name
+     * @return mixed
+     */
     private function recursiveGet($name)
     {
         if (isset($this->params->$name)) {
@@ -110,9 +125,16 @@ class ControlStatus extends Object
             }
         }
     }
-    
+
+
+    /**
+     * Get all local
+     *
+     * @return ArrayHash
+     */
     public function getAllLocal()
     {
         return $this->params;
     }
+
 }

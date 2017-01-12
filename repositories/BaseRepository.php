@@ -110,7 +110,7 @@ class BaseRepository extends Object implements IRepository
      *
      * @param Container $container                      container
      * @param EntityManager $entityManager              entity manager
-     * @param GettextSetup $translator                  transtor
+     * @param GettextSetup $translator                  translator
      * @param User $user                                user
      * @param RepositoryRegister $repositoryRegister    repository register
      */

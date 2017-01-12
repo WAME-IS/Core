@@ -3,26 +3,40 @@
 namespace Wame\Core\Cache;
 
 use Nette\Caching\IStorage;
-use Wame\Core\Cache\TemplatingCache;
+use Nette\Caching\Storages\DevNullStorage;
 
 class TemplatingCacheFactory
 {
-
+    /** @var DevNullStorage */
     private $cacheStorage;
+
 
     public function __construct(IStorage $cacheStorage)
     {
         $this->cacheStorage = $cacheStorage;
-        $this->cacheStorage = new \Nette\Caching\Storages\DevNullStorage();
+        $this->cacheStorage = new DevNullStorage();
     }
 
+
+    /**
+     * Create
+     *
+     * @param string $name name
+     * @return TemplatingCache
+     */
     public function create($name = null)
     {
         return new TemplatingCache($this->cacheStorage, $name);
     }
 
-    function setCacheStorage($cacheStorage)
+    /**
+     * Set cache storage
+     *
+     * @param DevNullStorage $cacheStorage cache storage
+     */
+    public function setCacheStorage($cacheStorage)
     {
         $this->cacheStorage = $cacheStorage;
     }
+
 }

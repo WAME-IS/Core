@@ -3,6 +3,7 @@
 namespace Wame\Core\Filters;
 
 use Nette\Object;
+use Wame\Utils\Date;
 
 class TimeAgoFilter extends Object
 {
@@ -12,7 +13,7 @@ class TimeAgoFilter extends Object
      */
     public function __invoke($date)
     {
-        return \Wame\Utils\Date::timeAgoInWords($date);
+        return Date::timeAgoInWords($date);
     }
     
 }

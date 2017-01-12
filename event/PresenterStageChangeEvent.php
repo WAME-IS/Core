@@ -7,14 +7,15 @@ use Nette\InvalidArgumentException;
 
 class PresenterStageChangeEvent
 {
-
     const stages = ['startup', 'action', 'signal', 'render', 'terminate'];
+
 
     /** @var Presenter */
     private $presenter;
 
     /** @var string */
     private $stage;
+
 
     /**
      * 
@@ -29,6 +30,7 @@ class PresenterStageChangeEvent
         $this->presenter = $presenter;
         $this->stage = $stage;
     }
+
 
     /**
      * Returns whenewer it is event entering stage

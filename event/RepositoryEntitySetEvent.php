@@ -12,10 +12,13 @@ use Nette\Object;
  */
 class RepositoryEntitySetEvent extends Object
 {
+    /** @var string */
     public $entityName;
+
 
     public function __construct($entityName)
     {
         $this->entityName = $entityName;
     }
+
 }

@@ -3,6 +3,7 @@
 namespace Wame\Core\Traits;
 
 use DusanKasan\Knapsack\Collection;
+use Wame\Core\Entities\BaseEntity;
 
 trait TRegister
 {
@@ -14,7 +15,7 @@ trait TRegister
      */
     public function getEntityAlias($register, $entity)
     {
-        $entityName = ($entity instanceof \Wame\Core\Entities\BaseEntity) ? get_class($entity) : $entity;
+        $entityName = ($entity instanceof BaseEntity) ? get_class($entity) : $entity;
         
         $alias = Collection::from($register->getArray())
                 ->reduce(function($tmp, $item) use($entityName) {

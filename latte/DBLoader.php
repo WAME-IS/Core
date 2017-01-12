@@ -4,6 +4,12 @@ namespace Wame\Core;
 
 use Latte;
 
+/**
+ * Class DBLoader
+ * @package Wame\Core
+ *
+ * @deprecated
+ */
 class DBLoader implements Latte\ILoader
 {
     /** {@inheritDoc} */
@@ -24,5 +30,5 @@ class DBLoader implements Latte\ILoader
     {
         return FALSE;
     }
-    
+
 }

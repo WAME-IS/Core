@@ -4,7 +4,6 @@ namespace Wame\Core\Registers;
 
 interface IRegister extends \IteratorAggregate, \ArrayAccess
 {
-
     /**
      * Register service into register.
      * 
@@ -34,4 +33,5 @@ interface IRegister extends \IteratorAggregate, \ArrayAccess
      * @return object Service
      */
     public function getByName($name);
+
 }

@@ -10,12 +10,12 @@ use WebLoader\InvalidArgumentException as InvalidArgumentException2;
 
 class PriorityRegister implements IRegister
 {
-
     /** @var string Type */
     private $type;
 
     /** @var array */
     protected $array;
+
 
     /**
      * @param string $type Name of class accepted in this register
@@ -26,11 +26,15 @@ class PriorityRegister implements IRegister
         $this->array = [];
     }
 
+
     /**
      * Register service into register.
-     * 
-     * @param object $service
-     * @param string $name
+     *
+     * @param object $service service
+     * @param string $name name
+     * @param array $parameters parameters
+     * @return $this
+     * @throws InvalidArgumentException2
      */
     public function add($service, $name = null, $parameters = [])
     {
@@ -82,8 +86,9 @@ class PriorityRegister implements IRegister
 
     /**
      * Remove service from register.
-     * 
+     *
      * @param object|string $name Service or name
+     * @return $this
      */
     public function remove($name)
     {
@@ -102,6 +107,9 @@ class PriorityRegister implements IRegister
         return $this;
     }
 
+    /**
+     * Resort
+     */
     private function resort()
     {
         usort($this->array, function($s1, $s2) {
@@ -111,6 +119,7 @@ class PriorityRegister implements IRegister
 
     /**
      * Get index by name
+     *
      * @param string $name
      * @return int Index of service or -1 if not found
      */
@@ -237,4 +246,5 @@ class PriorityRegister implements IRegister
             }
         }
     }
+
 }

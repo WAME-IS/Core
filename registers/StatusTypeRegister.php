@@ -10,7 +10,14 @@ class StatusTypeRegister extends PriorityRegister
     {
         parent::__construct(StatusType::class);
     }
-    
+
+
+    /**
+     * Get by entity class
+     *
+     * @param string $class
+     * @return mixed
+     */
     public function getByEntityClass($class)
     {
         foreach ($this->array as $service) {
@@ -20,4 +27,5 @@ class StatusTypeRegister extends PriorityRegister
         }
         return null;
     }
+
 }

@@ -3,6 +3,7 @@
 namespace Wame\Core\Entities;
 
 use Doctrine\ORM\Mapping as ORM;
+use Wame\LanguageModule\Entities\TranslatableEntity;
 
 /**
  * @ORM\MappedSuperclass

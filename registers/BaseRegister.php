@@ -4,9 +4,6 @@ namespace Wame\Core\Registers;
 
 use Nette\InvalidArgumentException;
 use Nette\Object;
-use Nette\Reflection\ClassType;
-use Nette\Utils\ArrayHash;
-use RecursiveArrayIterator;
 use Wame\Core\Registers\Types\IRegisterType;
 
 /**
@@ -16,12 +13,12 @@ use Wame\Core\Registers\Types\IRegisterType;
  */
 abstract class BaseRegister extends Object implements IRegister
 {
-
     /** @var string Type */
     private $type;
 
     /** @var array */
     private $array;
+
 
     /**
      * @param string $type Name of class accepted in this register
@@ -32,11 +29,12 @@ abstract class BaseRegister extends Object implements IRegister
         $this->array = [];
     }
 
+
     /**
      * Register service into register.
      * 
-     * @param object $service
-     * @param string $name
+     * @param object $service service
+     * @param string $name name
      */
     public function add($service, $name = null)
     {
@@ -59,7 +57,13 @@ abstract class BaseRegister extends Object implements IRegister
             throw new InvalidArgumentException("Trying to register class " . get_class($service) . " into register of " . $this->type);
         }
     }
-    
+
+    /**
+     * Get default name
+     *
+     * @param $service
+     * @return string
+     */
     protected function getDefaultName($service)
     {
         return get_class($service);
@@ -67,8 +71,10 @@ abstract class BaseRegister extends Object implements IRegister
 
     /**
      * Remove service from register.
-     * 
-     * @param object|string $service Service or name
+     *
+     * @param object|string $name name
+     * @return array
+     * @internal param object|string $service Service or name
      */
     public function remove($name)
     {
@@ -80,9 +86,9 @@ abstract class BaseRegister extends Object implements IRegister
     }
 
     /**
-     * Get all registred services
+     * Get all registered services
      * 
-     * @return ArrayHash
+     * @return array
      */
     public function getAll()
     {
@@ -106,7 +112,7 @@ abstract class BaseRegister extends Object implements IRegister
     /**
      * Returns an iterator over all items.
      * 
-     * @return RecursiveArrayIterator
+     * @return \ArrayIterator
      */
     public function getIterator()
     {
@@ -132,4 +138,5 @@ abstract class BaseRegister extends Object implements IRegister
     {
         unset($this->array[$key]);
     }
+
 }

@@ -2,7 +2,8 @@
 
 namespace Wame\Core\Repositories;
 
-use Wame\Core\Repositories\BaseRepository;
+use Wame\Core\Entities\BaseEntity;
+use Wame\Core\Registers\BaseRegister;
 use Doctrine\ORM\Query\Expr\Join;
 
 abstract class BaseItemRepository extends BaseRepository
@@ -11,14 +12,8 @@ abstract class BaseItemRepository extends BaseRepository
 	protected $register;
     
     
-    public function __construct($entityClass)
-    {
-        parent::__construct($entityClass);
-    }
-    
-    
     /**
-     * Get items
+     * Find entities
      * 
      * @param string $type          type
      * @param integer $entityId     entity id
@@ -47,7 +42,7 @@ abstract class BaseItemRepository extends BaseRepository
     }
     
     /**
-     * Get entities
+     * Find items
      * 
      * @param string $type      type
      * @param integer $itemId   item id

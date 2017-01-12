@@ -6,7 +6,6 @@ use Nette\Object;
 
 class ControlStatuses extends Object
 {
-
     /**
      * Event called when value of some status object is changed
      * 

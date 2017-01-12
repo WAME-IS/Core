@@ -12,7 +12,6 @@ use Wame\Core\Components\BaseControl;
 
 class TemplatingCache extends Object
 {
-
     /** @var Cache */
     private $cache;
 
@@ -25,6 +24,7 @@ class TemplatingCache extends Object
     /** @var boolean */
     private $enabled = false;
 
+
     /**
      * @param IStorage $cacheStorage
      * @param string $name
@@ -36,47 +36,67 @@ class TemplatingCache extends Object
         $this->name = $name;
     }
 
+
     /**
-     * @param string $name
+     * Set name
+     *
+     * @param string $name name
+     * @return $this
      */
-    function setName($name)
+    public function setName($name)
     {
         $this->name = $name;
+
+        return $this;
     }
 
     /**
+     * Get name
+     *
      * @return string
      */
-    function getName()
+    public function getName()
     {
         return $this->name;
     }
 
     /**
-     * @param string $tag
+     * Add tag
+     *
+     * @param string $tag tag
+     * @return $this
      */
     public function addTag($tag)
     {
         $this->addSettings([Cache::TAGS => [$tag]]);
+
         return $this;
     }
 
     /**
-     * @param string $expiration
+     * Set expiration
+     *
+     * @param string $expiration expiration
+     * @return $this
      */
     public function setExpiration($expiration)
     {
         $this->addSettings([Cache::EXPIRATION => $expiration]);
+
         return $this;
     }
 
     /**
+     * Add settings
+     *
      * @param array $settings
+     * @return $this
      */
     public function addSettings($settings)
     {
         $this->settings = array_merge_recursive($this->settings, $settings);
         $this->enable();
+
         return $this;
     }
 
@@ -91,9 +111,9 @@ class TemplatingCache extends Object
     /**
      * The most important function. Call this function to cache result of render.
      * 
-     * @param Control $control
-     * @param callable $callback
-     * @param array $args
+     * @param Control $control control
+     * @param callable $callback callback
+     * @param array $args arguments
      */
     public function cachedOutput($control, $callback, $args = null)
     {
@@ -122,6 +142,8 @@ class TemplatingCache extends Object
     }
 
     /**
+     * Add child caches
+     *
      * @param Control $control
      */
     private function addChildCaches($control)
@@ -137,4 +159,5 @@ class TemplatingCache extends Object
             }
         }
     }
+
 }
