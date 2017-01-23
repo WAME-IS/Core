@@ -79,10 +79,6 @@ class PriorityRegister implements IRegister
         return $this;
     }
 
-    protected function getDefaultName($service)
-    {
-        return Strings::getClassName($service);
-    }
 
     /**
      * Remove service from register.
@@ -105,16 +101,6 @@ class PriorityRegister implements IRegister
         $this->resort();
         
         return $this;
-    }
-
-    /**
-     * Resort
-     */
-    private function resort()
-    {
-        usort($this->array, function($s1, $s2) {
-            return $s2['parameters']['priority'] - $s1['parameters']['priority'];
-        });
     }
 
     /**
@@ -150,7 +136,8 @@ class PriorityRegister implements IRegister
     }
 
     /**
-     * 
+     * Get priority
+     *
      * @param string $name
      * @return int Priority
      */
@@ -164,6 +151,7 @@ class PriorityRegister implements IRegister
 
     /**
      * Get all registred services
+     *
      * @return array
      */
     public function getAll()
@@ -175,6 +163,7 @@ class PriorityRegister implements IRegister
 
     /**
      * Get by domain
+     *
      * @param string $domain
      * @return array
      */
@@ -203,6 +192,11 @@ class PriorityRegister implements IRegister
         }
     }
 
+    /**
+     * Get array
+     *
+     * @return array
+     */
     public function getArray()
     {
         return $this->array;
@@ -210,6 +204,7 @@ class PriorityRegister implements IRegister
 
     /**
      * Returns an iterator over all items.
+     *
      * @return RecursiveArrayIterator
      */
     public function getIterator()
@@ -245,6 +240,29 @@ class PriorityRegister implements IRegister
                 break;
             }
         }
+    }
+
+
+    /**
+     * Get default name
+     *
+     * @param $service
+     * @return string
+     */
+    protected function getDefaultName($service)
+    {
+        return Strings::getClassName($service);
+    }
+
+
+    /**
+     * Resort
+     */
+    private function resort()
+    {
+        usort($this->array, function($s1, $s2) {
+            return $s2['parameters']['priority'] - $s1['parameters']['priority'];
+        });
     }
 
 }

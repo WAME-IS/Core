@@ -7,8 +7,10 @@ parameters:
         prefix: 'wame_'
 
 
+
 php:
     date.timezone: Europe/Bratislava
+
 
 
 application:
@@ -18,9 +20,11 @@ application:
         *: App\*Module\Presenters\*Presenter
 
 
+
 session:
     autoStart: true
     expiration: 14 days
+
 
 
 extensions:
@@ -37,6 +41,7 @@ extensions:
     eventDispatcherExtension: Symnedi\EventDispatcher\DI\EventDispatcherExtension
     migrations: Zenify\DoctrineMigrations\DI\MigrationsExtension
     fixtures: Wame\DoctrineFixtures\DI\FixturesExtension
+
 
 
 doctrine:
@@ -63,7 +68,7 @@ doctrine:
             sin: DoctrineExtensions\Query\Mysql\Sin
         string:
             radians: DoctrineExtensions\Query\Mysql\Radians
-        
+
 
 
 webloader:
@@ -113,6 +118,7 @@ webloader:
 
             fileFilters:
                 - @jwlJsMinFilter
+
 
 
 services:
@@ -170,6 +176,7 @@ services:
 fixtures:
     locale: "sk_SK"
     seed: 1
+
 
 
 decorator:

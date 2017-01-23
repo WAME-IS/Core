@@ -6,6 +6,7 @@ use Wame\Core\Registers\Types\StatusType;
 
 class StatusTypeRegister extends PriorityRegister
 {
+    /** {@inheritdoc} */
     public function __construct()
     {
         parent::__construct(StatusType::class);

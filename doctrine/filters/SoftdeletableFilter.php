@@ -5,16 +5,13 @@ namespace Wame\Core\Doctrine\Filters;
 use Doctrine\ORM\Mapping\ClassMetadata;
 use Zenify\DoctrineFilters\Contract\ConditionalFilterInterface;
 
-
 final class SoftdeletableFilter implements ConditionalFilterInterface
 {
-    /** @var boolean */
+    /** @var bool */
     private $enabled = true;
     
     
-    /**
-     * {@inheritdoc}
-     */
+    /** {@inheritdoc} */
     public function addFilterConstraint(ClassMetadata $entity, string $alias) : string
     {
         if ($entity->getReflectionClass()->hasProperty('status') && $this->enabled) {
@@ -24,15 +21,25 @@ final class SoftdeletableFilter implements ConditionalFilterInterface
         return "";
     }
 
-    
+
+    /**
+     * Set enabled
+     *
+     * @param bool $status status
+     * @return $this
+     */
     public function setEnabled($status)
     {
         $this->enabled = $status;
         
         return $this;
     }
-    
-    
+
+    /**
+     * Disable
+     *
+     * @return $this
+     */
     public function isDisabled()
     {
         $this->enabled = false;
@@ -40,7 +47,7 @@ final class SoftdeletableFilter implements ConditionalFilterInterface
         return $this;
     }
     
-    
+    /** {@inheritdoc} */
     public function isEnabled() : bool
     {
         return $this->enabled;

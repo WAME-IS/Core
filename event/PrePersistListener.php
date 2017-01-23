@@ -4,6 +4,7 @@ namespace Wame\Core\Events;
 
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Kdyby\Doctrine\Events;
+use Kdyby\Events\Subscriber;
 use Nette\Security\User;
 use Wame\Core\Doctrine\Filters\SoftdeletableFilter;
 use Wame\Core\Entities\BaseEntity;
@@ -14,7 +15,7 @@ use Wame\Core\Registers\RepositoryRegister;
  *
  * @package Wame\Core\Events
  */
-class PrePersistListener implements \Kdyby\Events\Subscriber
+class PrePersistListener implements Subscriber
 {
     /** @var User */
     private $user;
@@ -54,6 +55,7 @@ class PrePersistListener implements \Kdyby\Events\Subscriber
      */
     public function prePersist(LifecycleEventArgs $lifecycleEventArgs)
     {
+        /** @var BaseEntity $entity */
         $entity = $lifecycleEventArgs->getEntity();
         
         $this->setCreateDate($entity);

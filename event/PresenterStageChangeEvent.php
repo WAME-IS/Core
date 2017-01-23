@@ -33,7 +33,7 @@ class PresenterStageChangeEvent
 
 
     /**
-     * Returns whenewer it is event entering stage
+     * Returns whenever it is event entering stage
      * 
      * @param string $stage
      * @return boolean
@@ -48,7 +48,7 @@ class PresenterStageChangeEvent
     }
 
     /**
-     * Returns whenewer it is event leaving stage
+     * Returns whenever it is event leaving stage
      * 
      * @param string $stage
      * @return boolean
@@ -81,4 +81,5 @@ class PresenterStageChangeEvent
     {
         return $this->stage;
     }
+
 }

@@ -5,13 +5,13 @@ namespace Wame\Core\Entities\Columns;
 trait PublishDate
 {
 	/**
-	 * @var DateTime
+	 * @var \DateTime
 	 * @ORM\Column(name="publish_start_date", type="datetime", nullable=true)
 	 */
 	protected $publishStartDate;
 
 	/**
-	 * @var DateTime
+	 * @var \DateTime
 	 * @ORM\Column(name="publish_end_date", type="datetime", nullable=true)
 	 */
 	protected $publishEndDate;

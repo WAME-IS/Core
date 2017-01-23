@@ -39,12 +39,6 @@ abstract class BasePresenter extends Presenter
     /** @var EntityManager @inject */
     public $entityManager;
 
-    /** @persistent */
-    public $id;
-
-    /** @var MetaTypeRegister */
-    public $metaTypeRegister;
-
     /** @var IFormControlFactory @inject */
     public $IFormControlFactory;
 
@@ -53,6 +47,12 @@ abstract class BasePresenter extends Presenter
 
     /** @var Dictionary @inject */
     public $dictionary;
+
+    /** @var int @persistent */
+    public $id;
+
+    /** @var MetaTypeRegister */
+    public $metaTypeRegister;
 
     /** @var ControlStatus */
     public $status;
@@ -99,6 +99,7 @@ abstract class BasePresenter extends Presenter
         }
     }
 
+    /** {@inheritdoc} */
     protected function startup()
     {
         parent::startup();
@@ -110,11 +111,7 @@ abstract class BasePresenter extends Presenter
         Container::register();
     }
 
-    /**
-     * End of presenter cycle
-     *
-     * @param IResponse $response
-     */
+    /** {@inheritdoc} */
     protected function shutdown($response)
     {
         parent::shutdown($response);
@@ -122,9 +119,7 @@ abstract class BasePresenter extends Presenter
         $this->entityManager->flush();
     }
 
-    /**
-     * Before renderer
-     */
+    /** {@inheritdoc} */
     protected function beforeRender()
     {
         parent::beforeRender();
@@ -134,9 +129,7 @@ abstract class BasePresenter extends Presenter
         $this->callBeforeRenders($this);
     }
 
-    /**
-     * After renderer
-     */
+    /** {@inheritdoc} */
     protected function afterRender()
     {
         parent::afterRender();
@@ -182,9 +175,10 @@ abstract class BasePresenter extends Presenter
      * use current Module, Presenter
      * resolve customTemplates
      *
+     * @param string $way
      * @return array
      */
-    public function formatTemplateFiles($way = '')
+    public function formatTemplateFiles($way = '') // TODO: nekompatibilne s parentom
     {
         $presenter = $this->getTemplatePresenter();
         $module = $this->getModule();
@@ -221,9 +215,11 @@ abstract class BasePresenter extends Presenter
      * use current Module, Presenter
      * resolve customTemplates
      *
+     * @param string $modulePath module path
+     * @param string $way way
      * @return array
      */
-    public function formatLayoutTemplateFiles($modulePath = 'Core', $way = '')
+    public function formatLayoutTemplateFiles($modulePath = 'Core', $way = '') // TODO: nekompatibilne s parentom
     {
         $presenter = $this->getTemplatePresenter();
         $module = $this->getModule();
@@ -271,11 +267,21 @@ abstract class BasePresenter extends Presenter
         return $list;
     }
 
+    /**
+     * Get template presenter
+     *
+     * @return string
+     */
     protected function getTemplatePresenter()
     {
         return substr($this->getName(), strrpos(':' . $this->getName(), ':'));
     }
 
+    /**
+     * Get template folder
+     *
+     * @return string
+     */
     protected function getTemplatesFolder()
     {
         $dir = dirname($this->getReflection()->getFileName());
@@ -303,6 +309,7 @@ abstract class BasePresenter extends Presenter
 
     /**
      * Get presenter status
+     *
      * @return ControlStatus
      */
     public function getStatus()
@@ -310,6 +317,13 @@ abstract class BasePresenter extends Presenter
         return $this->status;
     }
 
+    /**
+     * Try call
+     *
+     * @param $method
+     * @param array $params
+     * @return bool
+     */
     protected function tryCall($method, array $params)
     {
         $callEvent = Strings::startsWith($method, 'action');
@@ -327,6 +341,11 @@ abstract class BasePresenter extends Presenter
     }
 
 
+    /**
+     * Call before renders
+     *
+     * @param Control $control
+     */
     private function callBeforeRenders(Control $control)
     {
         //TODO check if it can be removed
@@ -340,10 +359,10 @@ abstract class BasePresenter extends Presenter
         }
     }
 
-    public function getEntity()
-    {
-
-    }
+    /**
+     * Get entity
+     */
+    public function getEntity() {}
 
 
     /** components ************************************************************/

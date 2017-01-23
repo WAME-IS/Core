@@ -71,29 +71,6 @@ class ControlStatus extends Object
         $this->callListeners($name, 'force');
     }
 
-
-    /**
-     * Recursive get
-     *
-     * @param string $name name
-     * @return mixed
-     */
-    private function recursiveGet($name)
-    {
-        if (isset($this->params->$name)) {
-            $value = $this->params->$name;
-            if(is_callable($value)) {
-                $value = call_user_func($value);
-                $this->params->$name = $value;
-            }
-            return $value;
-        }
-        $parent = $this->control->getParent();
-        if ($parent && method_exists($parent, "getStatus")) {
-            return $parent->getStatus()->get($name);
-        }
-    }
-
     /**
      * @internal
      */
@@ -126,7 +103,6 @@ class ControlStatus extends Object
         }
     }
 
-
     /**
      * Get all local
      *
@@ -135,6 +111,29 @@ class ControlStatus extends Object
     public function getAllLocal()
     {
         return $this->params;
+    }
+
+
+    /**
+     * Recursive get
+     *
+     * @param string $name name
+     * @return mixed
+     */
+    private function recursiveGet($name)
+    {
+        if (isset($this->params->$name)) {
+            $value = $this->params->$name;
+            if(is_callable($value)) {
+                $value = call_user_func($value);
+                $this->params->$name = $value;
+            }
+            return $value;
+        }
+        $parent = $this->control->getParent();
+        if ($parent && method_exists($parent, "getStatus")) {
+            return $parent->getStatus()->get($name);
+        }
     }
 
 }
