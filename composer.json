@@ -21,7 +21,7 @@
         }
     ],
     "require": {
-        "wame/doctrinefixtures": "dev-master"
+        "wame/doctrinefixtures": "0.0.1"
     },
     "autoload": {
         "classmap": [
