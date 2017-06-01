@@ -1,5 +1,5 @@
 {
-    "name": "wame/Core",
+    "name": "wame/core",
     "version": "0.0.1",
     "description": "CMS WAME admin",
     "homepage": "http://wame.sk/cms-wame-admin",
@@ -21,7 +21,7 @@
         }
     ],
     "require": {
-        "wame/DoctrineFixtures": "dev-master"
+        "wame/doctrinefixtures": "dev-master"
     },
     "autoload": {
         "classmap": [
