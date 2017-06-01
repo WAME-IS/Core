@@ -21,7 +21,7 @@
         }
     ],
     "require": {
-        "wame/DoctrineFixtures": "*"
+        "wame/DoctrineFixtures": "dev-master"
     },
     "autoload": {
         "classmap": [
