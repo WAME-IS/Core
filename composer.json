@@ -17,7 +17,7 @@
     "repositories": [
         {
             "type": "vcs",
-            "url": "git@bitbucket.org:wame-web"
+            "url": "git@bitbucket.org:wame-web/doctrinefixtures.git"
         }
     ],
     "require": {
