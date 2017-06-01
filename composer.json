@@ -6,7 +6,7 @@
     "minimum-stability": "dev",
     "repository": {
         "type": "vcs",
-        "url": "git@bitbucket.org:wamesro/core.git"
+        "url": "git@bitbucket.org:wame-web/core.git"
     },
     "authors": [
         {
@@ -14,6 +14,9 @@
             "homepage": "http://wame.sk"
         }
     ],
+    "require": {
+        "wame/DoctrineFixtures": "*"
+    },
     "autoload": {
         "classmap": [
             "."
