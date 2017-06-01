@@ -1,5 +1,5 @@
 {
-    "name": "wame/core",
+    "name": "wame/Core",
     "version": "0.0.1",
     "description": "CMS WAME admin",
     "homepage": "http://wame.sk/cms-wame-admin",
@@ -16,12 +16,12 @@
     ],
     "repositories": [
         {
-            "type": "vcs",
-            "url": "git@bitbucket.org:wame-web/doctrinefixtures.git"
+            "type": "composer",
+            "url": "http://packages.wame.sk"
         }
     ],
     "require": {
-        "wame/doctrinefixtures": "0.0.1"
+        "wame/DoctrineFixtures": "0.0.1"
     },
     "autoload": {
         "classmap": [
