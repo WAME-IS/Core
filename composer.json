@@ -10,10 +10,16 @@
     },
     "authors": [
         {
-            "name": "Wame",
+            "name": "WAME s.r.o.",
             "homepage": "http://wame.sk"
         }
     ],
+    "repositories": [
+		{
+			"type": "vcs",
+			"url": "git@bitbucket.org:wame-web"
+		}
+	],
     "require": {
         "wame/DoctrineFixtures": "*"
     },
