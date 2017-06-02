@@ -22,8 +22,8 @@
         "janmarek/webloader": "dev-master",
         "joseki/webloader-filters": "v1.1",
         "oyejorge/less.php": "v1.7.0.*",
-        "wame/DoctrineFixtures": "dev-master",
-        "wame/DynamicObject": "dev-master"
+        "wame/DoctrineFixtures": "0.0.*",
+        "wame/DynamicObject": "0.0.*"
     },
     "autoload": {
         "classmap": [
