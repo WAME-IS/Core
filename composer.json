@@ -15,13 +15,15 @@
         }
     ],
     "repositories": [
-        {
-            "type": "composer",
-            "url": "http://packages.wame.sk"
-        }
+        { "type": "composer", "url": "http://packages.wame.sk" }
     ],
+    "config": { "secure-http": false },
     "require": {
-        "wame/DoctrineFixtures": "0.0.1"
+        "janmarek/webloader": "dev-master",
+        "joseki/webloader-filters": "v1.1",
+        "oyejorge/less.php": "v1.7.0.*",
+        "wame/DoctrineFixtures": "0.0.1",
+        "wame/DynamicObject": "0.0.1"
     },
     "autoload": {
         "classmap": [
