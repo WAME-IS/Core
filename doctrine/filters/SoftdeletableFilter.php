@@ -12,7 +12,7 @@ final class SoftdeletableFilter implements ConditionalFilterInterface
     
     
     /** {@inheritdoc} */
-    public function addFilterConstraint(ClassMetadata $entity, string $alias) : string
+    public function addFilterConstraint(ClassMetadata $entity, $alias) : string
     {
         if ($entity->getReflectionClass()->hasProperty('status') && $this->enabled) {
             return sprintf('%s.status != %s', $alias, 0);
