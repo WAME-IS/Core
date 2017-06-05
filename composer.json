@@ -32,7 +32,10 @@
         "wame/AdminModule": "0.0.*",
         "wame/ChameleonComponentsListControl": "0.0.*",
         "wame/RouterModule": "0.0.*",
-        "wame/GeneralSettingsPlugin": "0.0.*"
+        "wame/RestApiModule": "0.0.*",
+        "wame/GeneralSettingsPlugin": "0.0.*",
+        "wame/SiteModule": "0.0.*",
+        "wame/ShopModule": "0.0.*"
     },
     "autoload": {
         "classmap": [
