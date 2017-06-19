@@ -12,6 +12,7 @@ use Nette\Object;
 use Nette\Security\User;
 use Wame\Core\Entities\BaseEntity;
 use Wame\Core\Registers\RepositoryRegister;
+use Wame\Core\Repositories\Modifiers\TModifier;
 
 
 interface IRepository { }
@@ -88,6 +89,9 @@ class BaseRepository extends Object implements IRepository
 
     /** @var string */
     protected $entityClass;
+
+
+    use TModifier;
 
 
     /**
@@ -253,7 +257,9 @@ class BaseRepository extends Object implements IRepository
      */
     public function createQueryBuilder($alias = 'a')
     {
-        return $this->entity->createQueryBuilder($alias);
+        $qb = $this->entity->createQueryBuilder($alias);
+        $this->applyModifiers($qb, $alias);
+        return $qb;
     }
 
 

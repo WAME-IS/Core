@@ -1,6 +1,6 @@
 {
     "name": "wame/Core",
-    "version": "0.0.1",
+    "version": "0.0.2",
     "description": "CMS WAME admin",
     "homepage": "http://wame.sk/cms-wame-admin",
     "minimum-stability": "dev",
@@ -19,6 +19,20 @@
     ],
     "config": { "secure-http": false },
     "require": {
+        "nette/application": "^2.4",
+        "nette/bootstrap": "^2.4",
+        "nette/caching": "^2.4",
+        "nette/di": "^2.4",
+        "nette/finder": "^2.4",
+        "nette/forms": "^2.4",
+        "nette/http": "^2.4",
+        "nette/mail": "^2.4",
+        "nette/robot-loader": "^2.4",
+        "nette/safe-stream": "^2.3",
+        "nette/security": "^2.4",
+        "nette/utils": "^2.4",
+        "latte/latte": "^2.4",
+        "tracy/tracy": "^2.4",
         "janmarek/webloader": "dev-master",
         "joseki/webloader-filters": "v1.1",
         "oyejorge/less.php": "v1.7.0.*",
@@ -35,7 +49,8 @@
         "wame/RestApiModule": "0.0.*",
         "wame/GeneralSettingsPlugin": "0.0.*",
         "wame/SiteModule": "0.0.*",
-        "wame/ShopModule": "0.0.*"
+        "wame/ShopModule": "0.0.*",
+        "dusank/knapsack": "^10.0"
     },
     "autoload": {
         "classmap": [

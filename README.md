@@ -1,3 +1,5 @@
+# Core
+
 ## BaseEntity, BaseRepository, BasePresenter,..
 Core modul obsahuje zakladne triedy od ktorych by mali dedit vsetky objekty tychto typov v systeme
 
