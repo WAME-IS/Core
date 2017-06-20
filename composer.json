@@ -33,7 +33,7 @@
         "nette/utils": "^2.4",
         "latte/latte": "^2.4",
         "tracy/tracy": "^2.4",
-        "janmarek/webloader": "dev-master",
+        "janmarek/webloader": ">= v2.5.0",
         "joseki/webloader-filters": "v1.1",
         "oyejorge/less.php": "v1.7.0.*",
         "wame/DoctrineFixtures": "0.0.*",
@@ -43,7 +43,7 @@
         "wame/DataGridControl": "0.0.*",
         "wame/MenuModule": "0.0.*",
         "wame/Utils": "0.0.*",
-        "wame/AdminModule": "0.0.*",
+        "wame/AdminModule": ">= 0.0.1",
         "wame/ChameleonComponentsListControl": "0.0.*",
         "wame/RouterModule": "0.0.*",
         "wame/RestApiModule": "0.0.*",
@@ -57,10 +57,5 @@
             "."
         ]
     },
-    "type": "wame-module",
-    "extra": {
-        "branch-alias": {
-            "dev-master": "0.0.*-dev"
-        }
-    }
+    "type": "wame-module"
 }
