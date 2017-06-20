@@ -57,5 +57,10 @@
             "."
         ]
     },
-    "type": "wame-module"
+    "type": "wame-module",
+    "extra": {
+        "branch-alias": {
+            "dev-master": "0.0.*-dev"
+        }
+    }
 }
