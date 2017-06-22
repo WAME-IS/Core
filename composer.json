@@ -46,8 +46,6 @@
         "wame/LanguageModule": ">=0.0.1",
         "wame/DynamicObject": ">=0.0.1",
         "wame/ComponentModule": ">=0.0.1",
-        "wame/DataGridControl": ">=0.0.1",
-        "wame/MenuModule": ">=0.0.1",
         "wame/Utils": ">=0.0.1",
         "wame/ChameleonComponentsListControl": ">=0.0.1",
         "wame/RouterModule": ">=0.0.1",
