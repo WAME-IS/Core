@@ -40,7 +40,6 @@ extensions:
     filtersExtension: Zenify\DoctrineFilters\DI\FiltersExtension
     eventDispatcherExtension: Symnedi\EventDispatcher\DI\EventDispatcherExtension
     migrations: Zenify\DoctrineMigrations\DI\MigrationsExtension
-    fixtures: Wame\DoctrineFixtures\DI\FixturesExtension
 
 
 
@@ -158,24 +157,7 @@ services:
 
     - Wame\Core\Registers\RepositoryRegister
 
-
     - Wame\Core\Cache\TemplatingCacheFactory
-
-
-    # Commands
-    fixtureCommand:
-        class: Wame\Core\Commands\FixtureCommand
-        tags: [kdyby.console.command]
-
-    loadDataFixturesDoctrineCommand:
-        class: Wame\Core\Commands\LoadDataFixturesDoctrineCommand
-        tags: [kdyby.console.command]
-
-
-
-fixtures:
-    locale: "sk_SK"
-    seed: 1
 
 
 
