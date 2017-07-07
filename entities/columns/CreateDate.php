@@ -5,7 +5,7 @@ namespace Wame\Core\Entities\Columns;
 trait CreateDate
 {
 	/**
-	 * @var DateTime
+	 * @var \DateTime
 	 * @ORM\Column(name="create_date", type="datetime", nullable=true)
 	 */
 	protected $createDate;
