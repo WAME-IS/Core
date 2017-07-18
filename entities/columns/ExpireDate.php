@@ -4,6 +4,7 @@ namespace Wame\Core\Entities\Columns;
 
 use Wame\Utils\Date;
 
+
 trait ExpireDate
 {
 	/**
@@ -17,8 +18,22 @@ trait ExpireDate
 
 	public function getExpireDate()
 	{
-		return $this->expireDate;
+	    if ($this->expireDate instanceof \DateTime) {
+            return $this->expireDate;
+        }
+
+		return Date::toDateTime($this->expireDate);
 	}
+
+
+    public function isActive()
+    {
+        if ($this->getExpireDate() instanceof \DateTime && $this->getExpireDate() >= Date::toDateTime(Date::NOW)) {
+            return true;
+        }
+
+        return false;
+    }
 
 
 	/** set ************************************************************/
