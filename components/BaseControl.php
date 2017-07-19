@@ -23,13 +23,13 @@ use Wame\Core\Status\ControlStatus;
 use Wame\Core\Status\ControlStatuses;
 use Wame\LanguageModule\Gettext\Dictionary;
 
+
 abstract class BaseControl extends Control
 {
     const DEFAULT_TEMPLATE = 'default.latte';
     const PARAM_CONTAINER = 'container';
     const CONTAINER_DEFAULT = ['tag' => 'div'];
     const COMPONENT_ID_CLASS = 'cnt-%s';
-
 
     /**
      * Event called before rendeing of control
@@ -75,11 +75,10 @@ abstract class BaseControl extends Control
     /** @var Dictionary */
     protected $dictionary;
 
-
     use TComponentStatusType;
 
 
-    public function __construct(Container $container, IContainer $parent = NULL, $name = NULL)
+    public function __construct(Container $container, IContainer $parent = null, $name = null)
     {
         parent::__construct($parent, $name);
 
@@ -92,8 +91,7 @@ abstract class BaseControl extends Control
         $this->componentCache = $container->getByType(TemplatingCacheFactory::class)->create();
 
         $type = Strings::getClassName(get_class($this));
-        $this->componentParameters->add(
-            new ArrayParameterSource(['container' => ['class' => sprintf(self::COMPONENT_ID_CLASS, $type)]]), 'componentDefaultClass', ['priority' => 1]);
+        $this->componentParameters->add(new ArrayParameterSource(['container' => ['class' => sprintf(self::COMPONENT_ID_CLASS, $type)]]), 'componentDefaultClass', ['priority' => 1]);
 
         $this->bindContainers();
     }
@@ -101,6 +99,7 @@ abstract class BaseControl extends Control
 
     /**
      * @internal
+     *
      * @param User $user
      */
     public function injectUser(User $user)
@@ -108,8 +107,10 @@ abstract class BaseControl extends Control
         $this->user = $user;
     }
 
+
     /**
      * @internal
+     *
      * @param Dictionary $dictionary
      */
     public function injectDictionary(Dictionary $dictionary)
@@ -118,10 +119,12 @@ abstract class BaseControl extends Control
         $this->dictionary->setDomain($this);
     }
 
+
     /**
      * Set component in position
      *
      * @param $componentInPosition
+     *
      * @return $this
      */
     public function setComponentInPosition($componentInPosition)
@@ -130,18 +133,18 @@ abstract class BaseControl extends Control
         $this->component = $componentInPosition->component;
 
         //add parameter sources
-        $this->componentParameters->add(
-            new ArrayParameterSource($componentInPosition->getParameters()), 'componentInPosition', ['priority' => 30]);
-        $this->componentParameters->add(
-            new ArrayParameterSource($this->component->getParameters()), 'component', ['priority' => 20]);
+        $this->componentParameters->add(new ArrayParameterSource($componentInPosition->getParameters()), 'componentInPosition', ['priority' => 30]);
+        $this->componentParameters->add(new ArrayParameterSource($this->component->getParameters()), 'component', ['priority' => 20]);
 
         return $this;
     }
+
 
     /**
      * Set template file
      *
      * @param string $template
+     *
      * @return BaseControl
      */
     public function setTemplateFile($template)
@@ -155,6 +158,7 @@ abstract class BaseControl extends Control
         return $this;
     }
 
+
     /**
      * Fills template with selected template file path
      */
@@ -164,8 +168,7 @@ abstract class BaseControl extends Control
             return;
         }
 
-        $filePath = dirname($this->getReflection()->getFileName());
-        $dir = explode(DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR . 'wame' . DIRECTORY_SEPARATOR, $filePath, 2)[1];
+        $dir = $this->getComponentPath();
 
         $file = $this->findTemplate($dir);
 
@@ -177,6 +180,30 @@ abstract class BaseControl extends Control
 
         return;
     }
+
+
+    /**
+     * Get component path
+     *
+     * @return string
+     */
+    private function getComponentPath()
+    {
+        $filePath = dirname($this->getReflection()->getFileName());
+
+        return explode(DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR . 'wame' . DIRECTORY_SEPARATOR, $filePath, 2)[1];
+    }
+
+
+    /**
+     * Get default component template
+     * @return string
+     */
+    private function getDefaultTemplate()
+    {
+        return VENDOR_PATH . DIRECTORY_SEPARATOR . PACKAGIST_NAME . DIRECTORY_SEPARATOR . $this->getComponentPath() . DIRECTORY_SEPARATOR . self::DEFAULT_TEMPLATE;
+    }
+
 
     /**
      * Find the most appropriate template
@@ -193,18 +220,18 @@ abstract class BaseControl extends Control
         $customTemplate = $this->getCustomTemplate();
 
         if ($templateFile) {
-            $dirs[] = APP_PATH . '/' . $dir . '/' . $templateFile;
+            $dirs[] = APP_PATH . DIRECTORY_SEPARATOR . $dir . DIRECTORY_SEPARATOR . $templateFile;
             if ($customTemplate) {
-                $dirs[] = TEMPLATES_PATH . '/' . $customTemplate . '/' . $dir . '/' . $templateFile;
+                $dirs[] = TEMPLATES_PATH . DIRECTORY_SEPARATOR . $customTemplate . DIRECTORY_SEPARATOR . $dir . DIRECTORY_SEPARATOR . $templateFile;
             }
-            $dirs[] = VENDOR_PATH . '/' . PACKAGIST_NAME . '/' . $dir . '/' . $templateFile;
+            $dirs[] = VENDOR_PATH . DIRECTORY_SEPARATOR . PACKAGIST_NAME . DIRECTORY_SEPARATOR . $dir . DIRECTORY_SEPARATOR . $templateFile;
         }
 
-        $dirs[] = APP_PATH . '/' . $dir . '/' . self::DEFAULT_TEMPLATE;
+        $dirs[] = APP_PATH . DIRECTORY_SEPARATOR . $dir . DIRECTORY_SEPARATOR . self::DEFAULT_TEMPLATE;
         if ($customTemplate) {
-            $dirs[] = TEMPLATES_PATH . '/' . $customTemplate . '/' . $dir . '/' . self::DEFAULT_TEMPLATE;
+            $dirs[] = TEMPLATES_PATH . DIRECTORY_SEPARATOR . $customTemplate . DIRECTORY_SEPARATOR . $dir . DIRECTORY_SEPARATOR . self::DEFAULT_TEMPLATE;
         }
-        $dirs[] = VENDOR_PATH . '/' . PACKAGIST_NAME . '/' . $dir . '/' . self::DEFAULT_TEMPLATE;
+        $dirs[] = VENDOR_PATH . DIRECTORY_SEPARATOR . PACKAGIST_NAME . DIRECTORY_SEPARATOR . $dir . DIRECTORY_SEPARATOR . self::DEFAULT_TEMPLATE;
 
         foreach ($dirs as $dir) {
             if (is_file($dir)) {
@@ -216,6 +243,7 @@ abstract class BaseControl extends Control
         return $file;
     }
 
+
     /**
      * Function called before render
      */
@@ -223,6 +251,7 @@ abstract class BaseControl extends Control
     {
 
     }
+
 
     /**
      * @internal
@@ -237,8 +266,8 @@ abstract class BaseControl extends Control
             $reflection = new Method($this, $method);
 
             $renderParamsSource = null;
-            if ($params) {
 
+            if ($params) {
                 foreach ($params as $key => $value) {
                     if (is_numeric($key)) {
                         if (!isset($reflection->getParameters()[$key])) {
@@ -264,8 +293,8 @@ abstract class BaseControl extends Control
 
             //Pre-render
             call_user_func_array([$this, $method], $loadedParams);
-            //Post-render
 
+            //Post-render
             $this->componentRender();
 
             $this->onAfterRender();
@@ -275,6 +304,7 @@ abstract class BaseControl extends Control
             }
         }, $params);
     }
+
 
     /**
      * Return component title
@@ -286,6 +316,7 @@ abstract class BaseControl extends Control
         return $this->component->getTitle();
     }
 
+
     /**
      * Return component description
      *
@@ -295,6 +326,7 @@ abstract class BaseControl extends Control
     {
         return $this->component->getDescription();
     }
+
 
     /**
      * Return component type
@@ -306,6 +338,7 @@ abstract class BaseControl extends Control
         return $this->component->getType();
     }
 
+
     /**
      * Return component parameters object
      *
@@ -315,6 +348,7 @@ abstract class BaseControl extends Control
     {
         return $this->componentParameters;
     }
+
 
     /**
      * Get component parameter
@@ -328,6 +362,7 @@ abstract class BaseControl extends Control
         return $this->componentParameters->getParameter($parameter, $parameterReader);
     }
 
+
     /**
      * Get component parameter or return defualt value if no parameter is found
      *
@@ -339,11 +374,14 @@ abstract class BaseControl extends Control
     public function getComponentParameterDefault($parameter, $default, $parameterReader = null)
     {
         $param = $this->componentParameters->getParameter($parameter, $parameterReader);
+
         if ($param) {
             return $param;
         }
+
         return $default;
     }
+
 
     /**
      * Get component cache settings
@@ -354,6 +392,7 @@ abstract class BaseControl extends Control
     {
         return $this->componentCache;
     }
+
 
     /**
      * Get presenter status
@@ -381,6 +420,7 @@ abstract class BaseControl extends Control
         $this->container->getByType(PositionControlLoader::class)->load($this);
     }
 
+
     /**
      * Method called after execution of any render method.
      */
@@ -390,21 +430,26 @@ abstract class BaseControl extends Control
 
         //find template if specified in parameters
         if (!$this->templateFile) {
-            $this->setTemplateFile($this->getComponentParameter("template"));
+            $this->setTemplateFile($this->getComponentParameter('template'));
         }
 
         //include default values into template
         if (!isset($this->template->user)) {
             $this->template->user = $this->user;
         }
+
         if (!isset($this->template->lang)) {
             $this->template->lang = $this->getPresenter()->lang;
         }
 
         //render template
         $this->getTemplateFile();
+
+        $this->template->defaultTemplate = $this->getDefaultTemplate();
+
         $this->template->render();
     }
+
 
     /**
      * Load parameters
@@ -436,6 +481,7 @@ abstract class BaseControl extends Control
         return $template;
     }
 
+
     /**
      * Bind containers
      */
@@ -444,16 +490,20 @@ abstract class BaseControl extends Control
         if (!$this->hasContainer) {
             return;
         }
+
         $this->onBeforeRender[] = function() {
             if (!$this->hasContainer) {
                 return;
             }
+
             Helpers::renderContainerStart(Helpers::getContainer($this, self::CONTAINER_DEFAULT, self::PARAM_CONTAINER));
         };
+
         $this->onAfterRender[] = function() {
             if (!$this->hasContainer) {
                 return;
             }
+
             Helpers::renderContainerEnd(Helpers::getContainer($this, self::CONTAINER_DEFAULT, self::PARAM_CONTAINER));
         };
     }
