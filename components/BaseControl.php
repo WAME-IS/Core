@@ -31,6 +31,7 @@ abstract class BaseControl extends Control
     const CONTAINER_DEFAULT = ['tag' => 'div'];
     const COMPONENT_ID_CLASS = 'cnt-%s';
 
+
     /**
      * Event called before rendeing of control
      *
@@ -74,6 +75,7 @@ abstract class BaseControl extends Control
 
     /** @var Dictionary */
     protected $dictionary;
+
 
     use TComponentStatusType;
 
