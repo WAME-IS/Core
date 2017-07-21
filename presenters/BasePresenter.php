@@ -57,6 +57,9 @@ abstract class BasePresenter extends Presenter
     /** @var ControlStatus */
     public $status;
 
+    /** @var array */
+    private $templateDirs = [];
+
     /**
      * Event called whenever processing stage of presenter changes. Stages are: startup, action, signal, render, terminate
      * Callback should have one argument of PresenterStageChangeEvent type
@@ -185,7 +188,7 @@ abstract class BasePresenter extends Presenter
 
         $dir = $this->getTemplatesFolder();
 
-        $dirs = [];
+        $dirs = $this->templateDirs;
 
         $dirs[] = APP_PATH . '/' . $module . $way . '/presenters/templates';
 
@@ -227,7 +230,7 @@ abstract class BasePresenter extends Presenter
 
         $dir = $this->getTemplatesFolder();
 
-        $dirs = [];
+        $dirs = $this->templateDirs;
 
         $dirs[] = APP_PATH . '/' . $module . $way . '/presenters/templates';
 
@@ -288,6 +291,22 @@ abstract class BasePresenter extends Presenter
         $dir = is_dir("$dir/templates") ? $dir : dirname($dir);
         return $dir;
     }
+
+
+    /**
+     * Set template dir
+     *
+     * @param $dir
+     *
+     * @return $this
+     */
+    public function setTemplateDir($dir)
+    {
+        $this->templateDirs[] = $dir;
+
+        return $this;
+    }
+
 
     /**
      * Create template
