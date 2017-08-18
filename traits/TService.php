@@ -5,6 +5,7 @@ namespace Wame\Core\Traits;
 use Exception;
 use Wame\Core\Repositories\BaseRepository;
 
+
 trait TService
 {
     /**
@@ -16,11 +17,22 @@ trait TService
      */
     public function getRepositoryByEntityName($entityName)
     {
-        // TODO: zbavit sa $this->container, pretoze traita moze byt pouzita niekde kde nieje container
-        $serviceName = key($this->container->findByTag($entityName));
-        $service = $this->container->getService($serviceName);
+        $container = null;
 
-        if($service instanceof BaseRepository) {
+        if (isset($this->container)) {
+            $container = $this->container;
+        } elseif (isset($this->context)) {
+            $container = $this->context;
+        }
+
+        if (!$container) {
+            throw new Exception('Missed Nette\DI\Container for Wame\Core\Traits\TService::getRepositoryByEntityName().');
+        }
+
+        $serviceName = key($container->findByTag($entityName));
+        $service = $container->getService($serviceName);
+
+        if ($service instanceof BaseRepository) {
             return $service;
         } else {
             throw new Exception('Repository not found.');
