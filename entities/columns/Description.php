@@ -2,6 +2,7 @@
 
 namespace Wame\Core\Entities\Columns;
 
+
 trait Description
 {
     /**
@@ -10,7 +11,7 @@ trait Description
     protected $description;
 
 	
-	/** get ************************************************************/
+	/** get ***********************************************************************************************************/
 
 	public function getDescription()
 	{
@@ -18,7 +19,7 @@ trait Description
 	}
 
 
-	/** set ************************************************************/
+	/** set ***********************************************************************************************************/
 
 	public function setDescription($description)
 	{

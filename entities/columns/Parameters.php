@@ -11,15 +11,15 @@ trait Parameters
     protected $parameters = null;
 	
 	
-	/** get *******************************************************************/
+	/** get ***********************************************************************************************************/
 
 	public function getParameters()
 	{
         if ($this->parameters) {
-            return  $this->parameters;
-        } else {
-            return [];
+            return $this->parameters;
         }
+
+        return [];
 	}
 	
 	
@@ -27,17 +27,18 @@ trait Parameters
 	{
 		if (array_key_exists($parameter, $this->parameters)) {
 			return $this->parameters[$parameter];
-		} else {
-			return null;
 		}
+
+        return null;
 	}
 	
 	
-	/** set *******************************************************************/
+	/** set ***********************************************************************************************************/
 
 	public function setParameters($parameters)
 	{
 		$this->parameters = $parameters;
+
 		return $this;
 	}
     
@@ -45,11 +46,12 @@ trait Parameters
     public function setParameter($parameter, $value)
 	{
         $this->parameters[$parameter] = $value;
+
 		return $this;
 	}
     
     
-    /** other *****************************************************************/
+    /** other ***********************************************************************************************************/
     
     public function hasParameter($parameter)
     {

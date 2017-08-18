@@ -2,6 +2,7 @@
 
 namespace Wame\Core\Entities\Columns;
 
+
 trait PublishDate
 {
 	/**
@@ -17,7 +18,7 @@ trait PublishDate
 	protected $publishEndDate;
     
     
-	/** get ************************************************************/
+	/** get ***********************************************************************************************************/
 
 	public function getPublishStartDate()
 	{
@@ -30,7 +31,7 @@ trait PublishDate
 	}
 
 	
-	/** set ************************************************************/
+	/** set ***********************************************************************************************************/
 
 	public function setPublishStartDate($publishStartDate)
 	{
