@@ -24,6 +24,10 @@ use WebLoader\Nette\JavaScriptLoader;
 use WebLoader\Nette\LoaderFactory;
 use Wame\LanguageModule\Gettext\Dictionary;
 
+
+/**
+ * @property-read \Nette\Bridges\ApplicationLatte\Template|\stdClass $template
+ */
 abstract class BasePresenter extends Presenter
 {
     /** h4kuna Gettext latte translator trait */
