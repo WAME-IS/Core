@@ -2,6 +2,7 @@
 
 namespace Wame\Core\Entities\Columns;
 
+
 trait Sort
 {
     /**
@@ -9,23 +10,17 @@ trait Sort
 	 */
 	protected $sort = 0;
 
-	
-    /**
-     * Get sort
-     * 
-     * @return integer
-     */
+
+	/** get ***********************************************************************************************************/
+
 	public function getSort()
 	{
 		return $this->sort;
 	}
     
-    /**
-     * Set sort
-     * 
-     * @param integer $sort
-     * @return \Wame\Core\Entities\Columns\Sort
-     */
+
+	/** set ***********************************************************************************************************/
+
 	public function setSort($sort)
 	{
 		$this->sort = $sort;

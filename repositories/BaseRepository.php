@@ -290,4 +290,46 @@ class BaseRepository extends Object implements IRepository
         return new $entityName();
     }
 
+
+    /**
+     * Get parent entity list
+     *
+     * @param BaseEntity $entity
+     * @param bool $reverse
+     *
+     * @return array
+     */
+    public function getParentList($entity, $reverse = false)
+    {
+        $array = $this->getParentEntity($entity);
+
+        if ($reverse === true) {
+            $array = array_reverse($array, true);
+        }
+
+        return $array;
+    }
+
+
+    /**
+     * Get parent entity
+     *
+     * @param BaseEntity $entity
+     * @param array $array
+     *
+     * @return array
+     */
+    private function getParentEntity($entity, $array = [])
+    {
+        if ($entity->getParent()) {
+            $parent = $entity->getParent();
+
+            $array[$parent->getId()] = $parent;
+
+            $array = array_replace($array, $this->getParentEntity($parent, $array));
+        }
+
+        return $array;
+    }
+
 }
