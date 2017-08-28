@@ -108,6 +108,7 @@ webloader:
                 - ../components/bootstrap/js/collapse.js
                 - ../components/bootstrap/js/dropdown.js
                 - ../components/bootstrap/js/modal.js
+                - ../components/bootstrap/js/tooltip.js
                 - ../components/bootstrap/js/transition.js
                 - nette.ajax.js
                 - live-form-validation.js
