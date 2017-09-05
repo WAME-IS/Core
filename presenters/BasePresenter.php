@@ -83,6 +83,7 @@ abstract class BasePresenter extends Presenter
         $this->status = new ControlStatus($this, $controlStatuses);
     }
 
+
     /**
      * @param MetaTypeRegister $metaTypeRegister
      */
@@ -106,6 +107,7 @@ abstract class BasePresenter extends Presenter
         }
     }
 
+
     /** {@inheritdoc} */
     protected function startup()
     {
@@ -118,6 +120,7 @@ abstract class BasePresenter extends Presenter
         Container::register();
     }
 
+
     /** {@inheritdoc} */
     protected function shutdown($response)
     {
@@ -125,6 +128,7 @@ abstract class BasePresenter extends Presenter
 
         $this->entityManager->flush();
     }
+
 
     /** {@inheritdoc} */
     protected function beforeRender()
@@ -135,6 +139,7 @@ abstract class BasePresenter extends Presenter
         $this->onStageChange(new PresenterStageChangeEvent($this, 'render'));
         $this->callBeforeRenders($this);
     }
+
 
     /** {@inheritdoc} */
     protected function afterRender()
@@ -161,6 +166,7 @@ abstract class BasePresenter extends Presenter
         return $module . 'Module';
     }
 
+
     /**
      * Return custom template
      *
@@ -177,6 +183,7 @@ abstract class BasePresenter extends Presenter
         return $template;
     }
 
+
     /**
      * Return template file
      * use current Module, Presenter
@@ -185,7 +192,7 @@ abstract class BasePresenter extends Presenter
      * @param string $way
      * @return array
      */
-    public function formatTemplateFiles($way = '') // TODO: nekompatibilne s parentom
+    public function formatTemplateFiles($way = '')
     {
         $presenter = $this->getTemplatePresenter();
         $module = $this->getModule();
@@ -217,6 +224,7 @@ abstract class BasePresenter extends Presenter
         return $paths;
     }
 
+
     /**
      * Return layout file
      * use current Module, Presenter
@@ -226,7 +234,7 @@ abstract class BasePresenter extends Presenter
      * @param string $way way
      * @return array
      */
-    public function formatLayoutTemplateFiles($modulePath = 'Core', $way = '') // TODO: nekompatibilne s parentom
+    public function formatLayoutTemplateFiles($modulePath = 'Core', $way = '')
     {
         $presenter = $this->getTemplatePresenter();
         $module = $this->getModule();
@@ -274,6 +282,7 @@ abstract class BasePresenter extends Presenter
         return $list;
     }
 
+
     /**
      * Get template presenter
      *
@@ -284,6 +293,7 @@ abstract class BasePresenter extends Presenter
         return substr($this->getName(), strrpos(':' . $this->getName(), ':'));
     }
 
+
     /**
      * Get template folder
      *
@@ -292,7 +302,8 @@ abstract class BasePresenter extends Presenter
     protected function getTemplatesFolder()
     {
         $dir = dirname($this->getReflection()->getFileName());
-        $dir = is_dir("$dir/templates") ? $dir : dirname($dir);
+        $dir = is_dir($dir . DIRECTORY_SEPARATOR . 'templates') ? $dir : dirname($dir);
+
         return $dir;
     }
 
@@ -330,6 +341,7 @@ abstract class BasePresenter extends Presenter
         return $template;
     }
 
+
     /**
      * Get presenter status
      *
@@ -339,6 +351,7 @@ abstract class BasePresenter extends Presenter
     {
         return $this->status;
     }
+
 
     /**
      * Try call
@@ -396,11 +409,13 @@ abstract class BasePresenter extends Presenter
         return $this->webLoader->createCssLoader('default');
     }
 
+
     /** @return JavaScriptLoader */
     protected function createComponentJs()
     {
         return $this->webLoader->createJavaScriptLoader('default');
     }
+
 
     /**
      * Form control
