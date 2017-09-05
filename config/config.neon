@@ -157,8 +157,7 @@ services:
     StatusTypeRegister:
         class: Wame\Core\Registers\StatusTypeRegister
 
-    RepositoryRegister:
-        class: Wame\Core\Registers\RepositoryRegister
+    - Wame\Core\Registers\RepositoryRegister
 
 
 
