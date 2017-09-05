@@ -129,6 +129,7 @@ services:
 
 
     - Wame\Core\Status\ControlStatuses
+    - Wame\Core\Cache\TemplatingCacheFactory
 
 
     # Doctrine filters
@@ -155,9 +156,8 @@ services:
     StatusTypeRegister:
         class: Wame\Core\Registers\StatusTypeRegister
 
-    - Wame\Core\Registers\RepositoryRegister
-
-    - Wame\Core\Cache\TemplatingCacheFactory
+    RepositoryRegister:
+        class: Wame\Core\Registers\RepositoryRegister
 
 
 
