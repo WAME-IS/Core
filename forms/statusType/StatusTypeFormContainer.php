@@ -38,6 +38,8 @@ class StatusTypeFormContainer extends BaseFormContainer
             /* @var $type \Wame\Core\Registers\Types\IStatusType */
             $pairs[$type->getAlias()] = $type->getTitle();
         }
+
+        ksort($pairs);
 		
 		$form->addSelect('statusType', _('Status type'), $pairs)
                 ->setPrompt('- ' . _('Select status type') . ' -');
