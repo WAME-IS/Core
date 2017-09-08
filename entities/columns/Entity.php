@@ -9,7 +9,7 @@ trait Entity
 {
 	public function setEntity(TranslatableEntity $entity)
 	{
-		$this->description = $description;
+		$this->description = $entity;
 		
 		return $this;
 	}
