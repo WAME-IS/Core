@@ -41,7 +41,11 @@
             {position coreLayoutFooter}
         </footer>
 
-        <script>var id = {$id};</script>
+        <script>
+            var id = {$id};
+            var WAME = {};
+            WAME.lang = {$lang};
+        </script>
 		{block scripts}
 			{control js}
 		{/block}
