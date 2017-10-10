@@ -64,13 +64,20 @@ trait SortableRepositoryTrait
         $next = $this->get(['id' => $nextId]);
         
         $item->sort = $next->sort;
+
+        $where = ['sort >=' => $item->sort, 'id !=' => $item->id];
+
+        if (method_exists($item, 'position')) {
+            $where['position'] = $item->position;
+        }
+
+        $higher = $this->find($where);
         
-        $higher = $this->find(['sort >=' => $item->sort, 'position' => $item->position, 'id !=' => $item->id]);
-        
-        foreach($higher as $l) {
+        foreach ($higher as $l) {
             $l->sort++;
         }
     }
+
     
     /**
      * Move after
@@ -84,24 +91,31 @@ trait SortableRepositoryTrait
         $prev = $this->get(['id' => $prevId]);
         
         $item->sort = $prev->sort + 1;
+
+        $where = ['sort >' => $item->sort, 'id !=' => $item->id];
+
+        if (method_exists($item, 'position')) {
+            $where['position'] = $item->position;
+        }
         
-        $higher = $this->find(['sort >' => $item->sort, 'position' => $item->position, 'id !=' => $item->id]);
+        $higher = $this->find($where);
         
-        foreach($higher as $l) {
+        foreach ($higher as $l) {
             $l->sort++;
         }
     }
+
     
     /**
      * Move
      * 
      * @param integer $itemId   item id
      * @param integer $prevId   prev id
-     * @param integer $nextId   next id
+     * @param integer|null $nextId   next id
      */
-    public function move($itemId, $prevId, $nextId)
+    public function move($itemId, $prevId, $nextId = null)
     {
-        if($nextId) {
+        if ($nextId) {
             $this->moveBefore($itemId, $nextId);
         } elseif ($prevId) {
             $this->moveAfter($itemId, $prevId);
