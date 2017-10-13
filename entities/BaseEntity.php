@@ -5,6 +5,7 @@ namespace Wame\Core\Entities;
 use Doctrine\ORM\Mapping as ORM;
 use Nette\Utils\ObjectMixin;
 
+
 /**
  * @ORM\MappedSuperclass
  */
