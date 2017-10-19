@@ -13,6 +13,7 @@ use Nette\Application\UI\ITemplate;
 use Nette\Utils\Strings;
 use Wame\ComponentModule\Components\PositionControlLoader;
 use Wame\Core\Components\BaseControl;
+use Wame\Core\Entities\BaseEntity;
 use Wame\Core\Event\PresenterStageChangeEvent;
 use Wame\Core\Status\ControlStatus;
 use Wame\Core\Status\ControlStatuses;
@@ -54,6 +55,9 @@ abstract class BasePresenter extends Presenter
 
     /** @var int @persistent */
     public $id;
+
+    /** @var BaseEntity */
+    protected $entity;
 
     /** @var MetaTypeRegister */
     public $metaTypeRegister;
@@ -152,10 +156,12 @@ abstract class BasePresenter extends Presenter
     /**
      * Return module name
      *
-     * @param string $name
+     * @param string|null $name
+     * @param boolean $affix
+     *
      * @return string
      */
-    public function getModule($name = null)
+    public function getModule($name = null, $affix = true)
     {
         if (is_null($name)) {
             $name = $this->name;
@@ -163,7 +169,9 @@ abstract class BasePresenter extends Presenter
 
         $module = preg_replace("#:?[a-zA-Z_0-9]+$#", "", $name);
 
-        return $module . 'Module';
+        if ($affix === true) $module .= 'Module';
+
+        return $module;
     }
 
 
@@ -397,8 +405,28 @@ abstract class BasePresenter extends Presenter
 
     /**
      * Get entity
+     *
+     * @return BaseEntity|null
      */
-    public function getEntity() {}
+    public function getEntity()
+    {
+        return $this->entity ?: null;
+    }
+
+
+    /**
+     * Get ID
+     *
+     * @return int|null
+     */
+    public function getId()
+    {
+        if ($this->id) {
+            return $this->id;
+        }
+
+        return null;
+    }
 
 
     /** components ************************************************************/
