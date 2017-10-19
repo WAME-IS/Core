@@ -15,6 +15,7 @@ use Wame\ComponentModule\Components\PositionControlLoader;
 use Wame\Core\Components\BaseControl;
 use Wame\Core\Entities\BaseEntity;
 use Wame\Core\Event\PresenterStageChangeEvent;
+use Wame\Core\Repositories\BaseRepository;
 use Wame\Core\Status\ControlStatus;
 use Wame\Core\Status\ControlStatuses;
 use Wame\DynamicObject\Components\IFormControlFactory;
@@ -58,6 +59,9 @@ abstract class BasePresenter extends Presenter
 
     /** @var BaseEntity */
     protected $entity;
+
+    /** @var BaseRepository */
+    public $repository;
 
     /** @var MetaTypeRegister */
     public $metaTypeRegister;
@@ -403,6 +407,18 @@ abstract class BasePresenter extends Presenter
         }
     }
 
+
+    /**
+     * Get repository
+     *
+     * @return int|null
+     */
+    public function getRepository()
+    {
+        return $this->repository ?: null;
+    }
+
+
     /**
      * Get entity
      *
@@ -421,11 +437,7 @@ abstract class BasePresenter extends Presenter
      */
     public function getId()
     {
-        if ($this->id) {
-            return $this->id;
-        }
-
-        return null;
+        return $this->id ?: null;
     }
 
 
