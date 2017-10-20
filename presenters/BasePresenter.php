@@ -441,6 +441,23 @@ abstract class BasePresenter extends Presenter
     }
 
 
+    /**
+     * Get previous referer url
+     *
+     * @param bool $string
+     *
+     * @return \Nette\Http\Url|void|string
+     */
+    public function getRefererUrl($string = true)
+    {
+        $refererUrl = $this->getHttpRequest()->getHeader('referer');
+
+        if ($string === true) return $refererUrl;
+
+        return new Url($refererUrl);
+    }
+
+
     /** components ************************************************************/
 
     /** @return CssLoader */
