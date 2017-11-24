@@ -111,6 +111,7 @@ webloader:
                 - ../components/bootstrap/js/transition.js
                 - nette.ajax.js
                 - ../components/nette-live-form-validation/js/live-form-validation.js
+                - ../components/object-fit-images/js/ofi.browser.js
                 - /wame-add-param-to-url/add-param-to-url.js
                 - /wame-bootstrap-modal/bootstrap-modal.js
                 - init.js
