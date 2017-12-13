@@ -7,6 +7,7 @@ use Kdyby\Doctrine\EntityManager;
 use Kdyby\Doctrine\EntityRepository;
 use Kdyby\Doctrine\QueryBuilder;
 use Nette\DI\Container;
+use Nette\Http\Session;
 use Nette\InvalidArgumentException;
 use Nette\Object;
 use Nette\Security\User;
@@ -117,12 +118,22 @@ class BaseRepository extends Object implements IRepository
      * @param GettextSetup $translator                  translator
      * @param User $user                                user
      * @param RepositoryRegister $repositoryRegister    repository register
+     * @param Session $session                          session
      */
-    public function injectRepository(Container $container, EntityManager $entityManager, GettextSetup $translator, User $user, RepositoryRegister $repositoryRegister)
-    {
+    public function injectRepository(
+        Container $container,
+        EntityManager $entityManager,
+        GettextSetup $translator,
+        User $user,
+        RepositoryRegister $repositoryRegister,
+        Session $session
+    ) {
         $this->container = $container;
         $this->entityManager = $entityManager;
         $this->lang = $translator->getLanguage();
+        bdump($this->lang);
+        $this->lang = $session->getSection('lang')->lang;
+        bdump($this->lang);
         $this->user = $user;
         $this->entity = $this->entityManager->getRepository($this->entityClass);
 
