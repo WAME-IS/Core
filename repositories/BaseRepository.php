@@ -130,10 +130,8 @@ class BaseRepository extends Object implements IRepository
     ) {
         $this->container = $container;
         $this->entityManager = $entityManager;
-        $this->lang = $translator->getLanguage();
-        bdump($this->lang);
+//        $this->lang = $translator->getLanguage();
         $this->lang = $session->getSection('lang')->lang;
-        bdump($this->lang);
         $this->user = $user;
         $this->entity = $this->entityManager->getRepository($this->entityClass);
 
