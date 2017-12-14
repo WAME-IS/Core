@@ -120,6 +120,8 @@ trait SortableRepositoryTrait
         } elseif ($prevId) {
             $this->moveAfter($itemId, $prevId);
         }
+
+        $this->entityManager->flush();
     }
 
 }
