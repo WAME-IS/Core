@@ -19,6 +19,7 @@
     ],
     "config": { "secure-http": false },
     "require": {
+        "php": ">= 7.0",
         "nette/application": "^2.4",
         "nette/bootstrap": "^2.4",
         "nette/caching": "^2.4",
@@ -43,6 +44,7 @@
         "zenify/doctrine-filters": "v4.0.4",
         "zenify/doctrine-migrations": "^2.3",
         "beberlei/DoctrineExtensions": "^1.0",
+        "nextras/migrations": "^3.0",
         "wame/LanguageModule": ">=0.0.1",
         "wame/DynamicObject": ">=0.0.1",
         "wame/ComponentModule": ">=0.0.1",

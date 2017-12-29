@@ -39,6 +39,14 @@ extensions:
     filtersExtension: Zenify\DoctrineFilters\DI\FiltersExtension
     eventDispatcherExtension: Symnedi\EventDispatcher\DI\EventDispatcherExtension
     migrations: Zenify\DoctrineMigrations\DI\MigrationsExtension
+    nextrasMigrations: Nextras\Migrations\Bridges\NetteDI\MigrationsExtension
+
+
+
+nextrasMigrations:
+    dir: %appDir%/../migrations
+    driver: mysql
+    dbal: doctrine
 
 
 
@@ -139,6 +147,10 @@ services:
 
     # Doctrine listeners
     - {class: Wame\Core\Events\PrePersistListener, tags: [kdyby.subscriber]}
+
+
+    # Commands
+    - {class: Wame\Core\Commands\MigrationsCollectCommand, tags: [kdyby.console.command]}
 
 
     # Latte filters
