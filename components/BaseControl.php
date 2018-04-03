@@ -313,9 +313,9 @@ abstract class BaseControl extends Control
      *
      * @return string
      */
-    public function getTitle()
+    public function getComponentTitle()
     {
-        return $this->component->getTitle();
+        return $this->component->title;
     }
 
 
@@ -326,7 +326,7 @@ abstract class BaseControl extends Control
      */
     public function getDescription()
     {
-        return $this->component->getDescription();
+        return $this->component->description;
     }
 
 

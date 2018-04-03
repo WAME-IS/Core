@@ -38,7 +38,7 @@
         "joseki/webloader-filters": "v1.1",
         "oyejorge/less.php": "v1.7.0.*",
         "dusank/knapsack": "^10.0",
-        "kdyby/doctrine": "^3.2",
+        "kdyby/doctrine": "v3.3.0",
         "kappa/doctrine": "3.0.x-dev",
         "kappa/doctrine-mptt": "1.0.x-dev",
         "zenify/doctrine-filters": "v4.0.4",
