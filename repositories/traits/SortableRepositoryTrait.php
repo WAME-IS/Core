@@ -13,7 +13,7 @@ trait SortableRepositoryTrait
 	 */
 	public function resort($criteria = [], $factor = 1) 
     {
-		$items = $this->find($criteria, ['sort']);
+		$items = $this->find($criteria, ['sort' => 'ASC']);
 
 		if (count($items) > 0) {
 			$i = 1;
