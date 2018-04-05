@@ -270,6 +270,8 @@ abstract class BasePresenter extends Presenter
             $list[] = VENDOR_PATH . '/wame/' . $modulePath . '/presenters/templates/@modalLayout.latte';
         } elseif ($this->isAjax() && $this->getHttpRequest()->getHeader("X-Component") == true) {
             $list[] = VENDOR_PATH . '/wame/Core/presenters/templates/@emptyLayout.latte';
+        } elseif ($this->isAjax() && $this->getHttpRequest()->getHeader("X-Empty") == true) {
+            $list[] = VENDOR_PATH . '/wame/Core/presenters/templates/@emptyLayout.latte';
         }
 
         $name = $this->getName();
