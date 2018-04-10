@@ -45,6 +45,7 @@
         "zenify/doctrine-migrations": "^2.3",
         "beberlei/DoctrineExtensions": "^1.0",
         "nextras/migrations": "^3.0",
+        "myclabs/deep-copy": "^1.7",
         "wame/LanguageModule": ">=0.0.1",
         "wame/DynamicObject": ">=0.0.1",
         "wame/ComponentModule": ">=0.0.1",
