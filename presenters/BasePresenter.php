@@ -57,6 +57,9 @@ abstract class BasePresenter extends Presenter
     /** @var int @persistent */
     public $id;
 
+    /** @persistent */
+    public $bl;
+
     /** @var BaseEntity */
     protected $entity;
 
@@ -116,6 +119,22 @@ abstract class BasePresenter extends Presenter
     }
 
 
+    /**
+     * Backlink handle
+     * return to previous page
+     * 
+     * @throws \Nette\Application\AbortException
+     */
+    public function handleBacklink()
+    {
+        if ($this->bl !== null) {
+            $this->restoreRequest($this->bl);
+        }
+
+        $this->redirect(':Homepage:Homepage:default', ['id' => null, 'bl' => null]);
+    }
+
+
     /** {@inheritdoc} */
     protected function startup()
     {
@@ -135,6 +154,7 @@ abstract class BasePresenter extends Presenter
         parent::shutdown($response);
 
         $this->entityManager->flush();
+        $this->bl = $this->storeRequest();
     }
 
 
