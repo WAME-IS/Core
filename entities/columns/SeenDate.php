@@ -1,6 +1,6 @@
 <?php
 
-namespace Wame\EmailModule\Entities\Columns;
+namespace Wame\Core\Entities\Columns;
 
 trait SeenDate
 {
