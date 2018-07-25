@@ -6,8 +6,10 @@ Core modul obsahuje zakladne triedy od ktorych by mali dedit vsetky objekty tych
 ## Register
 Zjednoteny sposob na registrovanie typov do pluginov. Register ma jeden parameter ktory je nazov triedy ktore musia pridavane typy implementovat. Novy register sa vytvori takto.
 ```
-class FilterHandlersRegister extends \Wame\Core\Registers\BaseRegister {
-    public function __construct() {
+class FilterHandlersRegister extends \Wame\Core\Registers\BaseRegister 
+{
+    public function __construct() 
+    {
         parent::__construct(\Nazov\Triedy\Ktore\Register\Berie::class);
     }
 }

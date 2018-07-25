@@ -138,6 +138,8 @@ abstract class BaseControl extends Control
         $this->componentParameters->add(new ArrayParameterSource($componentInPosition->getParameters()), 'componentInPosition', ['priority' => 30]);
         $this->componentParameters->add(new ArrayParameterSource($this->component->getParameters()), 'component', ['priority' => 20]);
 
+        $this->status->set(ComponentInPositionEntity::class, $componentInPosition);
+
         return $this;
     }
 
