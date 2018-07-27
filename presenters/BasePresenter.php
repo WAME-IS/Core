@@ -21,6 +21,8 @@ use Wame\Core\Status\ControlStatuses;
 use Wame\DynamicObject\Components\IFormControlFactory;
 use Wame\DynamicObject\Forms\FormGroup;
 use Wame\HeadControl\Registers\MetaTypeRegister;
+use Wame\LanguageModule\Entities\LanguageEntity;
+use Wame\LanguageModule\Repositories\LanguageRepository;
 use WebLoader\Nette\CssLoader;
 use WebLoader\Nette\JavaScriptLoader;
 use WebLoader\Nette\LoaderFactory;
@@ -54,8 +56,14 @@ abstract class BasePresenter extends Presenter
     /** @var Dictionary @inject */
     public $dictionary;
 
+    /** @var LanguageRepository @inject */
+    public $languageRepository;
+
     /** @var int @persistent */
     public $id;
+
+    /** @persistent */
+    public $bl;
 
     /** @var BaseEntity */
     protected $entity;
@@ -71,6 +79,9 @@ abstract class BasePresenter extends Presenter
 
     /** @var array */
     private $templateDirs = [];
+
+    /** @var LanguageEntity */
+    public $languageEntity;
 
     /**
      * Event called whenever processing stage of presenter changes. Stages are: startup, action, signal, render, terminate
@@ -116,6 +127,22 @@ abstract class BasePresenter extends Presenter
     }
 
 
+    /**
+     * Backlink handle
+     * return to previous page
+     * 
+     * @throws \Nette\Application\AbortException
+     */
+    public function handleBacklink()
+    {
+        if ($this->bl !== null) {
+            $this->restoreRequest($this->bl);
+        }
+
+        $this->redirect(':Homepage:Homepage:default', ['id' => null, 'bl' => null]);
+    }
+
+
     /** {@inheritdoc} */
     protected function startup()
     {
@@ -124,6 +151,9 @@ abstract class BasePresenter extends Presenter
         $this->onStageChange(new PresenterStageChangeEvent($this, 'startup'));
         $this->dictionary->setDomain($this);
         $this->positionControlLoader->load($this);
+
+        $this->languageEntity = $this->languageRepository->get(['code' => $this->lang]);
+        $this->getStatus()->set(LanguageEntity::class, $this->languageEntity);
 
         Container::register();
     }
@@ -135,6 +165,7 @@ abstract class BasePresenter extends Presenter
         parent::shutdown($response);
 
         $this->entityManager->flush();
+        $this->bl = $this->storeRequest();
     }
 
 

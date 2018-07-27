@@ -7,7 +7,7 @@ trait CreateUser
 {
 	/**
 	 * @ORM\ManyToOne(targetEntity="\Wame\UserModule\Entities\UserEntity")
-	 * @ORM\JoinColumn(name="create_user_id", referencedColumnName="id", nullable=true)
+	 * @ORM\JoinColumn(name="create_user_id", referencedColumnName="id", nullable=true, onDelete="CASCADE")
 	 */
 	protected $createUser;
 
