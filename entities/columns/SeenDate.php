@@ -2,6 +2,7 @@
 
 namespace Wame\Core\Entities\Columns;
 
+
 trait SeenDate
 {
     /**
