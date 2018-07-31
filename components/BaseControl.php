@@ -8,6 +8,7 @@ use Nette\DI\Container;
 use Nette\InvalidStateException;
 use Nette\Reflection\Method;
 use Nette\Security\User;
+use Wame\ComponentModule\Components\PositionControl;
 use Wame\ComponentModule\Traits\TComponentStatusType;
 use Wame\Utils\Strings;
 use Wame\ComponentModule\Components\PositionControlLoader;
@@ -93,6 +94,7 @@ abstract class BaseControl extends Control
         $this->componentCache = $container->getByType(TemplatingCacheFactory::class)->create();
 
         $type = Strings::getClassName(get_class($this));
+
         $this->componentParameters->add(new ArrayParameterSource(['container' => ['class' => sprintf(self::COMPONENT_ID_CLASS, $type)]]), 'componentDefaultClass', ['priority' => 1]);
 
         $this->bindContainers();
@@ -430,7 +432,7 @@ abstract class BaseControl extends Control
      */
     protected function componentRender()
     {
-        if($this->disableRenderByStatusEntity()) return;
+        if ($this->disableRenderByStatusEntity()) return;
 
         //find template if specified in parameters
         if (!$this->templateFile) {
@@ -447,9 +449,10 @@ abstract class BaseControl extends Control
         }
 
         //render template
-        $this->getTemplateFile();
+        $templateFile = $this->getTemplateFile();
+        $defaultTemplate = $this->getDefaultTemplate();
 
-        $this->template->defaultTemplate = $this->getDefaultTemplate();
+        $this->template->defaultTemplate = $defaultTemplate;
 
         $this->template->render();
     }
@@ -476,8 +479,8 @@ abstract class BaseControl extends Control
      */
     private function getCustomTemplate()
     {
-        if (isset($this->presenter->context->parameters['customTemplate'])) {
-            $template = $this->presenter->context->parameters['customTemplate'];
+        if (isset($this->container->parameters['customTemplate'])) {
+            $template = $this->container->parameters['customTemplate'];
         } else {
             $template = null;
         }
@@ -496,17 +499,18 @@ abstract class BaseControl extends Control
         }
 
         $this->onBeforeRender[] = function() {
-            if (!$this->hasContainer) {
-                return;
+            if (!$this->hasContainer) return;
+
+            // Add template path
+            if ($this->container->parameters['productionMode'] == false && !$this instanceof PositionControl) {
+                $this->componentParameters->add(new ArrayParameterSource(['container' => ['data-component-template' => $this->findTemplate($this->getComponentPath())]]), 'cntTmpl', ['priority' => 0]);
             }
 
             Helpers::renderContainerStart(Helpers::getContainer($this, self::CONTAINER_DEFAULT, self::PARAM_CONTAINER));
         };
 
         $this->onAfterRender[] = function() {
-            if (!$this->hasContainer) {
-                return;
-            }
+            if (!$this->hasContainer) return;
 
             Helpers::renderContainerEnd(Helpers::getContainer($this, self::CONTAINER_DEFAULT, self::PARAM_CONTAINER));
         };
