@@ -498,21 +498,28 @@ abstract class BaseControl extends Control
             return;
         }
 
-        $this->onBeforeRender[] = function() {
+        $this->onBeforeRender[] = function()
+        {
             if (!$this->hasContainer) return;
 
-            // Add template path in development mode for frontend developers
+            // Add component information in development mode for frontend developers
             if ($this->container->parameters['productionMode'] == false && !$this instanceof PositionControl) {
-                $this->componentParameters->add(new ArrayParameterSource(['container' => ['data-component-template' => str_replace(BASE_PATH, '', $this->findTemplate($this->getComponentPath()))]]), 'cntTmpl', ['priority' => 0]);
+                echo "<!-- START " . $this->getUniqueId() . "\nCOMPONENT: " . get_class($this) . "\nTEMPLATE: " . str_replace(BASE_PATH, '', $this->findTemplate($this->getComponentPath())) . "\n-->";
             }
 
             Helpers::renderContainerStart(Helpers::getContainer($this, self::CONTAINER_DEFAULT, self::PARAM_CONTAINER));
         };
 
-        $this->onAfterRender[] = function() {
+        $this->onAfterRender[] = function()
+        {
             if (!$this->hasContainer) return;
 
             Helpers::renderContainerEnd(Helpers::getContainer($this, self::CONTAINER_DEFAULT, self::PARAM_CONTAINER));
+
+            // Add component information in development mode for frontend developers
+            if ($this->container->parameters['productionMode'] == false && !$this instanceof PositionControl) {
+                echo "<!-- END " . $this->getUniqueId() . " -->";
+            }
         };
     }
 
