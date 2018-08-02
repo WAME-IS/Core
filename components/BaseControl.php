@@ -501,9 +501,9 @@ abstract class BaseControl extends Control
         $this->onBeforeRender[] = function() {
             if (!$this->hasContainer) return;
 
-            // Add template path
+            // Add template path in development mode for frontend developers
             if ($this->container->parameters['productionMode'] == false && !$this instanceof PositionControl) {
-                $this->componentParameters->add(new ArrayParameterSource(['container' => ['data-component-template' => $this->findTemplate($this->getComponentPath())]]), 'cntTmpl', ['priority' => 0]);
+                $this->componentParameters->add(new ArrayParameterSource(['container' => ['data-component-template' => str_replace(BASE_PATH, '', $this->findTemplate($this->getComponentPath()))]]), 'cntTmpl', ['priority' => 0]);
             }
 
             Helpers::renderContainerStart(Helpers::getContainer($this, self::CONTAINER_DEFAULT, self::PARAM_CONTAINER));
