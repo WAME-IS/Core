@@ -38,7 +38,7 @@ extensions:
     replicator: Kdyby\Replicator\DI\ReplicatorExtension
     filtersExtension: Zenify\DoctrineFilters\DI\FiltersExtension
     eventDispatcherExtension: Symnedi\EventDispatcher\DI\EventDispatcherExtension
-    migrations: Zenify\DoctrineMigrations\DI\MigrationsExtension
+#    migrations: Zenify\DoctrineMigrations\DI\MigrationsExtension
     nextrasMigrations: Nextras\Migrations\Bridges\NetteDI\MigrationsExtension
 
 
